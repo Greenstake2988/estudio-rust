@@ -17,3 +17,4 @@ fn main() {
     println!("{:#?}", pedro);
 }
 
+// Puedes implementar tu prpopio impresion de debug
