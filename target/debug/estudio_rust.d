@@ -1,1 +1,1 @@
-/home/oscar/estudio-rust/target/debug/estudio_rust: /home/oscar/estudio-rust/src/main.rs
+/Users/oscar/Documents/estudio-rust/target/debug/estudio_rust: /Users/oscar/Documents/estudio-rust/src/main.rs
