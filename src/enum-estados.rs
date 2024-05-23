@@ -13,6 +13,7 @@ enum Moneda {
     Veinte(UsEstado),
 }
 
+
 fn valor_en_pesos(moneda: Moneda) -> u8 {
     match moneda {
         Moneda::Uno => 1,
@@ -25,7 +26,18 @@ fn valor_en_pesos(moneda: Moneda) -> u8 {
     }
 }
 
+fn mas_uno(x: Option<i32>) -> Option<i32> {
+    match x {
+        None => None,
+        Some(i) => Some(i + 1),
+    }
+}
 
 fn main(){
     valor_en_pesos(Moneda::Veinte(UsEstado::Alaska));
+    let cinco = Some(5);
+    let seis = mas_uno(cinco);
+    let none = mas_uno(None);
 }
+
+
