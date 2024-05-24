@@ -1,0 +1,508 @@
+<!DOCTYPE HTML>
+<html lang="es" class="sidebar-visible light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Almacenando listas de valores con vectores - El Lenguaje de Programación Rust</title>
+
+
+        <!-- Custom HTML head -->
+        
+            <link rel="canonical" href="https://www.rustlang-es.org/rust-book-es/" />
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <meta property="og:url" content="https://rustlanges.github.io">
+        <meta property="og:type" content="book">
+        <meta property="og:title" content="Almacenando listas de valores con vectores - El Lenguaje de Programación Rust">
+        <meta property="og:description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta property="og:image" content="https://rustlanges.github.io/rust-book-es/img/open-graph.png">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="./theme/catppuccin.css">
+        <link rel="stylesheet" href="./theme/catppuccin-highlight.css">
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title-page.html">El Lenguaje de Programación Rust</a></li><li class="chapter-item expanded affix "><a href="foreword.html">Prefacio</a></li><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Introducción</a></li><li class="chapter-item expanded "><a href="ch01-00-getting-started.html"><strong aria-hidden="true">1.</strong> Empezando</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-installation.html"><strong aria-hidden="true">1.1.</strong> Instalación</a></li><li class="chapter-item expanded "><a href="ch01-02-hello-world.html"><strong aria-hidden="true">1.2.</strong> ¡Hola, Mundo!</a></li><li class="chapter-item expanded "><a href="ch01-03-hello-cargo.html"><strong aria-hidden="true">1.3.</strong> ¡Hola, Cargo!</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-guessing-game-tutorial.html"><strong aria-hidden="true">2.</strong> Programando un juego de adivinanzas</a></li><li class="chapter-item expanded "><a href="ch03-00-common-programming-concepts.html"><strong aria-hidden="true">3.</strong> Conceptos Comunes de Programación</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-variables-and-mutability.html"><strong aria-hidden="true">3.1.</strong> Variables y Mutabilidad</a></li><li class="chapter-item expanded "><a href="ch03-02-data-types.html"><strong aria-hidden="true">3.2.</strong> Tipos de Datos</a></li><li class="chapter-item expanded "><a href="ch03-03-how-functions-work.html"><strong aria-hidden="true">3.3.</strong> Funciones</a></li><li class="chapter-item expanded "><a href="ch03-04-comments.html"><strong aria-hidden="true">3.4.</strong> Comentarios</a></li><li class="chapter-item expanded "><a href="ch03-05-control-flow.html"><strong aria-hidden="true">3.5.</strong> Flujo de Control</a></li></ol></li><li class="chapter-item expanded "><a href="ch04-00-understanding-ownership.html"><strong aria-hidden="true">4.</strong> Entendiendo el Ownership</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04-01-what-is-ownership.html"><strong aria-hidden="true">4.1.</strong> ¿Qué es el Ownership?</a></li><li class="chapter-item expanded "><a href="ch04-02-references-and-borrowing.html"><strong aria-hidden="true">4.2.</strong> Referencias y Prestamos</a></li><li class="chapter-item expanded "><a href="ch04-03-slices.html"><strong aria-hidden="true">4.3.</strong> El Tipo Slice</a></li></ol></li><li class="chapter-item expanded "><a href="ch05-00-structs.html"><strong aria-hidden="true">5.</strong> Usando Structs para Estructurar Datos Relacionados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05-01-defining-structs.html"><strong aria-hidden="true">5.1.</strong> Definiendo e Instanciando Structs</a></li><li class="chapter-item expanded "><a href="ch05-02-example-structs.html"><strong aria-hidden="true">5.2.</strong> Un Programa de Ejemplo Usando Structs</a></li><li class="chapter-item expanded "><a href="ch05-03-method-syntax.html"><strong aria-hidden="true">5.3.</strong> Sintaxis de Métodos</a></li></ol></li><li class="chapter-item expanded "><a href="ch06-00-enums.html"><strong aria-hidden="true">6.</strong> Enums y Pattern Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06-01-defining-an-enum.html"><strong aria-hidden="true">6.1.</strong> Definiendo un Enum</a></li><li class="chapter-item expanded "><a href="ch06-02-match.html"><strong aria-hidden="true">6.2.</strong> El operador de control de flujo match</a></li><li class="chapter-item expanded "><a href="ch06-03-if-let.html"><strong aria-hidden="true">6.3.</strong> Flujo de Control Conciso con if let</a></li></ol></li><li class="chapter-item expanded "><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"><strong aria-hidden="true">7.</strong> Administrando Proyectos en Crecimiento con Paquetes, Crates y Módulos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07-01-packages-and-crates.html"><strong aria-hidden="true">7.1.</strong> Paquetes y Crates</a></li><li class="chapter-item expanded "><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"><strong aria-hidden="true">7.2.</strong> Definiendo módulos para controlar el scope y la privacidad</a></li><li class="chapter-item expanded "><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"><strong aria-hidden="true">7.3.</strong> Paths para referirse a un item en el árbol de módulos</a></li><li class="chapter-item expanded "><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"><strong aria-hidden="true">7.4.</strong> Incluyendo rutas al Scope con la palabra clave use</a></li><li class="chapter-item expanded "><a href="ch07-05-separating-modules-into-different-files.html"><strong aria-hidden="true">7.5.</strong> Separando Módulos en Diferentes Archivos</a></li></ol></li><li class="chapter-item expanded "><a href="ch08-00-common-collections.html"><strong aria-hidden="true">8.</strong> Colecciones comunes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch08-01-vectors.html" class="active"><strong aria-hidden="true">8.1.</strong> Almacenando listas de valores con vectores</a></li><li class="chapter-item expanded "><a href="ch08-02-strings.html"><strong aria-hidden="true">8.2.</strong> Almacenando texto codificado en UTF-8 con Strings</a></li><li class="chapter-item expanded "><a href="ch08-03-hash-maps.html"><strong aria-hidden="true">8.3.</strong> Almacenar Claves con Valores Asociados en HashMaps</a></li></ol></li><li class="chapter-item expanded "><a href="ch09-00-error-handling.html"><strong aria-hidden="true">9.</strong> Manejo de Errores</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09-01-unrecoverable-errors-with-panic.html"><strong aria-hidden="true">9.1.</strong> Errores irrecuperables con panic!</a></li><li class="chapter-item expanded "><a href="ch09-02-recoverable-errors-with-result.html"><strong aria-hidden="true">9.2.</strong> Errores recuperables con Result</a></li><li class="chapter-item expanded "><a href="ch09-03-to-panic-or-not-to-panic.html"><strong aria-hidden="true">9.3.</strong> panic! o no panic!</a></li></ol></li><li class="chapter-item expanded "><a href="ch10-00-generics.html"><strong aria-hidden="true">10.</strong> Tipos Genéricos, Traits y Lifetimes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch10-01-syntax.html"><strong aria-hidden="true">10.1.</strong> Tipos de Datos Genéricos</a></li><li class="chapter-item expanded "><a href="ch10-02-traits.html"><strong aria-hidden="true">10.2.</strong> Traits: Definiendo Comportamiento Compartido</a></li><li class="chapter-item expanded "><a href="ch10-03-lifetime-syntax.html"><strong aria-hidden="true">10.3.</strong> Validando Referencias con Lifetimes</a></li></ol></li><li class="chapter-item expanded "><a href="ch11-00-testing.html"><strong aria-hidden="true">11.</strong> Escribiendo Tests Automatizados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch11-01-writing-tests.html"><strong aria-hidden="true">11.1.</strong> Cómo Escribir Tests</a></li><li class="chapter-item expanded "><a href="ch11-02-running-tests.html"><strong aria-hidden="true">11.2.</strong> Controlando Cómo Los Tests Son Ejecutados</a></li><li class="chapter-item expanded "><a href="ch11-03-test-organization.html"><strong aria-hidden="true">11.3.</strong> Organización De Los Tests</a></li></ol></li><li class="chapter-item expanded "><a href="ch12-00-an-io-project.html"><strong aria-hidden="true">12.</strong> Un proyecto de I/O: Construyendo un programa de línea de comandos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch12-01-accepting-command-line-arguments.html"><strong aria-hidden="true">12.1.</strong> Aceptando argumentos de línea de comandos</a></li><li class="chapter-item expanded "><a href="ch12-02-reading-a-file.html"><strong aria-hidden="true">12.2.</strong> Leyendo un archivo</a></li><li class="chapter-item expanded "><a href="ch12-03-improving-error-handling-and-modularity.html"><strong aria-hidden="true">12.3.</strong> Refactorizando para mejorar la modularidad y el manejo de errores</a></li><li class="chapter-item expanded "><a href="ch12-04-testing-the-librarys-functionality.html"><strong aria-hidden="true">12.4.</strong> Desarrollando la funcionalidad de la biblioteca con T.D.D.</a></li><li class="chapter-item expanded "><a href="ch12-05-working-with-environment-variables.html"><strong aria-hidden="true">12.5.</strong> Trabajando con Variables de Entorno</a></li><li class="chapter-item expanded "><a href="ch12-06-writing-to-stderr-instead-of-stdout.html"><strong aria-hidden="true">12.6.</strong> Escribiendo mensajes de error estándar en lugar del output estándar</a></li></ol></li><li class="chapter-item expanded "><a href="ch13-00-functional-features.html"><strong aria-hidden="true">13.</strong> Características De Lenguajes Funcionales: Iteradores y Closures</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch13-01-closures.html"><strong aria-hidden="true">13.1.</strong> Closures: Funciones anónimas que capturan su entorno</a></li><li class="chapter-item expanded "><a href="ch13-02-iterators.html"><strong aria-hidden="true">13.2.</strong> Procesando una serie de elementos con Iteradores</a></li><li class="chapter-item expanded "><a href="ch13-03-improving-our-io-project.html"><strong aria-hidden="true">13.3.</strong> Mejorando nuestro proyecto I/O</a></li><li class="chapter-item expanded "><a href="ch13-04-performance.html"><strong aria-hidden="true">13.4.</strong> Comparando Performance: Bucles vs. Iteradores</a></li></ol></li><li class="chapter-item expanded "><a href="ch14-00-more-about-cargo.html"><strong aria-hidden="true">14.</strong> Más sobre Cargo y Crates.io</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch14-01-release-profiles.html"><strong aria-hidden="true">14.1.</strong> Personalizando Compilaciones con Perfiles de Lanzamiento</a></li><li class="chapter-item expanded "><a href="ch14-02-publishing-to-crates-io.html"><strong aria-hidden="true">14.2.</strong> Publicando un Crate a Crates.io</a></li><li class="chapter-item expanded "><a href="ch14-03-cargo-workspaces.html"><strong aria-hidden="true">14.3.</strong> Cargo Workspaces</a></li><li class="chapter-item expanded "><a href="ch14-04-installing-binaries.html"><strong aria-hidden="true">14.4.</strong> Instalando Binarios con cargo install</a></li><li class="chapter-item expanded "><a href="ch14-05-extending-cargo.html"><strong aria-hidden="true">14.5.</strong> Extendiendo Cargo con Comandos Personalizados</a></li></ol></li><li class="chapter-item expanded "><a href="ch15-00-smart-pointers.html"><strong aria-hidden="true">15.</strong> Smart Pointers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch15-01-box.html"><strong aria-hidden="true">15.1.</strong> Usando Box&lt;T&gt; para Apuntar a Datos en el Heap</a></li><li class="chapter-item expanded "><a href="ch15-02-deref.html"><strong aria-hidden="true">15.2.</strong> Tratando los Smart Pointers como Referencias Regulares con el Trait Deref</a></li><li class="chapter-item expanded "><a href="ch15-03-drop.html"><strong aria-hidden="true">15.3.</strong> Ejecutando Código al Limpiar con el Trait Drop</a></li><li class="chapter-item expanded "><a href="ch15-04-rc.html"><strong aria-hidden="true">15.4.</strong> Rc&lt;T&gt;, el Smart Pointer de Conteo de Referencias</a></li><li class="chapter-item expanded "><a href="ch15-05-interior-mutability.html"><strong aria-hidden="true">15.5.</strong> RefCell&lt;T&gt; y el Patrón de Mutabilidad Interior</a></li><li class="chapter-item expanded "><a href="ch15-06-reference-cycles.html"><strong aria-hidden="true">15.6.</strong> Referencias Circulares Pueden Fugar Memoria</a></li></ol></li><li class="chapter-item expanded "><a href="ch16-00-concurrency.html"><strong aria-hidden="true">16.</strong> Concurrencia Sin Miedo</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch16-01-threads.html"><strong aria-hidden="true">16.1.</strong> Usando Threads para Ejecutar Código Simultáneamente</a></li><li class="chapter-item expanded "><a href="ch16-02-message-passing.html"><strong aria-hidden="true">16.2.</strong> Usando el Pasaje de Mensajes para Transferir Datos entre Hilos</a></li><li class="chapter-item expanded "><a href="ch16-03-shared-state.html"><strong aria-hidden="true">16.3.</strong> Concurrencia con Estado Compartido</a></li><li class="chapter-item expanded "><a href="ch16-04-extensible-concurrency-sync-and-send.html"><strong aria-hidden="true">16.4.</strong> Concurrencia Extensible con los Traits Sync y Send</a></li></ol></li><li class="chapter-item expanded "><a href="ch17-00-oop.html"><strong aria-hidden="true">17.</strong> Rust como un Lenguaje de Programación Orientado a Objetos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch17-01-what-is-oo.html"><strong aria-hidden="true">17.1.</strong> Características de Lenguajes Orientados a Objetos</a></li><li class="chapter-item expanded "><a href="ch17-02-trait-objects.html"><strong aria-hidden="true">17.2.</strong> Usando Trait Objects que Permiten Valores de Diferentes Tipos</a></li><li class="chapter-item expanded "><a href="ch17-03-oo-design-patterns.html"><strong aria-hidden="true">17.3.</strong> Implementando un Patrón de Diseño Orientado a Objetos</a></li></ol></li><li class="chapter-item expanded "><a href="ch18-00-patterns.html"><strong aria-hidden="true">18.</strong> Patterns and Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch18-01-all-the-places-for-patterns.html"><strong aria-hidden="true">18.1.</strong> Todos los lugares donde se pueden usar Patterns</a></li><li class="chapter-item expanded "><a href="ch18-02-refutability.html"><strong aria-hidden="true">18.2.</strong> Refutabilidad: Si un Pattern Puede Fallar al Hacer Match</a></li><li class="chapter-item expanded "><a href="ch18-03-pattern-syntax.html"><strong aria-hidden="true">18.3.</strong> Sintaxis de los Patterns</a></li></ol></li><li class="chapter-item expanded "><a href="ch19-00-advanced-features.html"><strong aria-hidden="true">19.</strong> Características Avanzadas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch19-01-unsafe-rust.html"><strong aria-hidden="true">19.1.</strong> Rust Inseguro</a></li><li class="chapter-item expanded "><a href="ch19-03-advanced-traits.html"><strong aria-hidden="true">19.2.</strong> Advanced Traits</a></li><li class="chapter-item expanded "><a href="ch19-04-advanced-types.html"><strong aria-hidden="true">19.3.</strong> Advanced Types</a></li><li class="chapter-item expanded "><a href="ch19-05-advanced-functions-and-closures.html"><strong aria-hidden="true">19.4.</strong> Advanced Functions and Closures</a></li><li class="chapter-item expanded "><a href="ch19-06-macros.html"><strong aria-hidden="true">19.5.</strong> Macros</a></li></ol></li><li class="chapter-item expanded "><a href="ch20-00-final-project-a-web-server.html"><strong aria-hidden="true">20.</strong> Final Project: Building a Multithreaded Web Server</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch20-01-single-threaded.html"><strong aria-hidden="true">20.1.</strong> Building a Single-Threaded Web Server</a></li><li class="chapter-item expanded "><a href="ch20-02-multithreaded.html"><strong aria-hidden="true">20.2.</strong> Turning Our Single-Threaded Server into a Multithreaded Server</a></li><li class="chapter-item expanded "><a href="ch20-03-graceful-shutdown-and-cleanup.html"><strong aria-hidden="true">20.3.</strong> Graceful Shutdown and Cleanup</a></li></ol></li><li class="chapter-item expanded "><a href="appendix-00.html"><strong aria-hidden="true">21.</strong> Apéndice</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="appendix-01-keywords.html"><strong aria-hidden="true">21.1.</strong> A - Palabras claves</a></li><li class="chapter-item expanded "><a href="appendix-02-operators.html"><strong aria-hidden="true">21.2.</strong> B - Operadores y Símbolos</a></li><li class="chapter-item expanded "><a href="appendix-03-derivable-traits.html"><strong aria-hidden="true">21.3.</strong> C - Derivable Traits</a></li><li class="chapter-item expanded "><a href="appendix-04-useful-development-tools.html"><strong aria-hidden="true">21.4.</strong> D - Useful Development Tools</a></li><li class="chapter-item expanded "><a href="appendix-05-editions.html"><strong aria-hidden="true">21.5.</strong> E - Editions</a></li><li class="chapter-item expanded "><a href="appendix-06-translation.html"><strong aria-hidden="true">21.6.</strong> F - Translations of the Book</a></li><li class="chapter-item expanded "><a href="appendix-07-nightly-rust.html"><strong aria-hidden="true">21.7.</strong> G - Cómo se hace Rust y “Rust Nightly”</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="latte">Latte</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="frappe">Frappé</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="macchiato">Macchiato</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mocha">Mocha</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">El Lenguaje de Programación Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/RustLangES/rust-book-es" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="almacenando-listas-de-valores-con-vectores"><a class="header" href="#almacenando-listas-de-valores-con-vectores">Almacenando listas de valores con vectores</a></h2>
+<p>El primer tipo de colección que veremos es <code>Vec&lt;T&gt;</code>, también conocido como un
+<em>vector</em>. Los vectores te permiten almacenar más de un valor en una sola
+estructura de datos que pone todos los valores uno al lado del otro en la
+memoria. Los vectores solo pueden almacenar valores del mismo tipo. Son útiles
+cuando tienes una lista de elementos, como las líneas de texto en un archivo o
+los precios de los artículos en un carrito de compras.</p>
+<h3 id="creando-un-nuevo-vector"><a class="header" href="#creando-un-nuevo-vector">Creando un nuevo vector</a></h3>
+<p>Para crear un nuevo vector vacío, llamamos a la función <code>Vec::new</code>, como se
+muestra en el listado 8-1.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let v: Vec&lt;i32&gt; = Vec::new();
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-1: Creando un nuevo vector vacío para mantener
+valores de tipo <code>i32</code></span></p>
+<p>Ten en cuenta que agregamos una anotación de tipo aquí. Como no estamos
+insertando ningún valor en este vector, Rust no sabe qué tipo de elementos
+queremos almacenar. Este es un punto importante. Los vectores se implementan
+usando genéricos; cubriremos cómo usar genéricos con tus propios tipos en el
+Capítulo 10. Por ahora, sepa que el tipo <code>Vec&lt;T&gt;</code> proporcionado por la
+biblioteca estándar puede contener cualquier tipo. Cuando creamos un vector
+para contener un tipo específico, podemos especificar el tipo dentro de
+corchetes angulares. En el listado 8-1, le hemos dicho a Rust que el <code>Vec&lt;T&gt;</code>
+en <code>v</code> contendrá elementos del tipo <code>i32</code>.</p>
+<p>A menudo, crearás un <code>Vec&lt;T&gt;</code> con valores iniciales y Rust inferirá el tipo de
+valor que deseas almacenar, por lo que rara vez necesitarás hacer esta
+anotación de tipo. Rust proporciona convenientemente la macro <code>vec!</code>, que
+creará un nuevo vector que contenga los valores que le des. El listado 8-2
+crea un nuevo <code>Vec&lt;i32&gt;</code> que contiene los valores <code>1</code>, <code>2</code> y <code>3</code>. El tipo
+entero es <code>i32</code> porque ese es el tipo entero predeterminado, como discutimos
+en la sección <a href="ch03-02-data-types.html#tipos-de-datos">"Tipos de datos"</a><!-- ignore --> del Capítulo 3.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let v = vec![1, 2, 3];
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-2: Creando un nuevo vector que contiene
+valores</span></p>
+<p>Debido a que hemos dado valores iniciales <code>i32</code>, Rust puede inferir que el tipo
+de <code>v</code> es <code>Vec&lt;i32&gt;</code>, y la anotación de tipo no es necesaria. A continuación,
+veremos cómo modificar un vector.</p>
+<h3 id="actualizando-un-vector"><a class="header" href="#actualizando-un-vector">Actualizando un vector</a></h3>
+<p>Para crear un vector y luego agregar elementos a él, podemos usar el método
+<code>push</code>, como se muestra en el listado 8-3.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let mut v = Vec::new();
+
+    v.push(5);
+    v.push(6);
+    v.push(7);
+    v.push(8);
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-3: Usando el método <code>push</code> para añadir valores
+a un vector</span></p>
+<p>Como con cualquier variable, si queremos poder cambiar su valor, necesitamos
+hacerlo mutable usando la palabra clave <code>mut</code>, como se discutió en el Capítulo
+3. Los números que colocamos dentro son todos del tipo <code>i32</code>, y Rust infiere
+esto de los datos, por lo que no necesitamos la anotación <code>Vec&lt;i32&gt;</code>.</p>
+<h3 id="leyendo-elementos-de-vectores"><a class="header" href="#leyendo-elementos-de-vectores">Leyendo elementos de vectores</a></h3>
+<p>Hay dos formas de hacer referencia a un valor almacenado en un vector: a través
+de la indexación o usando el método <code>get</code>. En los siguientes ejemplos,
+hemos anotado los tipos de los valores que se devuelven de estas funciones para
+obtener una mayor claridad.</p>
+<p>En el listado 8-4 se muestran ambos métodos de acceso a un valor en un vector,
+con sintaxis de indexación y el método <code>get</code>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let v = vec![1, 2, 3, 4, 5];
+
+    let third: &amp;i32 = &amp;v[2];
+    println!("The third element is {third}");
+
+    let third: Option&lt;&amp;i32&gt; = v.get(2);
+    match third {
+        Some(third) =&gt; println!("The third element is {third}"),
+        None =&gt; println!("There is no third element."),
+    }
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-4: Usando la sintaxis de indexación o el método
+<code>get</code> accediendo a un objeto en un vector</span></p>
+<p>Ten en cuenta algunos detalles aquí. Usamos el valor de índice <code>2</code> para obtener
+el tercer elemento porque los vectores se indexan por número, comenzando en
+cero. Usar <code>&amp;</code> y <code>[]</code> nos da una referencia al elemento en el índice. Cuando
+usamos el método <code>get</code> con el índice pasado como argumento, obtenemos un
+<code>Option&lt;&amp;T&gt;</code> que podemos usar con <code>match</code>.</p>
+<p>La razón por la que Rust proporciona estas dos formas de hacer referencia a un
+elemento es para que puedas elegir cómo se comporta el programa cuando intentas
+usar un valor de índice fuera del rango de elementos existentes. Como ejemplo,
+veamos qué sucede cuando tenemos un vector de cinco elementos y luego intentamos
+acceder a un elemento en el índice 100 con cada técnica, como se muestra en el
+listado 8-5.</p>
+<pre><pre class="playground"><code class="language-rust should_panic panics"><span class="boring">fn main() {
+</span>    let v = vec![1, 2, 3, 4, 5];
+
+    let does_not_exist = &amp;v[100];
+    let does_not_exist = v.get(100);
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-5: Intentando acceder al elemento en el índice
+100 en un vector que contiene 5 elementos</span></p>
+<p>Cuando ejecutamos este código, el primer método <code>[]</code> causará que el programa
+falle porque intenta acceder a un elemento que no existe. Este método es mejor
+usarlo cuando quieres que tu programa se bloquee si hay un intento de acceder a
+un elemento más allá del final del vector.</p>
+<p>Cuando el método <code>get</code> se pasa un índice que está fuera del rango del vector,
+simplemente devuelve <code>None</code> sin entrar en pánico. Tendrías que usar este método
+si acceder a un elemento más allá del rango del vector puede suceder con
+frecuencia en circunstancias normales. Tu código tendrá entonces la lógica
+necesaria para gestionar la presencia de Some(&amp;element) o None, tal y como se explica en el capítulo 6. Por
+ejemplo, el índice podría provenir de una persona que ingresa un número. Si
+ingresan accidentalmente un número que es demasiado grande y el programa obtiene
+un valor <code>None</code>, podrías decirle al usuario cuántos elementos hay en el vector
+actual y darle otra oportunidad de ingresar un valor válido. Eso sería más
+amigable para el usuario que bloquear el programa debido a un error tipográfico.</p>
+<p>Cuando el programa tiene una referencia válida, el borrow checker hace cumplir
+las reglas de ownership y borrowing (cubiertas en el Capítulo 4) para asegurar
+que esta referencia y cualquier otra referencia a los contenidos del vector
+permanezcan válidas. Recuerda la regla que establece que no puedes tener
+referencias mutables e inmutables en el mismo ámbito. Esa regla se aplica en el
+listado 8-6, donde tenemos una referencia inmutable al primer elemento en un
+vector e intentamos agregar un elemento al final. Este programa no funcionará si
+también intentamos referirnos a ese elemento más adelante en la función:</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>    let mut v = vec![1, 2, 3, 4, 5];
+
+    let first = &amp;v[0];
+
+    v.push(6);
+
+    println!("The first element is: {first}");
+<span class="boring">}</span></code></pre>
+<p><span class="caption">Listado 8-6: Intentando agregar un elemento a un vector
+mientras se mantiene una referencia a un elemento</span></p>
+<p>Al compilar este código se producirá este error:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling collections v0.1.0 (file:///projects/collections)
+error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
+ --&gt; src/main.rs:6:5
+  |
+4 |     let first = &amp;v[0];
+  |                  - immutable borrow occurs here
+5 |
+6 |     v.push(6);
+  |     ^^^^^^^^^ mutable borrow occurs here
+7 |
+8 |     println!("The first element is: {first}");
+  |                                      ----- immutable borrow later used here
+
+For more information about this error, try `rustc --explain E0502`.
+error: could not compile `collections` due to previous error
+</code></pre>
+<p>El código en el listado 8-6 podría parecer que debería funcionar: ¿por qué una
+referencia al primer elemento se preocuparía por los cambios al final del
+vector? Este error se debe a la forma en que funcionan los vectores: porque los
+vectores colocan los valores uno al lado del otro en la memoria, agregar un
+nuevo elemento al final del vector puede requerir asignar nueva memoria y
+copiar los elementos antiguos al nuevo espacio, si no hay suficiente espacio
+para poner todos los elementos uno al lado del otro donde se almacena el vector
+actualmente. En ese caso, la referencia al primer elemento apuntaría a la
+memoria desasignada. Las reglas de borrowing evitan que los programas terminen en
+esa situación.</p>
+<blockquote>
+<p>Nota: Para más información sobre los detalles de implementación del tipo <code>Vec&lt;T&gt;</code>,
+véase <a href="https://doc.rust-lang.org/nomicon/vec/vec.html">"The Rustonomicon"</a>.</p>
+</blockquote>
+<h3 id="iterando-sobre-los-valores-en-un-vector"><a class="header" href="#iterando-sobre-los-valores-en-un-vector">Iterando sobre los valores en un vector</a></h3>
+<p>Para acceder a cada elemento en un vector a su vez, iteramos a través de todos
+los elementos, en lugar de usar índices para acceder a uno a la vez. El listado
+8-7 muestra cómo usar un bucle <code>for</code> para obtener referencias inmutables a cada
+elemento en un vector de valores <code>i32</code> e imprimirlos.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let v = vec![100, 32, 57];
+    for i in &amp;v {
+        println!("{i}");
+    }
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-7: Imprimiendo cada elemento en un vector
+iterando sobre los elementos usando un ciclo <code>for</code></span></p>
+<p>También podemos iterar sobre referencias mutables a cada elemento en un vector
+mutable, lo que nos permite cambiar los valores en un vector en el lugar. El
+código en el listado 8-8 agregará <code>50</code> a cada elemento en un vector.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let mut v = vec![100, 32, 57];
+    for i in &amp;mut v {
+        *i += 50;
+    }
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-8: Iterando sobre referencias mutables a
+elementos en un vector</span></p>
+<p>Para cambiar el valor al que se refiere la referencia mutable, tenemos que usar
+el operador de desreferencia <code>*</code> para llegar al valor en <code>i</code> antes de poder
+usar el operador <code>+=</code>. Hablaremos más sobre el operador de desreferencia en la
+sección <a href="ch15-02-deref.html#following-the-pointer-to-the-value-with-the-dereference-operator">“Siguiendo el puntero al valor con el operador de
+desreferencia”</a><!-- ignore --> del Capítulo 15.</p>
+<p>Iterando sobre un vector, ya sea inmutable o mutable, es seguro debido a las
+reglas del borrow checker. Si intentáramos insertar o eliminar elementos en los
+cuerpos del ciclo <code>for</code> en el listado 8-7 y el listado 8-8, obtendríamos un
+error del compilador similar al que obtuvimos con el código en el listado 8-6.
+La referencia al vector que el ciclo <code>for</code> contiene evita la modificación
+simultánea de todo el vector.</p>
+<h3 id="usar-un-enum-para-almacenar-múltiples-tipos"><a class="header" href="#usar-un-enum-para-almacenar-múltiples-tipos">Usar un <code>enum</code> para almacenar múltiples tipos</a></h3>
+<p>Los vectores solo pueden almacenar valores del mismo tipo. Esto puede ser
+inconveniente; definitivamente hay casos de uso para necesitar almacenar una
+lista de elementos de diferentes tipos. Afortunadamente, las variantes de un
+<code>enum</code> se definen bajo el mismo tipo de <code>enum</code>, por lo que cuando necesitamos
+que un tipo represente elementos de diferentes tipos, ¡podemos definir y usar un
+<code>enum</code>!</p>
+<p>Por ejemplo, digamos que queremos almacenar en una lista los elementos de una
+tabla de hoja de cálculo: algunas columnas pueden contener números, y otras
+cadenas de texto. Podemos definir un <code>enum</code> cuyas variantes contendrán los
+diferentes tipos de datos, y todas las variantes se considerarán del mismo tipo:
+el del <code>enum</code>. Luego podemos crear un vector para contener ese <code>enum</code> y, por lo
+tanto, en última instancia, contener diferentes tipos. Hemos demostrado esto en
+el listado 8-9.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    enum SpreadsheetCell {
+        Int(i32),
+        Float(f64),
+        Text(String),
+    }
+
+    let row = vec![
+        SpreadsheetCell::Int(3),
+        SpreadsheetCell::Text(String::from("blue")),
+        SpreadsheetCell::Float(10.12),
+    ];
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-9: Definiendo un <code>enum</code> para almacenar valores
+de diferentes tipos en un vector</span></p>
+<p>Rust necesita saber qué tipos habrá en el vector en tiempo de compilación para
+saber exactamente cuánta memoria en el montón se necesitará para almacenar cada
+elemento. También debemos ser explícitos sobre qué tipos están permitidos en
+este vector. Si Rust permitiera que un vector contenga cualquier tipo, existiría
+la posibilidad de que uno o más de los tipos causaran errores con las
+operaciones realizadas en los elementos del vector. Usar un <code>enum</code> más una
+expresión <code>match</code> significa que Rust se asegurará en tiempo de compilación de
+que se maneje cada caso posible, como se discutió en el Capítulo 6.</p>
+<p>Si tu no sabes el conjunto exhaustivo de tipos que un programa obtendrá en
+tiempo de ejecución para almacenar en un vector, la técnica de <code>enum</code> no
+funcionará. En su lugar, puede usar un objeto de rasgo, que cubriremos en el
+Capítulo 17.</p>
+<p>Ahora que hemos discutido algunas de las formas más comunes de usar vectores,
+asegúrese de revisar <a href="https://doc.rust-lang.org/std/vec/struct.Vec.html">la documentación de la API</a><!-- ignore --> para
+todos los muchos métodos útiles definidos en <code>Vec&lt;T&gt;</code> por la biblioteca
+estándar. Por ejemplo, además de <code>push</code>, un método <code>pop</code> elimina y devuelve el
+último elemento.</p>
+<h3 id="liberar-un-vector-libera-sus-elementos"><a class="header" href="#liberar-un-vector-libera-sus-elementos">Liberar un vector libera sus elementos</a></h3>
+<p>Como cualquier otro <code>struct</code>, un vector se libera cuando sale del ámbito, como
+se anota en el listado 8-10.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    {
+        let v = vec![1, 2, 3, 4];
+
+        // do stuff with v
+    } // &lt;- v goes out of scope and is freed here
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-10: Mostrando dónde se colocan el vector y sus
+elementos</span></p>
+<p>Cuando se libera el vector, también se libera todo su contenido, lo que
+significa que se limpiarán los enteros que contiene. El borrow checker garantiza
+que cualquier referencia al contenido de un vector solo se utilice mientras el
+vector en sí sea válido.</p>
+<p>Pasemos al siguiente tipo de colección: ¡<code>String</code>!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch08-00-common-collections.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch08-02-strings.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch08-00-common-collections.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch08-02-strings.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>

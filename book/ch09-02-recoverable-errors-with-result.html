@@ -1,0 +1,800 @@
+<!DOCTYPE HTML>
+<html lang="es" class="sidebar-visible light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Errores recuperables con Result - El Lenguaje de Programación Rust</title>
+
+
+        <!-- Custom HTML head -->
+        
+            <link rel="canonical" href="https://www.rustlang-es.org/rust-book-es/" />
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <meta property="og:url" content="https://rustlanges.github.io">
+        <meta property="og:type" content="book">
+        <meta property="og:title" content="Errores recuperables con Result - El Lenguaje de Programación Rust">
+        <meta property="og:description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta property="og:image" content="https://rustlanges.github.io/rust-book-es/img/open-graph.png">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="./theme/catppuccin.css">
+        <link rel="stylesheet" href="./theme/catppuccin-highlight.css">
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title-page.html">El Lenguaje de Programación Rust</a></li><li class="chapter-item expanded affix "><a href="foreword.html">Prefacio</a></li><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Introducción</a></li><li class="chapter-item expanded "><a href="ch01-00-getting-started.html"><strong aria-hidden="true">1.</strong> Empezando</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-installation.html"><strong aria-hidden="true">1.1.</strong> Instalación</a></li><li class="chapter-item expanded "><a href="ch01-02-hello-world.html"><strong aria-hidden="true">1.2.</strong> ¡Hola, Mundo!</a></li><li class="chapter-item expanded "><a href="ch01-03-hello-cargo.html"><strong aria-hidden="true">1.3.</strong> ¡Hola, Cargo!</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-guessing-game-tutorial.html"><strong aria-hidden="true">2.</strong> Programando un juego de adivinanzas</a></li><li class="chapter-item expanded "><a href="ch03-00-common-programming-concepts.html"><strong aria-hidden="true">3.</strong> Conceptos Comunes de Programación</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-variables-and-mutability.html"><strong aria-hidden="true">3.1.</strong> Variables y Mutabilidad</a></li><li class="chapter-item expanded "><a href="ch03-02-data-types.html"><strong aria-hidden="true">3.2.</strong> Tipos de Datos</a></li><li class="chapter-item expanded "><a href="ch03-03-how-functions-work.html"><strong aria-hidden="true">3.3.</strong> Funciones</a></li><li class="chapter-item expanded "><a href="ch03-04-comments.html"><strong aria-hidden="true">3.4.</strong> Comentarios</a></li><li class="chapter-item expanded "><a href="ch03-05-control-flow.html"><strong aria-hidden="true">3.5.</strong> Flujo de Control</a></li></ol></li><li class="chapter-item expanded "><a href="ch04-00-understanding-ownership.html"><strong aria-hidden="true">4.</strong> Entendiendo el Ownership</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04-01-what-is-ownership.html"><strong aria-hidden="true">4.1.</strong> ¿Qué es el Ownership?</a></li><li class="chapter-item expanded "><a href="ch04-02-references-and-borrowing.html"><strong aria-hidden="true">4.2.</strong> Referencias y Prestamos</a></li><li class="chapter-item expanded "><a href="ch04-03-slices.html"><strong aria-hidden="true">4.3.</strong> El Tipo Slice</a></li></ol></li><li class="chapter-item expanded "><a href="ch05-00-structs.html"><strong aria-hidden="true">5.</strong> Usando Structs para Estructurar Datos Relacionados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05-01-defining-structs.html"><strong aria-hidden="true">5.1.</strong> Definiendo e Instanciando Structs</a></li><li class="chapter-item expanded "><a href="ch05-02-example-structs.html"><strong aria-hidden="true">5.2.</strong> Un Programa de Ejemplo Usando Structs</a></li><li class="chapter-item expanded "><a href="ch05-03-method-syntax.html"><strong aria-hidden="true">5.3.</strong> Sintaxis de Métodos</a></li></ol></li><li class="chapter-item expanded "><a href="ch06-00-enums.html"><strong aria-hidden="true">6.</strong> Enums y Pattern Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06-01-defining-an-enum.html"><strong aria-hidden="true">6.1.</strong> Definiendo un Enum</a></li><li class="chapter-item expanded "><a href="ch06-02-match.html"><strong aria-hidden="true">6.2.</strong> El operador de control de flujo match</a></li><li class="chapter-item expanded "><a href="ch06-03-if-let.html"><strong aria-hidden="true">6.3.</strong> Flujo de Control Conciso con if let</a></li></ol></li><li class="chapter-item expanded "><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"><strong aria-hidden="true">7.</strong> Administrando Proyectos en Crecimiento con Paquetes, Crates y Módulos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07-01-packages-and-crates.html"><strong aria-hidden="true">7.1.</strong> Paquetes y Crates</a></li><li class="chapter-item expanded "><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"><strong aria-hidden="true">7.2.</strong> Definiendo módulos para controlar el scope y la privacidad</a></li><li class="chapter-item expanded "><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"><strong aria-hidden="true">7.3.</strong> Paths para referirse a un item en el árbol de módulos</a></li><li class="chapter-item expanded "><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"><strong aria-hidden="true">7.4.</strong> Incluyendo rutas al Scope con la palabra clave use</a></li><li class="chapter-item expanded "><a href="ch07-05-separating-modules-into-different-files.html"><strong aria-hidden="true">7.5.</strong> Separando Módulos en Diferentes Archivos</a></li></ol></li><li class="chapter-item expanded "><a href="ch08-00-common-collections.html"><strong aria-hidden="true">8.</strong> Colecciones comunes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch08-01-vectors.html"><strong aria-hidden="true">8.1.</strong> Almacenando listas de valores con vectores</a></li><li class="chapter-item expanded "><a href="ch08-02-strings.html"><strong aria-hidden="true">8.2.</strong> Almacenando texto codificado en UTF-8 con Strings</a></li><li class="chapter-item expanded "><a href="ch08-03-hash-maps.html"><strong aria-hidden="true">8.3.</strong> Almacenar Claves con Valores Asociados en HashMaps</a></li></ol></li><li class="chapter-item expanded "><a href="ch09-00-error-handling.html"><strong aria-hidden="true">9.</strong> Manejo de Errores</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09-01-unrecoverable-errors-with-panic.html"><strong aria-hidden="true">9.1.</strong> Errores irrecuperables con panic!</a></li><li class="chapter-item expanded "><a href="ch09-02-recoverable-errors-with-result.html" class="active"><strong aria-hidden="true">9.2.</strong> Errores recuperables con Result</a></li><li class="chapter-item expanded "><a href="ch09-03-to-panic-or-not-to-panic.html"><strong aria-hidden="true">9.3.</strong> panic! o no panic!</a></li></ol></li><li class="chapter-item expanded "><a href="ch10-00-generics.html"><strong aria-hidden="true">10.</strong> Tipos Genéricos, Traits y Lifetimes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch10-01-syntax.html"><strong aria-hidden="true">10.1.</strong> Tipos de Datos Genéricos</a></li><li class="chapter-item expanded "><a href="ch10-02-traits.html"><strong aria-hidden="true">10.2.</strong> Traits: Definiendo Comportamiento Compartido</a></li><li class="chapter-item expanded "><a href="ch10-03-lifetime-syntax.html"><strong aria-hidden="true">10.3.</strong> Validando Referencias con Lifetimes</a></li></ol></li><li class="chapter-item expanded "><a href="ch11-00-testing.html"><strong aria-hidden="true">11.</strong> Escribiendo Tests Automatizados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch11-01-writing-tests.html"><strong aria-hidden="true">11.1.</strong> Cómo Escribir Tests</a></li><li class="chapter-item expanded "><a href="ch11-02-running-tests.html"><strong aria-hidden="true">11.2.</strong> Controlando Cómo Los Tests Son Ejecutados</a></li><li class="chapter-item expanded "><a href="ch11-03-test-organization.html"><strong aria-hidden="true">11.3.</strong> Organización De Los Tests</a></li></ol></li><li class="chapter-item expanded "><a href="ch12-00-an-io-project.html"><strong aria-hidden="true">12.</strong> Un proyecto de I/O: Construyendo un programa de línea de comandos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch12-01-accepting-command-line-arguments.html"><strong aria-hidden="true">12.1.</strong> Aceptando argumentos de línea de comandos</a></li><li class="chapter-item expanded "><a href="ch12-02-reading-a-file.html"><strong aria-hidden="true">12.2.</strong> Leyendo un archivo</a></li><li class="chapter-item expanded "><a href="ch12-03-improving-error-handling-and-modularity.html"><strong aria-hidden="true">12.3.</strong> Refactorizando para mejorar la modularidad y el manejo de errores</a></li><li class="chapter-item expanded "><a href="ch12-04-testing-the-librarys-functionality.html"><strong aria-hidden="true">12.4.</strong> Desarrollando la funcionalidad de la biblioteca con T.D.D.</a></li><li class="chapter-item expanded "><a href="ch12-05-working-with-environment-variables.html"><strong aria-hidden="true">12.5.</strong> Trabajando con Variables de Entorno</a></li><li class="chapter-item expanded "><a href="ch12-06-writing-to-stderr-instead-of-stdout.html"><strong aria-hidden="true">12.6.</strong> Escribiendo mensajes de error estándar en lugar del output estándar</a></li></ol></li><li class="chapter-item expanded "><a href="ch13-00-functional-features.html"><strong aria-hidden="true">13.</strong> Características De Lenguajes Funcionales: Iteradores y Closures</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch13-01-closures.html"><strong aria-hidden="true">13.1.</strong> Closures: Funciones anónimas que capturan su entorno</a></li><li class="chapter-item expanded "><a href="ch13-02-iterators.html"><strong aria-hidden="true">13.2.</strong> Procesando una serie de elementos con Iteradores</a></li><li class="chapter-item expanded "><a href="ch13-03-improving-our-io-project.html"><strong aria-hidden="true">13.3.</strong> Mejorando nuestro proyecto I/O</a></li><li class="chapter-item expanded "><a href="ch13-04-performance.html"><strong aria-hidden="true">13.4.</strong> Comparando Performance: Bucles vs. Iteradores</a></li></ol></li><li class="chapter-item expanded "><a href="ch14-00-more-about-cargo.html"><strong aria-hidden="true">14.</strong> Más sobre Cargo y Crates.io</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch14-01-release-profiles.html"><strong aria-hidden="true">14.1.</strong> Personalizando Compilaciones con Perfiles de Lanzamiento</a></li><li class="chapter-item expanded "><a href="ch14-02-publishing-to-crates-io.html"><strong aria-hidden="true">14.2.</strong> Publicando un Crate a Crates.io</a></li><li class="chapter-item expanded "><a href="ch14-03-cargo-workspaces.html"><strong aria-hidden="true">14.3.</strong> Cargo Workspaces</a></li><li class="chapter-item expanded "><a href="ch14-04-installing-binaries.html"><strong aria-hidden="true">14.4.</strong> Instalando Binarios con cargo install</a></li><li class="chapter-item expanded "><a href="ch14-05-extending-cargo.html"><strong aria-hidden="true">14.5.</strong> Extendiendo Cargo con Comandos Personalizados</a></li></ol></li><li class="chapter-item expanded "><a href="ch15-00-smart-pointers.html"><strong aria-hidden="true">15.</strong> Smart Pointers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch15-01-box.html"><strong aria-hidden="true">15.1.</strong> Usando Box&lt;T&gt; para Apuntar a Datos en el Heap</a></li><li class="chapter-item expanded "><a href="ch15-02-deref.html"><strong aria-hidden="true">15.2.</strong> Tratando los Smart Pointers como Referencias Regulares con el Trait Deref</a></li><li class="chapter-item expanded "><a href="ch15-03-drop.html"><strong aria-hidden="true">15.3.</strong> Ejecutando Código al Limpiar con el Trait Drop</a></li><li class="chapter-item expanded "><a href="ch15-04-rc.html"><strong aria-hidden="true">15.4.</strong> Rc&lt;T&gt;, el Smart Pointer de Conteo de Referencias</a></li><li class="chapter-item expanded "><a href="ch15-05-interior-mutability.html"><strong aria-hidden="true">15.5.</strong> RefCell&lt;T&gt; y el Patrón de Mutabilidad Interior</a></li><li class="chapter-item expanded "><a href="ch15-06-reference-cycles.html"><strong aria-hidden="true">15.6.</strong> Referencias Circulares Pueden Fugar Memoria</a></li></ol></li><li class="chapter-item expanded "><a href="ch16-00-concurrency.html"><strong aria-hidden="true">16.</strong> Concurrencia Sin Miedo</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch16-01-threads.html"><strong aria-hidden="true">16.1.</strong> Usando Threads para Ejecutar Código Simultáneamente</a></li><li class="chapter-item expanded "><a href="ch16-02-message-passing.html"><strong aria-hidden="true">16.2.</strong> Usando el Pasaje de Mensajes para Transferir Datos entre Hilos</a></li><li class="chapter-item expanded "><a href="ch16-03-shared-state.html"><strong aria-hidden="true">16.3.</strong> Concurrencia con Estado Compartido</a></li><li class="chapter-item expanded "><a href="ch16-04-extensible-concurrency-sync-and-send.html"><strong aria-hidden="true">16.4.</strong> Concurrencia Extensible con los Traits Sync y Send</a></li></ol></li><li class="chapter-item expanded "><a href="ch17-00-oop.html"><strong aria-hidden="true">17.</strong> Rust como un Lenguaje de Programación Orientado a Objetos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch17-01-what-is-oo.html"><strong aria-hidden="true">17.1.</strong> Características de Lenguajes Orientados a Objetos</a></li><li class="chapter-item expanded "><a href="ch17-02-trait-objects.html"><strong aria-hidden="true">17.2.</strong> Usando Trait Objects que Permiten Valores de Diferentes Tipos</a></li><li class="chapter-item expanded "><a href="ch17-03-oo-design-patterns.html"><strong aria-hidden="true">17.3.</strong> Implementando un Patrón de Diseño Orientado a Objetos</a></li></ol></li><li class="chapter-item expanded "><a href="ch18-00-patterns.html"><strong aria-hidden="true">18.</strong> Patterns and Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch18-01-all-the-places-for-patterns.html"><strong aria-hidden="true">18.1.</strong> Todos los lugares donde se pueden usar Patterns</a></li><li class="chapter-item expanded "><a href="ch18-02-refutability.html"><strong aria-hidden="true">18.2.</strong> Refutabilidad: Si un Pattern Puede Fallar al Hacer Match</a></li><li class="chapter-item expanded "><a href="ch18-03-pattern-syntax.html"><strong aria-hidden="true">18.3.</strong> Sintaxis de los Patterns</a></li></ol></li><li class="chapter-item expanded "><a href="ch19-00-advanced-features.html"><strong aria-hidden="true">19.</strong> Características Avanzadas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch19-01-unsafe-rust.html"><strong aria-hidden="true">19.1.</strong> Rust Inseguro</a></li><li class="chapter-item expanded "><a href="ch19-03-advanced-traits.html"><strong aria-hidden="true">19.2.</strong> Advanced Traits</a></li><li class="chapter-item expanded "><a href="ch19-04-advanced-types.html"><strong aria-hidden="true">19.3.</strong> Advanced Types</a></li><li class="chapter-item expanded "><a href="ch19-05-advanced-functions-and-closures.html"><strong aria-hidden="true">19.4.</strong> Advanced Functions and Closures</a></li><li class="chapter-item expanded "><a href="ch19-06-macros.html"><strong aria-hidden="true">19.5.</strong> Macros</a></li></ol></li><li class="chapter-item expanded "><a href="ch20-00-final-project-a-web-server.html"><strong aria-hidden="true">20.</strong> Final Project: Building a Multithreaded Web Server</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch20-01-single-threaded.html"><strong aria-hidden="true">20.1.</strong> Building a Single-Threaded Web Server</a></li><li class="chapter-item expanded "><a href="ch20-02-multithreaded.html"><strong aria-hidden="true">20.2.</strong> Turning Our Single-Threaded Server into a Multithreaded Server</a></li><li class="chapter-item expanded "><a href="ch20-03-graceful-shutdown-and-cleanup.html"><strong aria-hidden="true">20.3.</strong> Graceful Shutdown and Cleanup</a></li></ol></li><li class="chapter-item expanded "><a href="appendix-00.html"><strong aria-hidden="true">21.</strong> Apéndice</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="appendix-01-keywords.html"><strong aria-hidden="true">21.1.</strong> A - Palabras claves</a></li><li class="chapter-item expanded "><a href="appendix-02-operators.html"><strong aria-hidden="true">21.2.</strong> B - Operadores y Símbolos</a></li><li class="chapter-item expanded "><a href="appendix-03-derivable-traits.html"><strong aria-hidden="true">21.3.</strong> C - Derivable Traits</a></li><li class="chapter-item expanded "><a href="appendix-04-useful-development-tools.html"><strong aria-hidden="true">21.4.</strong> D - Useful Development Tools</a></li><li class="chapter-item expanded "><a href="appendix-05-editions.html"><strong aria-hidden="true">21.5.</strong> E - Editions</a></li><li class="chapter-item expanded "><a href="appendix-06-translation.html"><strong aria-hidden="true">21.6.</strong> F - Translations of the Book</a></li><li class="chapter-item expanded "><a href="appendix-07-nightly-rust.html"><strong aria-hidden="true">21.7.</strong> G - Cómo se hace Rust y “Rust Nightly”</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="latte">Latte</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="frappe">Frappé</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="macchiato">Macchiato</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mocha">Mocha</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">El Lenguaje de Programación Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/RustLangES/rust-book-es" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="errores-recuperables-con-result"><a class="header" href="#errores-recuperables-con-result">Errores recuperables con <code>Result</code></a></h2>
+<p>La mayoría de los errores no son lo suficientemente graves como para requerir
+que el programa se detenga por completo. A veces, cuando una función falla, es
+por una razón que puede interpretar y responder fácilmente. Por ejemplo, si
+intenta abrir un archivo y esa operación falla porque el archivo no existe,
+es posible que desee crear el archivo en lugar de terminar el proceso.</p>
+<p>Recordemos el capítulo
+<a href="ch02-00-guessing-game-tutorial.html#manejando-el-posible-fallo-con-result">“Manejo de fallas potenciales con <code>Result</code>”</a><!--ignore -->
+en el Capítulo 2 que el enum <code>Result</code> se define como tener dos variantes,
+<code>Ok</code> y <code>Err</code>, de la siguiente manera:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Result&lt;T, E&gt; {
+    Ok(T),
+    Err(E),
+}
+<span class="boring">}</span></code></pre></pre>
+<p><code>T</code> y <code>E</code> son parámetros de tipo genérico: hablaremos de los genéricos con más
+detalle en el Capítulo 10. Lo que necesita saber ahora es que <code>T</code> representa el
+tipo del valor que será devuelto en un caso de éxito dentro de la variante <code>Ok</code>,
+y <code>E</code> representa el tipo del error que será devuelto en un caso de fallo dentro
+de la variante <code>Err</code>. Debido a que <code>Result</code> tiene estos parámetros de tipo
+genérico, podemos usar el tipo <code>Result</code> y las funciones definidas en él en
+muchas situaciones diferentes donde el valor de éxito y el valor de error que
+queremos devolver pueden diferir.</p>
+<p>Llamemos a una función que devuelve un valor <code>Result</code> porque la función podría
+fallar. En el listado 9-3 intentamos abrir un archivo.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">use std::fs::File;
+
+fn main() {
+    let greeting_file_result = File::open("hello.txt");
+}</code></pre></pre>
+<p><span class="caption">Listado 9-3: Abriendo un archivo</span></p>
+<p>El tipo de retorno de <code>File::open</code> es un <code>Result&lt;T, E&gt;</code>. El parámetro genérico
+<code>T</code> ha sido llenado por la implementación de <code>File::open</code> con el tipo del valor
+de éxito, <code>std::fs::File</code>, que es un manejador de archivo. El tipo de <code>E</code>
+utilizado en el valor de error es <code>std::io::Error</code>. Este tipo de retorno
+significa que la llamada a <code>File::open</code> podría tener éxito y devolver un
+manejador de archivo del que podemos leer o escribir. La llamada a la función
+también podría fallar: por ejemplo, el archivo podría no existir, o podríamos
+no tener permiso para acceder al archivo. La función <code>File::open</code> necesita tener
+una forma de decirnos si tuvo éxito o falló y al mismo tiempo darnos el
+manejador de archivo o la información de error. Esta información es exactamente
+lo que transmite el enum <code>Result</code>.</p>
+<p>En el caso en que <code>File::open</code> tenga éxito, el valor en la variable
+<code>greeting_file_result</code> será una instancia de <code>Ok</code> que contiene un manejador de
+archivo. En el caso en que falla, el valor en <code>greeting_file_result</code> será una
+instancia de <code>Err</code> que contiene más información sobre el tipo de error que
+ocurrió.</p>
+<p>Necesitamos agregar al código en el listado 9-3 para tomar diferentes acciones
+dependiendo del valor que <code>File::open</code> devuelve. El listado 9-4 muestra una
+forma de manejar él <code>Result</code> usando una herramienta básica, la expresión
+<code>match</code> que discutimos en el Capítulo 6.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust should_panic">use std::fs::File;
+
+fn main() {
+    let greeting_file_result = File::open("hello.txt");
+
+    let greeting_file = match greeting_file_result {
+        Ok(file) =&gt; file,
+        Err(error) =&gt; panic!("Problem opening the file: {:?}", error),
+    };
+}</code></pre></pre>
+<p><span class="caption">Listado 9-4: Usando una expresión <code>match</code> para manejar las
+variantes <code>Result</code> que podrían devolverse</span></p>
+<p>Ten en cuenta que, al igual que el enum <code>Option</code>, el enum <code>Result</code> y sus
+variantes se han traído al ámbito por el <a href="ch02-00-guessing-game-tutorial.html#prelude-meaning">prelude</a>, por lo que no necesitamos
+especificar <code>Result::</code> antes de las variantes <code>Ok</code> y <code>Err</code> en las opciones de
+<code>match</code>.</p>
+<p>Cuando el result es <code>Ok</code>, este código devolverá el valor interno <code>file</code> fuera
+de la variante <code>Ok</code>, y luego asignaremos ese valor de manejador de archivo a la
+variable <code>greeting_file</code>. Después del <code>match</code>, podemos usar el manejador de
+archivo para leer o escribir.</p>
+<p>La otra opción en el <code>match</code> es <code>Err</code>, que significa que el <code>File::open</code> ha
+fallado y el valor interno <code>err</code> de la variante <code>Err</code> contendrá información
+sobre cómo o por qué falló <code>File::open</code>. En este caso, llamamos a la función
+<code>panic!</code> y pasamos el valor <code>err</code> al <code>panic!</code>. Esto causa que nuestro programa
+se bloquee y muestre el mensaje de error que <code>panic!</code> proporciona. Si ejecutamos
+este código, obtendremos el siguiente mensaje de error:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling error-handling v0.1.0 (file:///projects/error-handling)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.73s
+     Running `target/debug/error-handling`
+thread 'main' panicked at 'Problem opening the file: Os { code: 2, kind: NotFound, message: "No such file or directory" }', src/main.rs:8:23
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</code></pre>
+<p>Como de costumbre, esta salida nos dice exactamente qué ha salido mal.</p>
+<h3 id="haciendo-coincidir-diferentes-errores"><a class="header" href="#haciendo-coincidir-diferentes-errores">Haciendo coincidir diferentes errores</a></h3>
+<p>El código en el listado 9-4 será <code>panic!</code> no importa por qué <code>File::open</code> falló.
+Sin embargo, queremos tomar diferentes acciones para diferentes razones de
+falla: si <code>File::open</code> falló porque el archivo no existe, queremos crear el
+archivo y devolver el manejador del nuevo archivo. Si <code>File::open</code> falló por
+cualquier otra razón, por ejemplo, porque no teníamos permiso para abrir el
+archivo, todavía queremos que el código dispare el <code>panic!</code> de la misma manera que lo hizo
+en el listado 9-4. Para esto agregamos una expresión <code>match</code> interna, que se
+muestra en el listado 9-5.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<!-- ignore this test because otherwise it creates hello.txt which causes other
+tests to fail lol -->
+<pre><code class="language-rust ignore">use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let greeting_file_result = File::open("hello.txt");
+
+    let greeting_file = match greeting_file_result {
+        Ok(file) =&gt; file,
+        Err(error) =&gt; match error.kind() {
+            ErrorKind::NotFound =&gt; match File::create("hello.txt") {
+                Ok(fc) =&gt; fc,
+                Err(e) =&gt; panic!("Problem creating the file: {:?}", e),
+            },
+            other_error =&gt; {
+                panic!("Problem opening the file: {:?}", other_error);
+            }
+        },
+    };
+}</code></pre>
+<p><span class="caption">Listado 9-5: Manejando diferentes tipos de errores de
+diferentes formas</span></p>
+<p>El tipo de valor que <code>File::open</code> devuelve dentro de la variante <code>Err</code> es
+<code>io::Error</code>, que es una estructura proporcionada por la biblioteca estándar.
+Esta estructura tiene un método <code>kind</code> que podemos llamar para obtener un valor
+<code>io::ErrorKind</code>. El enum <code>io::ErrorKind</code> es proporcionado por la biblioteca
+estándar y tiene variantes que representan los diferentes tipos de errores que
+podrían resultar de una operación <code>io</code>. La variante que queremos usar es
+<code>ErrorKind::NotFound</code>, que indica que el archivo que estamos tratando de abrir
+aún no existe. Así que hacemos coincidir en <code>greeting_file_result</code>, pero
+también tenemos una coincidencia interna en <code>error.kind()</code>.</p>
+<p>La condición que queremos verificar en la coincidencia interna es si el valor
+devuelto por <code>error.kind()</code> es la variante <code>NotFound</code> del enum <code>ErrorKind</code>. Si
+es así, intentamos crear el archivo con <code>File::create</code>. Sin embargo, debido a
+que <code>File::create</code> también podría fallar, necesitamos una segunda opción en la
+expresión <code>match</code> interna. Cuando no se puede crear el archivo, se imprime un
+mensaje de error diferente. La segunda opción del <code>match</code> externo permanece
+igual, por lo que el programa se bloquea en cualquier error además del error de
+archivo faltante.</p>
+<blockquote>
+<h3 id="alternativas-a-usar-match-con-resultt-e"><a class="header" href="#alternativas-a-usar-match-con-resultt-e">Alternativas a usar <code>match</code> con <code>Result&lt;T, E&gt;</code></a></h3>
+<p>¡Eso es mucho <code>match</code>! La expresión <code>match</code> es útil, pero también es bastante
+verbosa. En el Capítulo 13 aprenderás sobre los closures, que se usan con
+muchos de los métodos definidos en <code>Result&lt;T, E&gt;</code>. Estos métodos pueden ser
+más concisos que usar <code>match</code> al manejar valores <code>Result&lt;T, E&gt;</code> en tu código.</p>
+<p>Por ejemplo, aquí hay otra forma de escribir la misma lógica que se muestra en
+el listado 9-5, esta vez usando closures y el método <code>unwrap_or_else</code>:</p>
+<!-- CAN'T EXTRACT SEE https://github.com/rust-lang/mdBook/issues/1127 -->
+<pre><code class="language-rust ignore">use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let greeting_file = File::open("hello.txt").unwrap_or_else(|error| {
+        if error.kind() == ErrorKind::NotFound {
+            File::create("hello.txt").unwrap_or_else(|error| {
+                panic!("Problem creating the file: {:?}", error);
+            })
+        } else {
+            panic!("Problem opening the file: {:?}", error);
+        }
+    });
+}</code></pre>
+<p>Aunque este código tiene el mismo comportamiento que el listado 9-5, no
+contiene ninguna expresión <code>match</code> y es más fácil de leer. Vuelve a este
+ejemplo después de leer el Capítulo 13, y busca el método <code>unwrap_or_else</code> en
+la documentación de la biblioteca estándar. Muchos más de estos métodos pueden
+limpiar enormes expresiones <code>match</code> anidadas cuando se trata de errores.</p>
+</blockquote>
+<h3 id="atajos-para-panic-en-caso-de-error-unwrap-y-expect"><a class="header" href="#atajos-para-panic-en-caso-de-error-unwrap-y-expect">Atajos para <code>panic</code> en caso de error: <code>unwrap</code> y <code>expect</code></a></h3>
+<p>Usando <code>match</code> funciona bastante bien, pero puede ser un poco verboso y no
+siempre comunica bien la intención. El tipo <code>Result&lt;T, E&gt;</code> tiene muchos métodos
+auxiliares definidos en él para hacer varias tareas más específicas. El método
+<code>unwrap</code> es un método de atajo implementado exactamente como la expresión
+<code>match</code> que escribimos en el listado 9-4. Si el valor <code>Result</code> es la variante
+<code>Ok</code>, <code>unwrap</code> devolverá el valor dentro de <code>Ok</code>. Si el <code>Result</code> es la variante
+<code>Err</code>, <code>unwrap</code> llamará a la macro <code>panic!</code> por nosotros. Aquí hay un ejemplo de
+<code>unwrap</code> en acción:</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust should_panic">use std::fs::File;
+
+fn main() {
+    let greeting_file = File::open("hello.txt").unwrap();
+}</code></pre></pre>
+<p>Si ejecutamos este código sin un archivo <em>hello.txt</em>, veremos un mensaje de
+error de la llamada <code>panic!</code> que el método <code>unwrap</code> hace:</p>
+<!-- manual-regeneration
+cd listings/ch09-error-handling/no-listing-04-unwrap
+cargo run
+copy and paste relevant text
+-->
+<pre><code class="language-text">thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Os {
+code: 2, kind: NotFound, message: "No such file or directory" }',
+src/main.rs:4:49
+</code></pre>
+<p>Del mismo modo, el método <code>expect</code> nos permite elegir el mensaje de error de
+<code>panic!</code>. Usando <code>expect</code> en lugar de <code>unwrap</code> y proporcionando buenos mensajes
+de error puede transmitir tu intención y facilitar el seguimiento de la fuente
+de un pánico. La sintaxis de <code>expect</code> se ve así:</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust should_panic">use std::fs::File;
+
+fn main() {
+    let greeting_file = File::open("hello.txt")
+        .expect("hello.txt should be included in this project");
+}</code></pre></pre>
+<p>Nosotros usamos <code>expect</code> de la misma manera que <code>unwrap</code>: para devolver el
+manejo de archivo o llamar a la macro <code>panic!</code>. El mensaje de error utilizado
+por <code>expect</code> en su llamada a <code>panic!</code> será el parámetro que pasamos a <code>expect</code>,
+en lugar del mensaje predeterminado de <code>panic!</code> que usa <code>unwrap</code>. Así es como
+se ve:</p>
+<!-- manual-regeneration
+cd listings/ch09-error-handling/no-listing-05-expect
+cargo run
+copy and paste relevant text
+-->
+<pre><code class="language-text">thread 'main' panicked at 'hello.txt should be included in this project: Os {
+code: 2, kind: NotFound, message: "No such file or directory" }',
+src/main.rs:5:10
+</code></pre>
+<p>En producción, la mayoría de los Rustaceans eligen <code>expect</code> en lugar de
+<code>unwrap</code> y dan más contexto sobre por qué se espera que la operación siempre
+tenga éxito. De esa manera, si tus suposiciones se demuestran incorrectas,
+tienes más información para usar en la depuración.</p>
+<h3 id="propagación-de-errores"><a class="header" href="#propagación-de-errores">Propagación de errores</a></h3>
+<p>Cuando escribes una función cuyo cuerpo puede generar un error, en lugar de
+manejar el error dentro de la función, puedes devolver el error al código que
+llamó la función. Esto se conoce como <em>propagación</em> del error y le da más
+control al código que llama, donde puede haber más información o lógica que
+dicte cómo se debe manejar el error que la que tienes disponible en el contexto
+de tu código.</p>
+<p>Por ejemplo, El listado 9-6 muestra una función que lee un nombre de usuario de
+un archivo. Si el archivo no existe o no se puede leer, esta función devolverá
+esos errores al código que llamó a la función.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<!-- Deliberately not using rustdoc_include here; the `main` function in the
+file panics. We do want to include it for reader experimentation purposes, but
+don't want to include it for rustdoc testing purposes. -->
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::fs::File;
+use std::io::{self, Read};
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    let username_file_result = File::open("hello.txt");
+
+    let mut username_file = match username_file_result {
+        Ok(file) =&gt; file,
+        Err(e) =&gt; return Err(e),
+    };
+
+    let mut username = String::new();
+
+    match username_file.read_to_string(&amp;mut username) {
+        Ok(_) =&gt; Ok(username),
+        Err(e) =&gt; Err(e),
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 9-6: Una función que devuelve errores al código
+llamado usando <code>match</code></span></p>
+<p>Esta función se puede escribir de una manera mucho más corta, pero vamos a
+empezar por hacer mucho de ella manualmente para explorar el manejo de errores;
+al final, mostraremos la forma más corta. Veamos primero el tipo de retorno de
+la función: <code>Result&lt;String, io::Error&gt;</code>. Esto significa que la función está
+devolviendo un valor del tipo <code>Result&lt;T, E&gt;</code> donde el parámetro genérico <code>T</code> se
+ha rellenado con el tipo concreto <code>String</code>, y el tipo genérico <code>E</code> se ha
+rellenado con el tipo concreto <code>io::Error</code>.</p>
+<p>Si esta función tiene éxito sin ningún problema, el código que llama a esta
+función recibirá un valor <code>Ok</code> que contiene una <code>String</code> - el nombre de usuario
+que esta función leyó del archivo. Si esta función encuentra algún problema, el
+código que llama recibirá un valor <code>Err</code> que contiene una instancia de
+<code>io::Error</code> que contiene más información sobre cuáles fueron los problemas.
+Elegimos <code>io::Error</code> como el tipo de retorno de esta función porque eso sucede
+que es el tipo del valor de error devuelto de ambas operaciones que estamos
+llamando en el cuerpo de esta función que podrían fallar: la función
+<code>File::open</code> y el método <code>read_to_string</code>.</p>
+<p>El cuerpo de la función comienza llamando a la función <code>File::open</code>. Entonces
+manejamos el valor <code>Result</code> con una expresión <code>match</code> similar a la del Listado
+9-4. Si <code>File::open</code> tiene éxito, el archivo manejador en el patrón de variable
+<code>file</code> se convierte en el valor en la variable de patrón mutable <code>username_file</code>
+y la función continúa. En el caso de <code>Err</code>, en lugar de llamar a <code>panic!</code>,
+usamos la palabra clave <code>return</code> para devolver temprano la función por
+completo y pasar el valor de error de <code>File::open</code>, ahora en la variable de
+patrón <code>e</code>, de vuelta al código que llama a esta función como el valor de error
+de esta función.</p>
+<p>Entonces, si tenemos un manejador de archivo en <code>username_file</code>, la función
+crea un nuevo <code>String</code> en la variable <code>username</code> y llama al método
+<code>read_to_string</code> en el manejador de archivo en <code>username_file</code> para leer el
+contenido del archivo en <code>username</code>. El método <code>read_to_string</code> también
+devuelve un <code>Result</code> porque podría fallar, incluso si <code>File::open</code> tuvo éxito.
+Así que necesitamos otro <code>match</code> para manejar ese <code>Result</code>: si <code>read_to_string</code>
+tiene éxito, entonces nuestra función ha tenido éxito, y devolvemos el nombre de
+usuario del archivo que ahora está en <code>username</code> envuelto en un <code>Ok</code>. Si
+<code>read_to_string</code> falla, devolvemos el valor de error de la misma manera que
+devolvimos el valor de error en el <code>match</code> que manejó el valor de retorno de
+<code>File::open</code>. Sin embargo, no necesitamos decir explícitamente <code>return</code>, porque
+esta es la última expresión de la función.</p>
+<p>El código que llama a este código se encargará de obtener un valor <code>Ok</code> que
+contiene un nombre de usuario o un valor <code>Err</code> que contiene un <code>io::Error</code>. Es
+responsabilidad del código que llama decidir qué hacer con esos valores. Si el
+código que llama obtiene un valor <code>Err</code>, podría llamar a <code>panic!</code> y bloquear el
+programa, usar un nombre de usuario predeterminado o buscar el nombre de
+usuario en algún lugar que no sea un archivo, por ejemplo. No tenemos
+suficiente información sobre lo que el código que llama realmente está tratando
+de hacer, por lo que propagamos toda la información de éxito o error hacia
+arriba para que la maneje apropiadamente.</p>
+<p>Este patrón de propagación de errores es tan común en Rust que Rust proporciona
+el operador de interrogación <code>?</code> para hacer esto más fácil.</p>
+<h4 id="un-atajo-para-propagar-errores-el-operador-"><a class="header" href="#un-atajo-para-propagar-errores-el-operador-">Un atajo para propagar errores: el operador <code>?</code></a></h4>
+<p>El listado 9-7 muestra una implementación de <code>read_username_from_file</code> que tiene
+la misma funcionalidad que en el Listado 9-6, pero esta implementación utiliza
+el operador <code>?</code>.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<!-- Deliberately not using rustdoc_include here; the `main` function in the
+file panics. We do want to include it for reader experimentation purposes, but
+don't want to include it for rustdoc testing purposes. -->
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::fs::File;
+use std::io::{self, Read};
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    let mut username_file = File::open("hello.txt")?;
+    let mut username = String::new();
+    username_file.read_to_string(&amp;mut username)?;
+    Ok(username)
+}
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 9-7: Una función que devuelve errores al código
+llamado usando el operador <code>?</code></span></p>
+<p>El <code>?</code> colocado después de un valor <code>Result</code> se define para funcionar de casi
+la misma manera que las expresiones <code>match</code> que definimos para manejar los
+valores <code>Result</code> en el listado 9-6. Si el valor de <code>Result</code> es un <code>Ok</code>, el
+valor dentro del <code>Ok</code> se devolverá de esta expresión, y el programa continuará.
+Si el valor es un <code>Err</code>, él <code>Err</code> se devolverá de toda la función como si
+hubiéramos usado la palabra clave <code>return</code> para que el valor de error se
+propague al código que llama.</p>
+<p>Hay una diferencia entre lo que hace la expresión <code>match</code> del listado 9-6 y lo
+que hace el operador <code>?</code>: los valores de error que tienen el operador <code>?</code>
+llamado en ellos pasan a través de la función <code>from</code>, definida en el trait
+<code>From</code> en la biblioteca estándar, que se usa para convertir valores de un tipo
+a otro. Cuando el operador <code>?</code> llama a la función <code>from</code>, el tipo de error
+recibido se convierte en el tipo de error definido en el tipo de retorno de la
+función actual. Esto es útil cuando una función devuelve un tipo de error para
+representar todas las formas en que una función podría fallar, incluso si las
+partes podrían fallar por muchas razones diferentes.</p>
+<p>Por ejemplo, podríamos cambiar la función <code>read_username_from_file</code> en el
+listado 9-7 para devolver un tipo de error personalizado llamado <code>OurError</code> que
+definimos. Si también definimos <code>impl From&lt;io::Error&gt; for OurError</code> para
+construir una instancia de <code>OurError</code> a partir de un <code>io::Error</code>, entonces el
+operador <code>?</code> llama en el cuerpo de <code>read_username_from_file</code> llamará a <code>from</code>
+y convertirá los tipos de error sin necesidad de agregar más código a la
+función.</p>
+<p>En el contexto del listado 9-7, el <code>?</code> al final de la llamada a <code>File::open</code>
+devolverá el valor dentro de un <code>Ok</code> a la variable <code>username_file</code>. Si ocurre
+un error, el <code>?</code> operador devolverá temprano toda la función y dará cualquier
+valor <code>Err</code> al código que llama. Lo mismo se aplica al <code>?</code> al final de la
+llamada a <code>read_to_string</code>.</p>
+<p>El operador <code>?</code> elimina mucho código repetitivo y realiza esta función de
+implementación más simple. Incluso podríamos acortar aún más este código
+encadenando llamadas de método inmediatamente después del <code>?</code>, como se muestra
+en el Listado 9-8.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<!-- Deliberately not using rustdoc_include here; the `main` function in the
+file panics. We do want to include it for reader experimentation purposes, but
+don't want to include it for rustdoc testing purposes. -->
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::fs::File;
+use std::io::{self, Read};
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    let mut username = String::new();
+
+    File::open("hello.txt")?.read_to_string(&amp;mut username)?;
+
+    Ok(username)
+}
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 9-8: Método de encadenamiento
+llamado después del operador <code>?</code></span></p>
+<p>Hemos movido la creación del nuevo <code>String</code> en <code>username</code> al principio de la
+función; esa parte no ha cambiado. En lugar de crear una variable
+<code>username_file</code>, hemos encadenado la llamada a <code>read_to_string</code> directamente
+sobre el resultado de <code>File::open("hello.txt")?</code>. Todavía tenemos un <code>?</code> al
+final de la llamada a <code>read_to_string</code>, y todavía devolvemos un valor <code>Ok</code>
+que contiene <code>username</code> cuando tanto <code>File::open</code> como <code>read_to_string</code>
+tienen éxito en lugar de devolver errores. La funcionalidad es nuevamente la
+misma que en el listado 9-6 y el listado 9-7; esta es solo una forma diferente
+y más ergonómica de escribirla.</p>
+<p>El listado 9-9 muestra una forma de hacer esto aún más conciso usando
+<code>fs::read_to_string</code>.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<!-- Deliberately not using rustdoc_include here; the `main` function in the
+file panics. We do want to include it for reader experimentation purposes, but
+don't want to include it for rustdoc testing purposes. -->
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::fs;
+use std::io;
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    fs::read_to_string("hello.txt")
+}
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 9-9: Usando <code>fs::read_to_string</code> en lugar de
+abrir y luego leer el archivo</span></p>
+<p>Leer un archivo en un <code>String</code> es una operación bastante común, por lo que la
+biblioteca estándar proporciona la conveniente función <code>fs::read_to_string</code>
+que abre el archivo, crea un nuevo <code>String</code>, lee el contenido del archivo,
+coloca el contenido en ese <code>String</code> y lo devuelve. Por supuesto, usar
+<code>fs::read_to_string</code> no nos da la oportunidad de explicar todo el manejo de
+errores, por lo que lo hicimos de la manera más larga primero.</p>
+<h4 id="donde-se-puede-usar-el-operador-"><a class="header" href="#donde-se-puede-usar-el-operador-">Donde se puede usar el operador <code>?</code></a></h4>
+<p>El operador <code>?</code> solo puede usarse en funciones cuyo tipo de retorno sea
+compatible con el valor que se usa con el operador <code>?</code>. Porque el operador <code>?</code>
+está definido para realizar una devolución temprana de un valor de la función,
+de la misma manera que la expresión <code>match</code> que definimos en el listado 9-6.
+En el listado 9-6, el <code>match</code> estaba usando un valor <code>Result</code>, y el brazo de
+devolución temprana devolvió un valor <code>Err(e)</code>. El tipo de retorno de la
+función debe ser un <code>Result</code> para que sea compatible con este <code>return</code>.</p>
+<p>En el listado 9-10, veamos el error que obtendremos si usamos el operador <code>?</code>
+en una función <code>main</code> con un tipo de retorno incompatible con el tipo de valor
+que usamos <code>?</code>:</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><code class="language-rust ignore does_not_compile">use std::fs::File;
+
+fn main() {
+    let greeting_file = File::open("hello.txt")?;
+}</code></pre>
+<p><span class="caption">Listado 9-10: Intentando usar el <code>?</code> en la función <code>main</code>
+que devuelve <code>()</code> no se compilará</span></p>
+<p>Este código abre un archivo, que puede fallar. El operador <code>?</code> sigue el valor
+<code>Result</code> devuelto por <code>File::open</code>, pero esta función <code>main</code> tiene el tipo de
+retorno de <code>()</code>, no <code>Result</code>. Cuando compilamos este código, obtenemos el
+siguiente mensaje de error:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling error-handling v0.1.0 (file:///projects/error-handling)
+error[E0277]: the `?` operator can only be used in a function that returns `Result` or `Option` (or another type that implements `FromResidual`)
+ --&gt; src/main.rs:4:48
+  |
+3 | fn main() {
+  | --------- this function should return `Result` or `Option` to accept `?`
+4 |     let greeting_file = File::open("hello.txt")?;
+  |                                                ^ cannot use the `?` operator in a function that returns `()`
+  |
+  = help: the trait `FromResidual&lt;Result&lt;Infallible, std::io::Error&gt;&gt;` is not implemented for `()`
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `error-handling` due to previous error
+</code></pre>
+<p>Este error señala que solo podemos usar el operador <code>?</code> en una función que
+devuelve <code>Result</code> o <code>Option</code> o en cualquier otro tipo que implemente
+<code>FromResidual</code>.</p>
+<p>Para corregir el error, tienes dos opciones. Una opción es cambiar el tipo de
+retorno de tu función para que sea compatible con el valor que estás usando el
+operador <code>?</code> mientras no tengas restricciones que lo impidan. La otra técnica
+es usar un <code>match</code> o uno de los métodos <code>Result&lt;T, E&gt;</code> para manejar el
+<code>Result&lt;T, E&gt;</code> de la manera que sea apropiada.</p>
+<p>El mensaje de error también menciona que el operador <code>?</code> también se puede usar
+con valores <code>Option&lt;T&gt;</code>. Al igual que con el uso de <code>?</code> en <code>Result</code>, solo
+puedes usar <code>?</code> en <code>Option</code> en una función que devuelve <code>Option</code>. El
+comportamiento del operador <code>?</code> cuando se llama en un <code>Option&lt;T&gt;</code> es similar a
+su comportamiento cuando se llama en un <code>Result&lt;T, E&gt;</code>: si el valor es <code>None</code>,
+el <code>None</code> se devolverá temprano desde la función en ese punto. Si el valor es
+<code>Some</code>, el valor dentro de <code>Some</code> es el valor resultante de la expresión y la
+función continúa. El listado 9-11 tiene un ejemplo de una función que encuentra
+el último carácter de la primera línea en el texto dado:</p>
+<pre><pre class="playground"><code class="language-rust">fn last_char_of_first_line(text: &amp;str) -&gt; Option&lt;char&gt; {
+    text.lines().next()?.chars().last()
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    assert_eq!(
+</span><span class="boring">        last_char_of_first_line("Hello, world\nHow are you today?"),
+</span><span class="boring">        Some('d')
+</span><span class="boring">    );
+</span><span class="boring">
+</span><span class="boring">    assert_eq!(last_char_of_first_line(""), None);
+</span><span class="boring">    assert_eq!(last_char_of_first_line("\nhi"), None);
+</span><span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 9-11: Using the <code>?</code> operator on an <code>Option&lt;T&gt;</code>
+value</span></p>
+<p>Esta función devuelve <code>Option&lt;char&gt;</code> porque es posible que haya un carácter
+allí, pero también es posible que no lo haya. Este código toma el argumento de
+string slice <code>text</code> y llama al método <code>lines</code> en él, que devuelve un
+iterador sobre las líneas en el string. Debido a que esta función quiere
+examinar la primera línea, llama a <code>next</code> en el iterador para obtener el primer
+valor del iterador. Si <code>text</code> es un string vacío, esta llamada a <code>next</code>
+devolverá <code>None</code>, en cuyo caso usamos <code>?</code> para detener y devolver <code>None</code> desde
+<code>last_char_of_first_line</code>. Si <code>text</code> no es un string vacío, <code>next</code> devolverá
+un valor <code>Some</code> que contiene un string slice de la primera línea en <code>text</code>.</p>
+<p>El <code>?</code> extrae el string slice, y podemos llamar a <code>chars</code> en ese string slice
+para obtener un iterador de sus caracteres. Estamos interesados en el último
+carácter en esta primera línea, por lo que llamamos a <code>last</code> para devolver el
+último elemento en el iterador. Esto es un <code>Option</code> porque es posible que la
+primera línea sea el string vacío, por ejemplo, si <code>text</code> comienza con una
+línea en blanco pero tiene caracteres en otras líneas, como en <code>"\nhi"</code>. Sin
+embargo, si hay un último carácter en la primera línea, se devolverá en la
+variante <code>Some</code>. El operador <code>?</code> en el medio nos da una forma concisa de
+expresar esta lógica, lo que nos permite implementar la función en una línea.
+Si no pudiéramos usar el operador <code>?</code> en <code>Option</code>, tendríamos que implementar
+esta lógica usando más llamadas de método o una expresión <code>match</code>.</p>
+<p>Ten en cuenta que puedes usar el operador <code>?</code> en una función que devuelve
+<code>Result</code> y puedes usar el operador <code>?</code> en una función que devuelve <code>Option</code>,
+pero no puedes mezclar y combinar. El operador <code>?</code> no convertirá
+automáticamente un <code>Result</code> en un <code>Option</code> o viceversa; en esos casos, puedes
+usar métodos como el método <code>ok</code> en <code>Result</code> o el método <code>ok_or</code> en <code>Option</code>
+para hacer la conversión explícitamente.</p>
+<p>Hasta ahora, todas las funciones <code>main</code> que hemos usado devuelven <code>()</code>. La
+función <code>main</code> es especial porque es el punto de entrada y salida de los
+programas ejecutables, y hay restricciones sobre cuál puede ser su tipo de
+retorno para que los programas se comporten como se espera.</p>
+<p>Por suerte, <code>main</code> también puede devolver un <code>Result&lt;(), E&gt;</code>. El Listado 9-12
+tiene el código del listado 9-10, pero hemos cambiado el tipo de retorno de
+<code>main</code> para que sea <code>Result&lt;(), Box&lt;dyn Error&gt;&gt;</code> y hemos agregado un valor de
+retorno <code>Ok(())</code> al final. Este código ahora se compilará:</p>
+<pre><code class="language-rust ignore">use std::error::Error;
+use std::fs::File;
+
+fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    let greeting_file = File::open("hello.txt")?;
+
+    Ok(())
+}</code></pre>
+<p><span class="caption">Listado∂ 9-12: Cambiando <code>main</code> devuelve <code>Result&lt;(), E&gt;</code>
+permitiendo el uso del operador <code>?</code> en valores <code>Result</code></span></p>
+<p>El <code>Box&lt;dyn Error&gt;</code> tipo es un <em>trait object</em>, que hablaremos en la sección
+<a href="ch17-02-trait-objects.html#usando-trait-objects-que-permiten-valores-de-diferentes-tipos">“Usando Trait Objects que permiten valores de diferentes
+tipos”</a><!-- ignore --> en el Capítulo 17. Por ahora, puedes leer
+<code>Box&lt;dyn Error&gt;</code> para significar “cualquier tipo de error”. Usar <code>?</code> en un
+valor <code>Result</code> en una función <code>main</code> con el tipo de error <code>Box&lt;dyn Error&gt;</code> está
+permitido, porque permite que cualquier valor <code>Err</code> se devuelva temprano. A
+pesar de que el cuerpo de esta función <code>main</code> solo devolverá errores de tipo
+<code>std::io::Error</code>, al especificar <code>Box&lt;dyn Error&gt;</code>, esta firma seguirá siendo
+correcta incluso si se agrega más código que devuelva otros errores al cuerpo
+de <code>main</code>.</p>
+<p>Cuando una función <code>main</code> devuelve un <code>Result</code>, el ejecutable puede
+salir con un valor de <code>0</code> si <code>main</code> devuelve <code>Ok(())</code> y saldrá con un valor
+distinto de <code>0</code> si <code>main</code> devuelve un <code>Err</code>. Los ejecutables escritos en C
+devuelven enteros cuando salen: los programas que salen con éxito devuelven el
+entero <code>0</code>, y los programas que devuelven un error devuelven algún entero
+distinto de <code>0</code>. Rust también devuelve enteros de ejecutables para ser
+compatibles con esta convención.</p>
+<p>La función <code>main</code> puede devolver cualquier tipo que implemente el trait
+<a href="https://doc.rust-lang.org/std/process/trait.Termination.html"><code>std::process::Termination</code></a><!-- ignore -->, que incluye una
+función <code>report</code> que devuelve un <code>ExitCode</code>. Consulta la documentación de la
+biblioteca estándar para obtener más información sobre la implementación del
+trait <code>Termination</code> para tus propios tipos.</p>
+<p>Ahora que hemos discutido los detalles de llamar a <code>panic!</code> o devolver
+<code>Result</code>, volvamos al tema de cómo decidir cuál es apropiado usar en qué casos.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch09-01-unrecoverable-errors-with-panic.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch09-03-to-panic-or-not-to-panic.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch09-01-unrecoverable-errors-with-panic.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch09-03-to-panic-or-not-to-panic.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>

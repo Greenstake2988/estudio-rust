@@ -1,0 +1,1093 @@
+<!DOCTYPE HTML>
+<html lang="es" class="sidebar-visible light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>¿Qué es el Ownership? - El Lenguaje de Programación Rust</title>
+
+
+        <!-- Custom HTML head -->
+        
+            <link rel="canonical" href="https://www.rustlang-es.org/rust-book-es/" />
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <meta property="og:url" content="https://rustlanges.github.io">
+        <meta property="og:type" content="book">
+        <meta property="og:title" content="¿Qué es el Ownership? - El Lenguaje de Programación Rust">
+        <meta property="og:description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta property="og:image" content="https://rustlanges.github.io/rust-book-es/img/open-graph.png">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="./theme/catppuccin.css">
+        <link rel="stylesheet" href="./theme/catppuccin-highlight.css">
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title-page.html">El Lenguaje de Programación Rust</a></li><li class="chapter-item expanded affix "><a href="foreword.html">Prefacio</a></li><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Introducción</a></li><li class="chapter-item expanded "><a href="ch01-00-getting-started.html"><strong aria-hidden="true">1.</strong> Empezando</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-installation.html"><strong aria-hidden="true">1.1.</strong> Instalación</a></li><li class="chapter-item expanded "><a href="ch01-02-hello-world.html"><strong aria-hidden="true">1.2.</strong> ¡Hola, Mundo!</a></li><li class="chapter-item expanded "><a href="ch01-03-hello-cargo.html"><strong aria-hidden="true">1.3.</strong> ¡Hola, Cargo!</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-guessing-game-tutorial.html"><strong aria-hidden="true">2.</strong> Programando un juego de adivinanzas</a></li><li class="chapter-item expanded "><a href="ch03-00-common-programming-concepts.html"><strong aria-hidden="true">3.</strong> Conceptos Comunes de Programación</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-variables-and-mutability.html"><strong aria-hidden="true">3.1.</strong> Variables y Mutabilidad</a></li><li class="chapter-item expanded "><a href="ch03-02-data-types.html"><strong aria-hidden="true">3.2.</strong> Tipos de Datos</a></li><li class="chapter-item expanded "><a href="ch03-03-how-functions-work.html"><strong aria-hidden="true">3.3.</strong> Funciones</a></li><li class="chapter-item expanded "><a href="ch03-04-comments.html"><strong aria-hidden="true">3.4.</strong> Comentarios</a></li><li class="chapter-item expanded "><a href="ch03-05-control-flow.html"><strong aria-hidden="true">3.5.</strong> Flujo de Control</a></li></ol></li><li class="chapter-item expanded "><a href="ch04-00-understanding-ownership.html"><strong aria-hidden="true">4.</strong> Entendiendo el Ownership</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04-01-what-is-ownership.html" class="active"><strong aria-hidden="true">4.1.</strong> ¿Qué es el Ownership?</a></li><li class="chapter-item expanded "><a href="ch04-02-references-and-borrowing.html"><strong aria-hidden="true">4.2.</strong> Referencias y Prestamos</a></li><li class="chapter-item expanded "><a href="ch04-03-slices.html"><strong aria-hidden="true">4.3.</strong> El Tipo Slice</a></li></ol></li><li class="chapter-item expanded "><a href="ch05-00-structs.html"><strong aria-hidden="true">5.</strong> Usando Structs para Estructurar Datos Relacionados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05-01-defining-structs.html"><strong aria-hidden="true">5.1.</strong> Definiendo e Instanciando Structs</a></li><li class="chapter-item expanded "><a href="ch05-02-example-structs.html"><strong aria-hidden="true">5.2.</strong> Un Programa de Ejemplo Usando Structs</a></li><li class="chapter-item expanded "><a href="ch05-03-method-syntax.html"><strong aria-hidden="true">5.3.</strong> Sintaxis de Métodos</a></li></ol></li><li class="chapter-item expanded "><a href="ch06-00-enums.html"><strong aria-hidden="true">6.</strong> Enums y Pattern Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06-01-defining-an-enum.html"><strong aria-hidden="true">6.1.</strong> Definiendo un Enum</a></li><li class="chapter-item expanded "><a href="ch06-02-match.html"><strong aria-hidden="true">6.2.</strong> El operador de control de flujo match</a></li><li class="chapter-item expanded "><a href="ch06-03-if-let.html"><strong aria-hidden="true">6.3.</strong> Flujo de Control Conciso con if let</a></li></ol></li><li class="chapter-item expanded "><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"><strong aria-hidden="true">7.</strong> Administrando Proyectos en Crecimiento con Paquetes, Crates y Módulos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07-01-packages-and-crates.html"><strong aria-hidden="true">7.1.</strong> Paquetes y Crates</a></li><li class="chapter-item expanded "><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"><strong aria-hidden="true">7.2.</strong> Definiendo módulos para controlar el scope y la privacidad</a></li><li class="chapter-item expanded "><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"><strong aria-hidden="true">7.3.</strong> Paths para referirse a un item en el árbol de módulos</a></li><li class="chapter-item expanded "><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"><strong aria-hidden="true">7.4.</strong> Incluyendo rutas al Scope con la palabra clave use</a></li><li class="chapter-item expanded "><a href="ch07-05-separating-modules-into-different-files.html"><strong aria-hidden="true">7.5.</strong> Separando Módulos en Diferentes Archivos</a></li></ol></li><li class="chapter-item expanded "><a href="ch08-00-common-collections.html"><strong aria-hidden="true">8.</strong> Colecciones comunes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch08-01-vectors.html"><strong aria-hidden="true">8.1.</strong> Almacenando listas de valores con vectores</a></li><li class="chapter-item expanded "><a href="ch08-02-strings.html"><strong aria-hidden="true">8.2.</strong> Almacenando texto codificado en UTF-8 con Strings</a></li><li class="chapter-item expanded "><a href="ch08-03-hash-maps.html"><strong aria-hidden="true">8.3.</strong> Almacenar Claves con Valores Asociados en HashMaps</a></li></ol></li><li class="chapter-item expanded "><a href="ch09-00-error-handling.html"><strong aria-hidden="true">9.</strong> Manejo de Errores</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09-01-unrecoverable-errors-with-panic.html"><strong aria-hidden="true">9.1.</strong> Errores irrecuperables con panic!</a></li><li class="chapter-item expanded "><a href="ch09-02-recoverable-errors-with-result.html"><strong aria-hidden="true">9.2.</strong> Errores recuperables con Result</a></li><li class="chapter-item expanded "><a href="ch09-03-to-panic-or-not-to-panic.html"><strong aria-hidden="true">9.3.</strong> panic! o no panic!</a></li></ol></li><li class="chapter-item expanded "><a href="ch10-00-generics.html"><strong aria-hidden="true">10.</strong> Tipos Genéricos, Traits y Lifetimes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch10-01-syntax.html"><strong aria-hidden="true">10.1.</strong> Tipos de Datos Genéricos</a></li><li class="chapter-item expanded "><a href="ch10-02-traits.html"><strong aria-hidden="true">10.2.</strong> Traits: Definiendo Comportamiento Compartido</a></li><li class="chapter-item expanded "><a href="ch10-03-lifetime-syntax.html"><strong aria-hidden="true">10.3.</strong> Validando Referencias con Lifetimes</a></li></ol></li><li class="chapter-item expanded "><a href="ch11-00-testing.html"><strong aria-hidden="true">11.</strong> Escribiendo Tests Automatizados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch11-01-writing-tests.html"><strong aria-hidden="true">11.1.</strong> Cómo Escribir Tests</a></li><li class="chapter-item expanded "><a href="ch11-02-running-tests.html"><strong aria-hidden="true">11.2.</strong> Controlando Cómo Los Tests Son Ejecutados</a></li><li class="chapter-item expanded "><a href="ch11-03-test-organization.html"><strong aria-hidden="true">11.3.</strong> Organización De Los Tests</a></li></ol></li><li class="chapter-item expanded "><a href="ch12-00-an-io-project.html"><strong aria-hidden="true">12.</strong> Un proyecto de I/O: Construyendo un programa de línea de comandos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch12-01-accepting-command-line-arguments.html"><strong aria-hidden="true">12.1.</strong> Aceptando argumentos de línea de comandos</a></li><li class="chapter-item expanded "><a href="ch12-02-reading-a-file.html"><strong aria-hidden="true">12.2.</strong> Leyendo un archivo</a></li><li class="chapter-item expanded "><a href="ch12-03-improving-error-handling-and-modularity.html"><strong aria-hidden="true">12.3.</strong> Refactorizando para mejorar la modularidad y el manejo de errores</a></li><li class="chapter-item expanded "><a href="ch12-04-testing-the-librarys-functionality.html"><strong aria-hidden="true">12.4.</strong> Desarrollando la funcionalidad de la biblioteca con T.D.D.</a></li><li class="chapter-item expanded "><a href="ch12-05-working-with-environment-variables.html"><strong aria-hidden="true">12.5.</strong> Trabajando con Variables de Entorno</a></li><li class="chapter-item expanded "><a href="ch12-06-writing-to-stderr-instead-of-stdout.html"><strong aria-hidden="true">12.6.</strong> Escribiendo mensajes de error estándar en lugar del output estándar</a></li></ol></li><li class="chapter-item expanded "><a href="ch13-00-functional-features.html"><strong aria-hidden="true">13.</strong> Características De Lenguajes Funcionales: Iteradores y Closures</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch13-01-closures.html"><strong aria-hidden="true">13.1.</strong> Closures: Funciones anónimas que capturan su entorno</a></li><li class="chapter-item expanded "><a href="ch13-02-iterators.html"><strong aria-hidden="true">13.2.</strong> Procesando una serie de elementos con Iteradores</a></li><li class="chapter-item expanded "><a href="ch13-03-improving-our-io-project.html"><strong aria-hidden="true">13.3.</strong> Mejorando nuestro proyecto I/O</a></li><li class="chapter-item expanded "><a href="ch13-04-performance.html"><strong aria-hidden="true">13.4.</strong> Comparando Performance: Bucles vs. Iteradores</a></li></ol></li><li class="chapter-item expanded "><a href="ch14-00-more-about-cargo.html"><strong aria-hidden="true">14.</strong> Más sobre Cargo y Crates.io</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch14-01-release-profiles.html"><strong aria-hidden="true">14.1.</strong> Personalizando Compilaciones con Perfiles de Lanzamiento</a></li><li class="chapter-item expanded "><a href="ch14-02-publishing-to-crates-io.html"><strong aria-hidden="true">14.2.</strong> Publicando un Crate a Crates.io</a></li><li class="chapter-item expanded "><a href="ch14-03-cargo-workspaces.html"><strong aria-hidden="true">14.3.</strong> Cargo Workspaces</a></li><li class="chapter-item expanded "><a href="ch14-04-installing-binaries.html"><strong aria-hidden="true">14.4.</strong> Instalando Binarios con cargo install</a></li><li class="chapter-item expanded "><a href="ch14-05-extending-cargo.html"><strong aria-hidden="true">14.5.</strong> Extendiendo Cargo con Comandos Personalizados</a></li></ol></li><li class="chapter-item expanded "><a href="ch15-00-smart-pointers.html"><strong aria-hidden="true">15.</strong> Smart Pointers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch15-01-box.html"><strong aria-hidden="true">15.1.</strong> Usando Box&lt;T&gt; para Apuntar a Datos en el Heap</a></li><li class="chapter-item expanded "><a href="ch15-02-deref.html"><strong aria-hidden="true">15.2.</strong> Tratando los Smart Pointers como Referencias Regulares con el Trait Deref</a></li><li class="chapter-item expanded "><a href="ch15-03-drop.html"><strong aria-hidden="true">15.3.</strong> Ejecutando Código al Limpiar con el Trait Drop</a></li><li class="chapter-item expanded "><a href="ch15-04-rc.html"><strong aria-hidden="true">15.4.</strong> Rc&lt;T&gt;, el Smart Pointer de Conteo de Referencias</a></li><li class="chapter-item expanded "><a href="ch15-05-interior-mutability.html"><strong aria-hidden="true">15.5.</strong> RefCell&lt;T&gt; y el Patrón de Mutabilidad Interior</a></li><li class="chapter-item expanded "><a href="ch15-06-reference-cycles.html"><strong aria-hidden="true">15.6.</strong> Referencias Circulares Pueden Fugar Memoria</a></li></ol></li><li class="chapter-item expanded "><a href="ch16-00-concurrency.html"><strong aria-hidden="true">16.</strong> Concurrencia Sin Miedo</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch16-01-threads.html"><strong aria-hidden="true">16.1.</strong> Usando Threads para Ejecutar Código Simultáneamente</a></li><li class="chapter-item expanded "><a href="ch16-02-message-passing.html"><strong aria-hidden="true">16.2.</strong> Usando el Pasaje de Mensajes para Transferir Datos entre Hilos</a></li><li class="chapter-item expanded "><a href="ch16-03-shared-state.html"><strong aria-hidden="true">16.3.</strong> Concurrencia con Estado Compartido</a></li><li class="chapter-item expanded "><a href="ch16-04-extensible-concurrency-sync-and-send.html"><strong aria-hidden="true">16.4.</strong> Concurrencia Extensible con los Traits Sync y Send</a></li></ol></li><li class="chapter-item expanded "><a href="ch17-00-oop.html"><strong aria-hidden="true">17.</strong> Rust como un Lenguaje de Programación Orientado a Objetos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch17-01-what-is-oo.html"><strong aria-hidden="true">17.1.</strong> Características de Lenguajes Orientados a Objetos</a></li><li class="chapter-item expanded "><a href="ch17-02-trait-objects.html"><strong aria-hidden="true">17.2.</strong> Usando Trait Objects que Permiten Valores de Diferentes Tipos</a></li><li class="chapter-item expanded "><a href="ch17-03-oo-design-patterns.html"><strong aria-hidden="true">17.3.</strong> Implementando un Patrón de Diseño Orientado a Objetos</a></li></ol></li><li class="chapter-item expanded "><a href="ch18-00-patterns.html"><strong aria-hidden="true">18.</strong> Patterns and Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch18-01-all-the-places-for-patterns.html"><strong aria-hidden="true">18.1.</strong> Todos los lugares donde se pueden usar Patterns</a></li><li class="chapter-item expanded "><a href="ch18-02-refutability.html"><strong aria-hidden="true">18.2.</strong> Refutabilidad: Si un Pattern Puede Fallar al Hacer Match</a></li><li class="chapter-item expanded "><a href="ch18-03-pattern-syntax.html"><strong aria-hidden="true">18.3.</strong> Sintaxis de los Patterns</a></li></ol></li><li class="chapter-item expanded "><a href="ch19-00-advanced-features.html"><strong aria-hidden="true">19.</strong> Características Avanzadas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch19-01-unsafe-rust.html"><strong aria-hidden="true">19.1.</strong> Rust Inseguro</a></li><li class="chapter-item expanded "><a href="ch19-03-advanced-traits.html"><strong aria-hidden="true">19.2.</strong> Advanced Traits</a></li><li class="chapter-item expanded "><a href="ch19-04-advanced-types.html"><strong aria-hidden="true">19.3.</strong> Advanced Types</a></li><li class="chapter-item expanded "><a href="ch19-05-advanced-functions-and-closures.html"><strong aria-hidden="true">19.4.</strong> Advanced Functions and Closures</a></li><li class="chapter-item expanded "><a href="ch19-06-macros.html"><strong aria-hidden="true">19.5.</strong> Macros</a></li></ol></li><li class="chapter-item expanded "><a href="ch20-00-final-project-a-web-server.html"><strong aria-hidden="true">20.</strong> Final Project: Building a Multithreaded Web Server</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch20-01-single-threaded.html"><strong aria-hidden="true">20.1.</strong> Building a Single-Threaded Web Server</a></li><li class="chapter-item expanded "><a href="ch20-02-multithreaded.html"><strong aria-hidden="true">20.2.</strong> Turning Our Single-Threaded Server into a Multithreaded Server</a></li><li class="chapter-item expanded "><a href="ch20-03-graceful-shutdown-and-cleanup.html"><strong aria-hidden="true">20.3.</strong> Graceful Shutdown and Cleanup</a></li></ol></li><li class="chapter-item expanded "><a href="appendix-00.html"><strong aria-hidden="true">21.</strong> Apéndice</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="appendix-01-keywords.html"><strong aria-hidden="true">21.1.</strong> A - Palabras claves</a></li><li class="chapter-item expanded "><a href="appendix-02-operators.html"><strong aria-hidden="true">21.2.</strong> B - Operadores y Símbolos</a></li><li class="chapter-item expanded "><a href="appendix-03-derivable-traits.html"><strong aria-hidden="true">21.3.</strong> C - Derivable Traits</a></li><li class="chapter-item expanded "><a href="appendix-04-useful-development-tools.html"><strong aria-hidden="true">21.4.</strong> D - Useful Development Tools</a></li><li class="chapter-item expanded "><a href="appendix-05-editions.html"><strong aria-hidden="true">21.5.</strong> E - Editions</a></li><li class="chapter-item expanded "><a href="appendix-06-translation.html"><strong aria-hidden="true">21.6.</strong> F - Translations of the Book</a></li><li class="chapter-item expanded "><a href="appendix-07-nightly-rust.html"><strong aria-hidden="true">21.7.</strong> G - Cómo se hace Rust y “Rust Nightly”</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="latte">Latte</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="frappe">Frappé</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="macchiato">Macchiato</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mocha">Mocha</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">El Lenguaje de Programación Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/RustLangES/rust-book-es" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="qué-es-el-ownership"><a class="header" href="#qué-es-el-ownership">¿Qué es el Ownership?</a></h2>
+<p>El <em>ownership</em> es un conjunto de reglas que definen cómo un programa de Rust
+administra la memoria. Todos los programas tienen que administrar la forma en
+que usan la memoria de un computador mientras se ejecutan. Algunos lenguajes
+tienen recolección de basura que busca regularmente la memoria que ya no se
+usa mientras el programa se ejecuta; en otros lenguajes, el programador debe
+asignar y liberar la memoria explícitamente. Rust usa un tercer enfoque: la
+memoria se administra a través de un sistema de ownership con un conjunto de
+reglas que el compilador verifica. Si alguna de las reglas se viola, el
+programa no se compilará. Ninguna de las características del ownership
+ralentizará su programa mientras se ejecuta.</p>
+<p>Porque el ownership es un concepto nuevo para muchos programadores, toma un
+tiempo acostumbrarse. La buena noticia es que a medida que se vuelva más
+experimentado con Rust y las reglas del sistema de ownership, más fácil le
+resultará desarrollar naturalmente código que sea seguro y eficiente. ¡Sigue
+intentándolo!</p>
+<p>Cuando entienda el ownership, tendrá una base sólida para comprender las
+características que hacen que Rust sea único. En este capítulo, aprenderá
+ownership trabajando en algunos ejemplos que se centran en una estructura de
+datos muy común: las cadenas de caracteres.</p>
+<blockquote>
+<p>Nota:
+La traducción de Ownership seria "Propiedad", la mayor parte de la comunidad
+habla de este sistema como Ownsership pero también es valido este termino.
+El motivo es que el sistema de ownership es solo una analogía.</p>
+<p>La analogía es que el ownership es como la propiedad de un objeto, por ejemplo
+si tienes un libro, el libro es tuyo. Si lo prestas a alguien, el libro sigue
+siendo tuyo, pero ahora el libro esta en posesión de otra persona. Cuando
+te devuelven el libro, el libro regresa a tu posesión.</p>
+</blockquote>
+<blockquote>
+<h3 id="el-stack-y-el-heap"><a class="header" href="#el-stack-y-el-heap">El Stack y el Heap</a></h3>
+<p>Muchos lenguajes de programación no requieren que piense mucho en el stack y
+el heap. Pero en un lenguaje de programación de sistemas como Rust, si un
+valor está en el stack o en el heap afecta cómo el lenguaje se comporta y por
+qué debe tomar ciertas decisiones. Partes del ownership se describirán en
+relación con el stack y el heap más adelante en este capítulo, por lo que
+aquí hay una breve explicación en preparación.</p>
+<p>Tanto el stack como el heap son partes de la memoria disponible para su código
+para usar en tiempo de ejecución, pero están estructurados de formas
+diferentes. El stack almacena valores en el orden en que los recibe y elimina
+los valores en el orden opuesto. Esto se conoce como LIFO que es el acrónimo inglés de <em>Last In, First Out</em> o en español <em>El último en entrar, es el primero en salir</em>. Piense en una pila de platos: cuando agrega más platos, los coloca en
+la parte superior de la pila, y cuando necesita un plato, toma uno de la
+parte superior. Agregar o eliminar platos del medio o de la parte inferior no
+funcionaría tan bien! Agregar datos se llama <em>empujar en el stack</em>, y
+eliminar datos se llama <em>sacar del stack</em>. Todos los datos almacenados en el
+stack deben tener un tamaño conocido y fijo. Los datos con un tamaño
+desconocido en tiempo de compilación o un tamaño que puede cambiar deben
+almacenarse en el heap en su lugar.</p>
+<p>El heap es menos organizado: cuando coloca datos en el heap, solicita una
+cierta cantidad de espacio. El administrador de memoria encuentra un lugar
+vacío en el heap que sea lo suficientemente grande, lo marca como en uso y
+devuelve un <em>puntero</em>, que es la dirección de esa ubicación. Este proceso se
+llama <em>asignar en el heap</em> y a veces se abrevia como solo <em>asignar</em> (empujar
+valores en el stack no se considera asignar). Debido a que el puntero al heap
+es un tamaño conocido y fijo, puede almacenar el puntero en el stack, pero
+cuando desea los datos reales, debe seguir el puntero. Piense en estar sentado
+en un restaurante. Cuando ingresa, indica la cantidad de personas en su
+grupo, y el anfitrión encuentra una mesa vacía que quepa a todos y los lleva
+allí. Si alguien en su grupo llega tarde, puede preguntar dónde se ha
+sentado para encontrarlo.</p>
+<p>Empujar en el stack es más rápido que asignar en el heap porque el
+administrador de memoria nunca tiene que buscar un lugar para almacenar nuevos
+datos; esa ubicación siempre está en la parte superior de la pila. En
+comparación, asignar espacio en el heap requiere más trabajo porque el
+administrador de memoria debe encontrar primero un espacio lo suficientemente
+grande para contener los datos y luego realizar tareas administrativas para
+prepararse para la siguiente asignación.</p>
+<p>Acceder a los datos en el heap es más lento que acceder a los datos en el
+stack porque debe seguir un puntero para llegar allí. Los procesadores
+contemporáneos son más rápidos si saltan menos en la memoria. Continuando con
+la analogía, considere un servidor en un restaurante que toma pedidos de
+muchas mesas. Es más eficiente obtener todos los pedidos de una mesa antes de
+pasar a la siguiente mesa. Tomar un pedido de la mesa A, luego un pedido de la
+mesa B, luego uno de la A nuevamente y luego uno de la B nuevamente sería un
+proceso mucho más lento. Del mismo modo, un procesador puede hacer su trabajo
+mejor si trabaja con datos que están cerca de otros datos (como lo están en
+el stack) en lugar de más lejos (como pueden estar en el heap).</p>
+<p>Cuando su código llama a una función, los valores que se pasan a la función
+(incluidos, posiblemente, punteros a datos en el heap) y las variables locales
+de la función se empujan en el stack. Cuando la función termina, esos valores
+se sacan del stack.</p>
+<p>Mantener un registro de qué partes del código están utilizando qué datos en
+el heap, minimizar la cantidad de datos duplicados en el heap y limpiar los
+datos no utilizados en el heap para que no se quede sin espacio son todos
+problemas que ownership aborda. Una vez que comprenda ownership, no tendrá
+que pensar mucho en el stack y el heap, pero saber que el principal propósito
+de ownership es administrar datos en el heap puede ayudar a explicar por qué
+funciona de la manera en que lo hace.</p>
+</blockquote>
+<h3 id="reglas-de-ownership"><a class="header" href="#reglas-de-ownership">Reglas de Ownership</a></h3>
+<p>Primero, echemos un vistazo a las reglas de ownership. Mantenga estas reglas en
+mente mientras trabajamos a través de los ejemplos que las ilustran:</p>
+<ul>
+<li>Cada valor en Rust tiene un <em>propietario</em>.</li>
+<li>Solo puede haber un propietario a la vez.</li>
+<li>Cuando el propietario sale del alcance, el valor se descartará.</li>
+</ul>
+<h3 id="Ámbito-de-las-variables"><a class="header" href="#Ámbito-de-las-variables">Ámbito de las Variables</a></h3>
+<p>Ahora que hemos pasado la sintaxis básica de Rust, no incluiremos todo el código
+<code>fn main() {</code> en los ejemplos, por lo que si está siguiendo, asegúrese de
+colocar los siguientes ejemplos dentro de una función <code>main</code> manualmente. Como
+resultado, nuestros ejemplos serán un poco más concisos, permitiéndonos
+centrarnos en los detalles reales en lugar del código repetitivo.</p>
+<p>Como primer ejemplo de ownership, veremos el <em>contexto de ejecución</em> de algunas variables.
+Un contexto de ejecución es el rango o espacio dentro de un programa para el que un elemento es válido.
+Toma la siguiente variable:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s = "hola";
+<span class="boring">}</span></code></pre></pre>
+<p>La variable <code>s</code> se refiere a un literal de cadena, donde el valor de la cadena
+está codificado en el texto de nuestro programa. La variable es válida desde el
+punto en que se declara hasta el final del <em>contexto de ejecución</em> actual. El listado 4-1
+muestra un programa con comentarios que anotan dónde sería válida la variable
+<code>s</code>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    {                      // s no es valido aquí, aún no está declarado
+        let s = "hola";   // s es valido desde aquí
+
+        // Hacer algo con s
+    }                      // este ámbito termina aquí, s ya no es valido
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 4-1: Una variable y el contexto de ejecución en el que es válida</span></p>
+<p>En otras palabras, hay dos puntos importantes en el tiempo aquí:</p>
+<ul>
+<li>Cuando <code>s</code> está el <em>contexto de ejecución</em>, es válido.</li>
+<li>Permanece válido hasta que sale de <em>contexto de ejecución</em>.</li>
+</ul>
+<p>En este punto, la relación entre los contextos de ejecución y cuándo las variables son válidas
+es similar a la de otros lenguajes de programación. Ahora construiremos sobre
+este entendimiento al introducir el tipo <code>String</code>.</p>
+<h3 id="el-tipo-string"><a class="header" href="#el-tipo-string">El Tipo <code>String</code></a></h3>
+<p>Para ilustrar las reglas de ownership, necesitamos un tipo de datos más complejo
+que los que cubrimos en la sección <a href="ch03-02-data-types.html#tipos-de-datos">“Tipos de Datos”</a><!-- ignore -->
+del Capítulo 3. Los tipos cubiertos anteriormente son de un tamaño conocido,
+pueden almacenarse en el stack y se pueden sacar del stack cuando su contexto de ejecución termina, y se pueden copiar rápidamente y trivialmente para crear una nueva
+instancia independiente si otra parte del código necesita usar el mismo valor
+en un contexto de ejecución diferente. Pero queremos ver los datos que se almacenan en el heap
+y explorar cómo Rust sabe cuándo limpiar esos datos, y el tipo <code>String</code> es un
+gran ejemplo.</p>
+<p>Nos centraremos en las partes de <code>String</code> que se relacionan con el ownership.
+Estos aspectos también se aplican a otros tipos de datos complejos, ya sean
+suministrados por la biblioteca estándar o creados por usted. Discutiremos
+<code>String</code> con más profundidad en el <a href="ch08-02-strings.html">Capítulo 8</a><!-- ignore -->.</p>
+<p>Ya hemos visto literales de cadena, donde un valor de cadena está codificado en
+nuestro programa. Los literales de cadena son convenientes, pero no son
+adecuados para todas las situaciones en las que podríamos querer usar texto.
+Una razón es que son inmutables. Otra es que no todos los valores de cadena se
+pueden conocer cuando escribimos nuestro código: ¿y si queremos tomar la
+entrada del usuario y almacenarla? Para estas situaciones, Rust tiene un segundo
+tipo de cadena, <code>String</code>. Este tipo administra datos asignados en el heap y,
+como tal, es capaz de almacenar una cantidad de texto que no conocemos en el
+tiempo de compilación. Puede crear un <code>String</code> a partir de un literal de cadena
+usando la función <code>from</code>, así:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s = String::from("hola");
+<span class="boring">}</span></code></pre></pre>
+<p>El operador doble dos puntos <code>::</code> nos permite usar el namespace (nombre
+de espacio) de esta función <code>from</code> particular bajo el tipo <code>String</code> en lugar
+de usar algún tipo de nombre como <code>string_from</code>. Discutiremos esta sintaxis
+más en la sección <a href="ch05-03-method-syntax.html#sintaxis-de-metodos">“Sintaxis de Método”</a><!-- ignore --> del
+Capítulo 5, y cuando hablamos sobre el uso de namespaces con módulos en
+<a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">“Rutas para Referir a un Elemento en el Árbol de Módulos”</a><!-- ignore --></p>
+<p>Este tipo de cadena <em>puede</em> ser mutable:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let mut s = String::from("hola");
+
+    s.push_str(", mundo!"); // push_str() agrega un literal a un String
+
+    println!("{}", s); // Esto imprime "hola, mundo!"
+<span class="boring">}</span></code></pre></pre>
+<p>Entonces, ¿cuál es la diferencia aquí? ¿Por qué <code>String</code> puede ser mutable pero
+los literales no pueden? La diferencia está en cómo estos dos tipos manejan la
+memoria.</p>
+<h3 id="memoria-y-asignación"><a class="header" href="#memoria-y-asignación">Memoria y Asignación</a></h3>
+<p>En el caso de un literal de cadena, conocemos los contenidos en tiempo de
+compilación, por lo que el texto está codificado directamente en el ejecutable
+final. Es por eso que los literales de cadena son rápidos y eficientes. Pero
+estas propiedades solo vienen de la inmutabilidad del literal de cadena.
+Desafortunadamente, no podemos poner un blob de memoria en el binario para
+cada pieza de texto cuyo tamaño es desconocido en tiempo de compilación y cuyo
+tamaño puede cambiar mientras se ejecuta el programa.</p>
+<p>Con el tipo <code>String</code>, para poder soportar una pieza mutable y extensible de
+texto, necesitamos asignar una cantidad de memoria en el heap, desconocida en
+tiempo de compilación, para contener el contenido. Esto significa:</p>
+<ul>
+<li>La memoria debe solicitarse al administrador de memoria en tiempo de ejecución.</li>
+<li>Necesitamos una forma de devolver esta memoria al administrador cuando
+terminemos con nuestro <code>String</code>.</li>
+</ul>
+<p>Esa primera parte la hacemos nosotros: cuando llamamos a <code>String::from</code>, su
+implementación solicita la memoria que necesita. Esto es prácticamente
+universal en los lenguajes de programación.</p>
+<p>Sin embargo, la segunda parte es diferente. En los lenguajes con un <em>recolector
+de basura (Garbage Collector)</em>, el recolector de basura rastrea y limpia la
+memoria que ya no se está usando y no necesitamos pensar en ello. En la mayoría
+de los lenguajes sin un recolector de basura, es nuestra responsabilidad identificar cuándo la
+memoria ya no se está usando y llamar al código para liberarla explícitamente,
+tal como lo hicimos para solicitarla. Hacer esto correctamente ha sido
+históricamente un problema difícil de programación. Si lo olvidamos,
+desperdiciaremos memoria. Si lo hacemos demasiado pronto, tendremos una variable
+inválida. Si lo hacemos dos veces, eso también es un error. Necesitamos
+emparejar exactamente una <code>asignación</code> con exactamente una <code>liberación</code>.</p>
+<p>Rust toma un camino diferente: la memoria se devuelve automáticamente una vez
+que la variable que la posee sale del contexto de ejecución. Aquí hay una versión de nuestro
+ejemplo de alcance de la Lista 4-1 usando un <code>String</code> en lugar de un literal
+de cadena:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    {
+        let s = String::from("hola"); // s es valido desde aquí
+
+        // Hacer algo con s
+    }                                  // este ámbito termina aquí, 
+                                       // s ya no es valido
+<span class="boring">}</span></code></pre></pre>
+<p>Hay un punto natural en el que podemos devolver la memoria que necesita nuestro
+<code>String</code> al administrador: cuando <code>s</code> sale del alcance. Cuando una variable
+sale del contexto de ejecución, Rust llama a una función especial para nosotros. Esta
+función se llama <a href="https://doc.rust-lang.org/std/ops/trait.Drop.html#tymethod.drop"><code>drop</code></a><!-- ignore -->, y es donde el autor de <code>String</code>
+puede poner el código para devolver la memoria. Rust llama a <code>drop</code>
+automáticamente en la llave de cierre.</p>
+<blockquote>
+<p>Nota: En C++, este patrón de desasignación de recursos al final de la vida
+útil de un elemento a veces se denomina <em>Resource Acquisition Is
+Initialization (RAII)</em>. La función <code>drop</code> en Rust será familiar para usted si
+ha utilizado patrones RAII.</p>
+</blockquote>
+<p>Este patrón tiene un profundo impacto en la forma en que se escribe el código
+Rust. Puede parecer simple ahora, pero el comportamiento del código puede ser
+inesperado en situaciones más complejas cuando queremos que varias variables
+usen los datos que hemos asignado en el heap. Exploremos algunas de esas
+situaciones ahora.</p>
+<!-- Old heading. Do not remove or links may break. -->
+<p><a id="ways-variables-and-data-interact-move"></a></p>
+<h4 id="variables-y-datos-interactuando-con-move"><a class="header" href="#variables-y-datos-interactuando-con-move">Variables y datos interactuando con Move</a></h4>
+<p>Varias variables pueden interactuar con los mismos datos de diferentes formas
+en Rust. Veamos un ejemplo usando un entero en la Lista 4-2.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let x = 5;
+    let y = x;
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Lista 4-2: Asignando el valor entero de la variable <code>x</code>
+a <code>y</code></span></p>
+<p>Podemos adivinar lo que está haciendo: "vincular el valor <code>5</code> a <code>x</code>; luego
+hacer una copia del valor en <code>x</code> y vincularlo a <code>y</code>". Ahora tenemos dos
+variables, <code>x</code> y <code>y</code>, y ambos son <code>5</code>. Esto es lo que está sucediendo, porque
+los enteros son valores simples con un tamaño conocido y fijo, y estos dos
+valores <code>5</code> se empujan en la pila.</p>
+<p>Ahora veamos la versión <code>String</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let s1 = String::from("hola");
+    let s2 = s1;
+<span class="boring">}</span></code></pre></pre>
+<p>Esto se ve muy similar, por lo que podríamos suponer que la forma en que
+funciona sería la misma: es decir, la segunda línea haría una copia del valor en
+<code>s1</code> y lo vincularía a <code>s2</code>. Pero esto no es exactamente lo que sucede.</p>
+<p>Mire la Figura 4-1 para ver lo que está sucediendo en realidad con el <code>String</code>.
+Un <code>String</code> está compuesto por tres partes, mostradas a la izquierda:
+un puntero a la memoria que contiene el contenido de la cadena, una longitud y
+una capacidad. Este grupo de datos se almacena en la pila. A la derecha está la
+memoria en el heap que contiene el contenido.</p>
+<div style="width:50%; max-width: 100%;">
+<svg class="center" role="img" aria-labelledby="desc" 
+ viewBox="0.00 400.00 1000.00 500.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g  class="graph" transform="scale(4.1667 4.1667) rotate(0) translate(4 238)">
+<title>Dos tablas: la primera tabla contiene la representación de s1 en la pila, que consta de su longitud (5), capacidad (5) y un puntero al primer valor en la segunda tabla. La segunda tabla contiene la representación de los datos en el heap, byte por byte.</title>
+<desc >Dos tablas: la primera tabla contiene la representación de s1 en la pila, que consta de su longitud (5), capacidad (5) y un puntero al primer valor en la segunda tabla. La segunda tabla contiene la representación de los datos en el heap, byte por byte.</desc>
+<polygon fill="transparent" stroke="transparent" points="-4,4 -4,-152 233,-152 233,4 -4,4"/>
+<!-- table0 -->
+<g  class="node">
+<polyline fill="none" stroke="var(--fg)" points="0,-124 96,-124 "/>
+<text text-anchor="start" x="45.7759" y="-129.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">s1</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-104 0,-124 60,-124 60,-104 8,-104"/>
+<text text-anchor="start" x="2.8413" y="-109.8" font-family="Times,serif" font-size="14.00" fill="currentColor">nombre</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-104 60,-124 96,-124 96,-104 60,-104"/>
+<text text-anchor="start" x="62.8413" y="-109.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">valor</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-84 0,-104 60,-104 60,-84 8,-84"/>
+<text text-anchor="start" x="2.2241" y="-89.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">ptr</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-84 60,-104 96,-104 96,-84 60,-84"/>
+<polygon fill="none" stroke="var(--fg)" points="0,-64 0,-84 60,-84 60,-64 8,-64"/>
+<text text-anchor="start" x="2.4482" y="-69.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">longitud</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-64 60,-84 96,-84 96,-64 60,-64"/>
+<text text-anchor="start" x="74.5" y="-69.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-44 0,-64 60,-64 60,-44 8,-44"/>
+<text text-anchor="start" x="2.6826" y="-49.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">capacidad</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-44 60,-64 96,-64 96,-44 60,-44"/>
+<text text-anchor="start" x="74.5" y="-49.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+</g>
+<!-- table1 -->
+<g  class="node">
+<polygon fill="none" stroke="var(--fg)" points="140.5,-104 140.5,-124 185.5,-124 185.5,-104 148.5,-104"/>
+<text text-anchor="start" x="143.4482" y="-109.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">indice</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-104 185.5,-124 221.5,-124 221.5,-104 185.5,-104"/>
+<text text-anchor="start" x="188.3413" y="-109.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">valor</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-84 140.5,-104 185.5,-104 185.5,-84 148.5,-84"/>
+<text text-anchor="start" x="155.5" y="-89.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">0</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-84 185.5,-104 221.5,-104 221.5,-84 185.5,-84"/>
+<text text-anchor="start" x="200" y="-89.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">h</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-64 140.5,-84 185.5,-84 185.5,-64 148.5,-64"/>
+<text text-anchor="start" x="155.5" y="-69.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">1</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-64 185.5,-84 221.5,-84 221.5,-64 185.5,-64"/>
+<text text-anchor="start" x="200.3931" y="-69.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">o</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-44 140.5,-64 185.5,-64 185.5,-44 148.5,-44"/>
+<text text-anchor="start" x="155.5" y="-49.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">2</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-44 185.5,-64 221.5,-64 221.5,-44 185.5,-44"/>
+<text text-anchor="start" x="201.5552" y="-49.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">l</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-24 140.5,-44 185.5,-44 185.5,-24 148.5,-24"/>
+<text text-anchor="start" x="155.5" y="-29.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">3</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-24 185.5,-44 221.5,-44 221.5,-24 185.5,-24"/>
+<text text-anchor="start" x="201.5552" y="-29.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">a</text>
+</g>
+<!-- table0&#45;&gt;table1 -->
+<g  class="edge">
+<path fill="none" stroke="var(--fg)" d="M78,-94C78,-94 109.3406,-94 130.3797,-94"/>
+<polygon fill="var(--fg)" stroke="var(--fg)" points="130.5,-97.5001 140.5,-94 130.5,-90.5001 130.5,-97.5001"/>
+</g>
+</g>
+</svg>
+</div>
+<p><span class="caption">Figura 4-1: Representación en memoria de un <code>String</code>
+que contiene el valor <code>"hola"</code> vinculado a <code>s1</code></span></p>
+<p>La longitud es cuánta memoria, en bytes, los contenidos del <code>String</code> están
+utilizando actualmente. La capacidad es la cantidad total de memoria, en bytes,
+que el <code>String</code> ha recibido del administrador. La diferencia entre longitud y
+capacidad importa, pero no en este contexto, por lo que por ahora está bien
+ignorar la capacidad.</p>
+<p>Cuando asignamos <code>s1</code> a <code>s2</code>, los datos de <code>String</code> se copian, lo que significa
+que copiamos el puntero, la longitud y la capacidad que están en la pila. No
+copiamos los datos en el heap al que hace referencia el puntero. En otras
+palabras, la representación de datos en memoria se ve como la Figura 4-2.</p>
+<div style="width:50%; max-width: 100%;">
+<svg class="center" role="img" aria-labelledby="desc" 
+ viewBox="0.00 0.00 1000.00 1000.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g  class="graph" transform="scale(4.1667 4.1667) rotate(0) translate(4 238)">
+<title>Tres tablas: tablas s1 y s2 que representan esas cadenas en la
+pila, respectivamente, y ambas apuntando a los mismos datos de cadena en el
+heap.</title>
+<desc >Tres tablas: tablas s1 y s2 que representan esas cadenas en la
+pila, respectivamente, y ambas apuntando a los mismos datos de cadena en el
+heap.</desc>
+<polygon fill="transparent" stroke="transparent" points="-4,4 -4,-238 233,-238 233,4 -4,4"/>
+<!-- table0 -->
+<g  class="node">
+<title>table0</title>
+<polyline fill="none" stroke="var(--fg)" points="0,-210 96,-210 "/>
+<text text-anchor="start" x="45.7759" y="-215.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">s1</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-190 0,-210 60,-210 60,-190 8,-190"/>
+<text text-anchor="start" x="8.8413" y="-195.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">nombre</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-190 60,-210 96,-210 96,-190 60,-190"/>
+<text text-anchor="start" x="62.8413" y="-195.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">valor</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-170 0,-190 60,-190 60,-170 8,-170"/>
+<text text-anchor="start" x="2.2241" y="-175.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">puntero</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-170 60,-190 96,-190 96,-170 60,-170"/>
+<polygon fill="none" stroke="var(--fg)" points="0,-150 0,-170 60,-170 60,-150 8,-150"/>
+<text text-anchor="start" x="2.4482" y="-155.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">longitud</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-150 60,-170 96,-170 96,-150 60,-150"/>
+<text text-anchor="start" x="74.5" y="-155.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-130 0,-150 60,-150 60,-130 8,-130"/>
+<text text-anchor="start" x="2.6826" y="-135.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">capacidad</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-130 60,-150 96,-150 96,-130 60,-130"/>
+<text text-anchor="start" x="74.5" y="-135.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+</g>
+<!-- table1 -->
+<g  class="node">
+<title>table1</title>
+<polygon fill="none" stroke="currentColor" points="140.5,-127 140.5,-147 185.5,-147 185.5,-127 148.5,-127"/>
+<text text-anchor="start" x="145.4482" y="-132.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">indice</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-127 185.5,-147 221.5,-147 221.5,-127 185.5,-127"/>
+<text text-anchor="start" x="188.3413" y="-132.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">valor</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-107 140.5,-127 185.5,-127 185.5,-107 148.5,-107"/>
+<text text-anchor="start" x="158.5" y="-112.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">0</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-107 185.5,-127 221.5,-127 221.5,-107 185.5,-107"/>
+<text text-anchor="start" x="200" y="-112.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">h</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-87 140.5,-107 185.5,-107 185.5,-87 148.5,-87"/>
+<text text-anchor="start" x="158.5" y="-92.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">1</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-87 185.5,-107 221.5,-107 221.5,-87 185.5,-87"/>
+<text text-anchor="start" x="200.3931" y="-92.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">o</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-67 140.5,-87 185.5,-87 185.5,-67 148.5,-67"/>
+<text text-anchor="start" x="158.5" y="-72.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">2</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-67 185.5,-87 221.5,-87 221.5,-67 185.5,-67"/>
+<text text-anchor="start" x="201.5552" y="-72.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">l</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-47 140.5,-67 185.5,-67 185.5,-47 148.5,-47"/>
+<text text-anchor="start" x="158.5" y="-52.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">3</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-47 185.5,-67 221.5,-67 221.5,-47 185.5,-47"/>
+<text text-anchor="start" x="201.5552" y="-52.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">a</text>
+</g>
+<!-- table0&#45;&gt;table1 -->
+<g  class="edge">
+<title>table0:c&#45;&gt;table1:pointee</title>
+<path fill="none" stroke="var(--fg)" d="M78,-180C78,-180 101.9982,-126.912 130.4405,-118.2023"/>
+<polygon fill="var(--fg)" stroke="var(--fg)" points="130.986,-121.6621 140.5,-117 130.1553,-114.7115 130.986,-121.6621"/>
+</g>
+<!-- table3 -->
+<g  class="node">
+<title>table3</title>
+<polyline fill="none" stroke="var(--fg)" points="0,-84 96,-84 "/>
+<text text-anchor="start" x="45.7759" y="-89.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">s2</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-64 0,-84 60,-84 60,-64 8,-64"/>
+<text text-anchor="start" x="8.8413" y="-69.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">nombre</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-64 60,-84 96,-84 96,-64 60,-64"/>
+<text text-anchor="start" x="62.8413" y="-69.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">valor</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-44 0,-64 60,-64 60,-44 8,-44"/>
+<text text-anchor="start" x="2.2241" y="-49.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">puntero</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-44 60,-64 96,-64 96,-44 60,-44"/>
+<polygon fill="none" stroke="var(--fg)" points="0,-24 0,-44 60,-44 60,-24 8,-24"/>
+<text text-anchor="start" x="2.4482" y="-29.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">longitud</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-24 60,-44 96,-44 96,-24 60,-24"/>
+<text text-anchor="start" x="74.5" y="-29.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-4 0,-24 60,-24 60,-4 8,-4"/>
+<text text-anchor="start" x="2.6826" y="-9.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">capacidad</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-4 60,-24 96,-24 96,-4 60,-4"/>
+<text text-anchor="start" x="74.5" y="-9.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+</g>
+<!-- table3&#45;&gt;table1 -->
+<g  class="edge">
+<path fill="none" stroke="var(--fg)" d="M78,-54C78,-54 101.9982,-107.088 130.4405,-115.7977"/>
+<polygon fill="var(--fg)" stroke="var(--fg)" points="130.1553,-119.2885 140.5,-117 130.986,-112.3379 130.1553,-119.2885"/>
+</g>
+</g>
+</svg>
+</div>
+<p><span class="caption">Figura 4-2: Representación en memoria de la variable
+<code>s2</code> que tiene una copia del puntero, la longitud y la capacidad de <code>s1</code>.</span></p>
+<p>La representación <em>no</em> se ve como la Figura 4-3, que es lo que la memoria
+parecería si Rust copiara además los datos del heap. Si Rust hiciera esto, la
+operación <code>s2 = s1</code> podría ser muy costosa en términos de rendimiento de tiempo
+de ejecución si los datos en el heap fueran grandes.</p>
+<div style="width:50%; max-width: 100%;">
+<svg
+ viewBox="0.00 0.00 1000.00 1200.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g  class="graph" transform="scale(4.1667 4.1667) rotate(0) translate(4 298)">
+<title>Cuatro tablas: dos tablas que representan los datos de la pila para s1 y s2, y cada una apunta a su propia copia de datos de cadena en el heap.</title>
+<desc >Cuatro tablas: dos tablas que representan los datos de la pila para s1 y s2, y cada una apunta a su propia copia de datos de cadena en el heap.</desc>
+<polygon fill="transparent" stroke="transparent" points="-4,4 -4,-298 233,-298 233,4 -4,4"/>
+<!-- table0 -->
+<g  class="node">
+<polyline fill="none" stroke="var(--fg)" points="0,-124 96,-124 "/>
+<text text-anchor="start" x="45.7759" y="-129.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">s2</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-104 0,-124 60,-124 60,-104 8,-104"/>
+<text text-anchor="start" x="8.8413" y="-109.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">nombre</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-104 60,-124 96,-124 96,-104 60,-104"/>
+<text text-anchor="start" x="62.8413" y="-109.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">valor</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-84 0,-104 60,-104 60,-84 8,-84"/>
+<text text-anchor="start" x="2.2241" y="-89.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">puntero</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-84 60,-104 96,-104 96,-84 60,-84"/>
+<polygon fill="none" stroke="var(--fg)" points="0,-64 0,-84 60,-84 60,-64 8,-64"/>
+<text text-anchor="start" x="2.4482" y="-69.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">longitud</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-64 60,-84 96,-84 96,-64 60,-64"/>
+<text text-anchor="start" x="74.5" y="-69.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-44 0,-64 60,-64 60,-44 8,-44"/>
+<text text-anchor="start" x="2.6826" y="-49.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">capacidad</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-44 60,-64 96,-64 96,-44 60,-44"/>
+<text text-anchor="start" x="74.5" y="-49.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+</g>
+<!-- table1 -->
+<g  class="node">
+<polygon fill="none" stroke="var(--fg)" points="140.5,-104 140.5,-124 185.5,-124 185.5,-104 148.5,-104"/>
+<text text-anchor="start" x="145.4482" y="-109.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">indice</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-104 185.5,-124 221.5,-124 221.5,-104 185.5,-104"/>
+<text text-anchor="start" x="188.3413" y="-109.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">valor</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-84 140.5,-104 185.5,-104 185.5,-84 148.5,-84"/>
+<text text-anchor="start" x="158.5" y="-89.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">0</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-84 185.5,-104 221.5,-104 221.5,-84 185.5,-84"/>
+<text text-anchor="start" x="200" y="-89.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">h</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-64 140.5,-84 185.5,-84 185.5,-64 148.5,-64"/>
+<text text-anchor="start" x="158.5" y="-69.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">1</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-64 185.5,-84 221.5,-84 221.5,-64 185.5,-64"/>
+<text text-anchor="start" x="200.3931" y="-69.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">o</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-44 140.5,-64 185.5,-64 185.5,-44 148.5,-44"/>
+<text text-anchor="start" x="158.5" y="-49.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">2</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-44 185.5,-64 221.5,-64 221.5,-44 185.5,-44"/>
+<text text-anchor="start" x="201.5552" y="-49.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">l</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-24 140.5,-44 185.5,-44 185.5,-24 148.5,-24"/>
+<text text-anchor="start" x="158.5" y="-29.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">3</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-24 185.5,-44 221.5,-44 221.5,-24 185.5,-24"/>
+<text text-anchor="start" x="201.5552" y="-29.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">a</text>
+</g>
+<!-- table0&#45;&gt;table1 -->
+<g  class="edge">
+<path fill="none" stroke="var(--fg)" d="M78,-94C78,-94 109.3406,-94 130.3797,-94"/>
+<polygon fill="var(--fg)" stroke="var(--fg)" points="130.5,-97.5001 140.5,-94 130.5,-90.5001 130.5,-97.5001"/>
+</g>
+<!-- table3 -->
+<g  class="node">
+<polyline fill="none" stroke="var(--fg)" points="0,-270 96,-270 "/>
+<text text-anchor="start" x="45.7759" y="-275.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">s1</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-250 0,-270 60,-270 60,-250 8,-250"/>
+<text text-anchor="start" x="8.8413" y="-255.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">nombre</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-250 60,-270 96,-270 96,-250 60,-250"/>
+<text text-anchor="start" x="62.8413" y="-255.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">valor</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-230 0,-250 60,-250 60,-230 8,-230"/>
+<text text-anchor="start" x="2.2241" y="-235.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">puntero</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-230 60,-250 96,-250 96,-230 60,-230"/>
+<polygon fill="none" stroke="var(--fg)" points="0,-210 0,-230 60,-230 60,-210 8,-210"/>
+<text text-anchor="start" x="2.4482" y="-215.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">longitud</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-210 60,-230 96,-230 96,-210 60,-210"/>
+<text text-anchor="start" x="74.5" y="-215.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-190 0,-210 60,-210 60,-190 8,-190"/>
+<text text-anchor="start" x="2.6826" y="-195.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">capacidad</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-190 60,-210 96,-210 96,-190 60,-190"/>
+<text text-anchor="start" x="74.5" y="-195.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+</g>
+<!-- table4 -->
+<g  class="node">
+<polygon fill="none" stroke="var(--fg)" points="140.5,-250 140.5,-270 185.5,-270 185.5,-250 148.5,-250"/>
+<text text-anchor="start" x="145.4482" y="-255.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">indice</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-250 185.5,-270 221.5,-270 221.5,-250 185.5,-250"/>
+<text text-anchor="start" x="188.3413" y="-255.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">valor</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-230 140.5,-250 185.5,-250 185.5,-230 148.5,-230"/>
+<text text-anchor="start" x="158.5" y="-235.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">0</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-230 185.5,-250 221.5,-250 221.5,-230 185.5,-230"/>
+<text text-anchor="start" x="200" y="-235.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">h</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-210 140.5,-230 185.5,-230 185.5,-210 148.5,-210"/>
+<text text-anchor="start" x="158.5" y="-215.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">1</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-210 185.5,-230 221.5,-230 221.5,-210 185.5,-210"/>
+<text text-anchor="start" x="200.3931" y="-215.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">o</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-190 140.5,-210 185.5,-210 185.5,-190 148.5,-190"/>
+<text text-anchor="start" x="158.5" y="-195.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">2</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-190 185.5,-210 221.5,-210 221.5,-190 185.5,-190"/>
+<text text-anchor="start" x="201.5552" y="-195.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">l</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-170 140.5,-190 185.5,-190 185.5,-170 148.5,-170"/>
+<text text-anchor="start" x="158.5" y="-175.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">3</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-170 185.5,-190 221.5,-190 221.5,-170 185.5,-170"/>
+<text text-anchor="start" x="201.5552" y="-175.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">a</text>
+</g>
+<!-- table3&#45;&gt;table4 -->
+<g  class="edge">
+<path fill="none" stroke="var(--fg)" d="M78,-240C78,-240 109.3406,-240 130.3797,-240"/>
+<polygon fill="var(--fg)" stroke="var(--fg)" points="130.5,-243.5001 140.5,-240 130.5,-236.5001 130.5,-243.5001"/>
+</g>
+</g>
+</svg>
+</div>
+<p><span class="caption">Figura 4-3: Otra posibilidad de lo que <code>s2 = s1</code> podría
+hacer si Rust copiara también los datos del heap</span></p>
+<p>Anteriormente, dijimos que cuando una variable sale de contexto de ejecución, Rust llama
+automáticamente a la función <code>drop</code> y limpia la memoria del heap para esa
+variable. Pero la Figura 4-2 muestra que ambos punteros de datos apuntan al
+mismo lugar. Esto es un problema: cuando <code>s2</code> y <code>s1</code> salen de contexto de ejecución, ambos
+intentarán liberar la misma memoria. Esto se conoce como un error de <em>doble
+liberación</em> y es uno de los errores de seguridad de la memoria que mencionamos
+anteriormente. Liberar la memoria dos veces puede conducir a la corrupción de
+memoria, lo que puede conducir a vulnerabilidades de seguridad.</p>
+<p>Para garantizar la seguridad de la memoria, después de la línea <code>let s2 = s1;</code>,
+Rust considera a <code>s1</code> como no válida. Por lo tanto, Rust no necesita liberar
+nada cuando <code>s1</code> sale de ámbito. Echa un vistazo a lo que sucede cuando intentas
+usar <code>s1</code> después de que se crea <code>s2</code>; no funcionará:</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>    let s1 = String::from("hola");
+    let s2 = s1;
+
+    println!("{}, mundo!", s1);
+<span class="boring">}</span></code></pre>
+<p>Obtendrás un error como este porque Rust te impide usar la referencia
+invalidada:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0382]: borrow of moved value: `s1`
+ --&gt; src/main.rs:5:28
+  |
+2 |     let s1 = String::from("hola");
+  |         -- move occurs because `s1` has type `String`, which does not implement the `Copy` trait
+3 |     let s2 = s1;
+  |              -- value moved here
+4 |
+5 |     println!("{}, mundo!", s1);
+  |                            ^^ value borrowed here after move
+  |
+  = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider cloning the value if the performance cost is acceptable
+  |
+3 |     let s2 = s1.clone();
+  |                ++++++++
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `ownership` due to previous error
+</code></pre>
+<p>Si has escuchado los términos <em>copia superficial</em> y <em>copia profunda</em> mientras
+trabajabas con otros lenguajes, el concepto de copiar el puntero, la longitud y
+la capacidad sin copiar los datos probablemente suene a hacer una copia
+superficial. Pero debido a que Rust también invalida la primera variable, en
+vez de llamarse una copia superficial, se conoce como un <em>movimiento</em>. En este
+ejemplo, diríamos que <code>s1</code> fue <em>movido</em> a <code>s2</code>. Entonces, lo que realmente
+sucede se muestra en la Figura 4-4.</p>
+<div style="width:50%; max-width: 100%;">
+<svg
+ viewBox="0.00 0.00 1000.00 1000.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g  class="graph" transform="scale(4.1667 4.1667) rotate(0) translate(4 238)">
+<title>Tres tablas: las tablas s1 y s2 que representan esas cadenas en la pila, respectivamente, y ambas apuntando a la misma cadena de datos en el heap. La tabla s1 está desactivada porque s1 ya no es válida; solo s2 se puede usar para acceder a los datos del heap.</title>
+<desc >Tres tablas: las tablas s1 y s2 que representan esas cadenas en la pila, respectivamente, y ambas apuntando a la misma cadena de datos en el heap. La tabla s1 está desactivada porque s1 ya no es válida; solo s2 se puede usar para acceder a los datos del heap.</desc>
+<polygon fill="transparent" stroke="transparent" points="-4,4 -4,-238 233,-238 233,4 -4,4"/>
+<!-- table0 -->
+<g  class="node">
+<polygon class="opacity-background" stroke="transparent" points="0,-130 0,-230 96,-230 96,-130 8,-130"/>
+<polyline fill="none" stroke="var(--fg)" points="0,-210 96,-210 "/>
+<text text-anchor="start" x="45.7759" y="-215.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">s1</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-190 0,-210 60,-210 60,-190 8,-190"/>
+<text text-anchor="start" x="8.8413" y="-195.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">nombre</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-190 60,-210 96,-210 96,-190 60,-190"/>
+<text text-anchor="start" x="62.8413" y="-195.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">valor</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-170 0,-190 60,-190 60,-170 8,-170"/>
+<text text-anchor="start" x="2.2241" y="-175.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">puntero</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-170 60,-190 96,-190 96,-170 60,-170"/>
+<polygon fill="none" stroke="var(--fg)" points="0,-150 0,-170 60,-170 60,-150 8,-150"/>
+<text text-anchor="start" x="2.4482" y="-155.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">longitud</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-150 60,-170 96,-170 96,-150 60,-150"/>
+<text text-anchor="start" x="74.5" y="-155.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-130 0,-150 60,-150 60,-130 8,-130"/>
+<text text-anchor="start" x="2.6826" y="-135.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">capacidad</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-130 60,-150 96,-150 96,-130 60,-130"/>
+<text text-anchor="start" x="74.5" y="-135.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+</g>
+<!-- table1 -->
+<g  class="node">
+<polygon fill="none" stroke="var(--fg)" points="140.5,-127 140.5,-147 185.5,-147 185.5,-127 148.5,-127"/>
+<text text-anchor="start" x="145.4482" y="-132.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">indice</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-127 185.5,-147 221.5,-147 221.5,-127 185.5,-127"/>
+<text text-anchor="start" x="188.3413" y="-132.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">valor</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-107 140.5,-127 185.5,-127 185.5,-107 148.5,-107"/>
+<text text-anchor="start" x="158.5" y="-112.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">0</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-107 185.5,-127 221.5,-127 221.5,-107 185.5,-107"/>
+<text text-anchor="start" x="200" y="-112.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">h</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-87 140.5,-107 185.5,-107 185.5,-87 148.5,-87"/>
+<text text-anchor="start" x="158.5" y="-92.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">1</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-87 185.5,-107 221.5,-107 221.5,-87 185.5,-87"/>
+<text text-anchor="start" x="200.3931" y="-92.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">o</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-67 140.5,-87 185.5,-87 185.5,-67 148.5,-67"/>
+<text text-anchor="start" x="158.5" y="-72.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">2</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-67 185.5,-87 221.5,-87 221.5,-67 185.5,-67"/>
+<text text-anchor="start" x="201.5552" y="-72.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">l</text>
+<polygon fill="none" stroke="var(--fg)" points="140.5,-47 140.5,-67 185.5,-67 185.5,-47 148.5,-47"/>
+<text text-anchor="start" x="158.5" y="-52.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">3</text>
+<polygon fill="none" stroke="var(--fg)" points="185.5,-47 185.5,-67 221.5,-67 221.5,-47 185.5,-47"/>
+<text text-anchor="start" x="201.5552" y="-52.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">a</text>
+</g>
+<!-- table0&#45;&gt;table1 -->
+<g  class="edge">
+<path fill="none" stroke="var(--fg)" d="M78,-180C78,-180 101.9982,-126.912 130.4405,-118.2023"/>
+<polygon fill="var(--fg)" stroke="var(--fg)" points="130.986,-121.6621 140.5,-117 130.1553,-114.7115 130.986,-121.6621"/>
+</g>
+<!-- table3 -->
+<g  class="node">
+<polyline fill="none" stroke="var(--fg)" points="0,-84 96,-84 "/>
+<text text-anchor="start" x="45.7759" y="-89.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">s2</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-64 0,-84 60,-84 60,-64 8,-64"/>
+<text text-anchor="start" x="8.8413" y="-69.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">nombre</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-64 60,-84 96,-84 96,-64 60,-64"/>
+<text text-anchor="start" x="62.8413" y="-69.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">valor</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-44 0,-64 60,-64 60,-44 8,-44"/>
+<text text-anchor="start" x="2.2241" y="-49.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">puntero</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-44 60,-64 96,-64 96,-44 60,-44"/>
+<polygon fill="none" stroke="var(--fg)" points="0,-24 0,-44 60,-44 60,-24 8,-24"/>
+<text text-anchor="start" x="2.4482" y="-29.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">longitud</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-24 60,-44 96,-44 96,-24 60,-24"/>
+<text text-anchor="start" x="74.5" y="-29.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+<polygon fill="none" stroke="var(--fg)" points="0,-4 0,-24 60,-24 60,-4 8,-4"/>
+<text text-anchor="start" x="2.6826" y="-9.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">capacidad</text>
+<polygon fill="none" stroke="var(--fg)" points="60,-4 60,-24 96,-24 96,-4 60,-4"/>
+<text text-anchor="start" x="74.5" y="-9.8" font-family="Times,serif" font-size="14.00" fill="var(--fg)">4</text>
+</g>
+<!-- table3&#45;&gt;table1 -->
+<g  class="edge">
+<path fill="none" stroke="var(--fg)" d="M78,-54C78,-54 101.9982,-107.088 130.4405,-115.7977"/>
+<polygon fill="var(--fg)" stroke="var(--fg)" points="130.1553,-119.2885 140.5,-117 130.986,-112.3379 130.1553,-119.2885"/>
+</g>
+</g>
+</svg>
+</div>
+<p><span class="caption">Figura 4-4: Representación en memoria después de que
+<code>s1</code> se haya invalidado</span></p>
+<p>¡Eso resuelve nuestro problema! Con solo <code>s2</code> válido, cuando sale de ámbito
+solo él liberará la memoria, y ya está.</p>
+<p>Además, hay una elección de diseño que se infiere de esto: Rust nunca
+creará automáticamente "copias profundas" de tus datos. Por lo tanto, cualquier
+copia <em>automática</em> se puede asumir que es económica en términos de rendimiento
+en tiempo de ejecución.</p>
+<!-- Old heading. Do not remove or links may break. -->
+<p><a id="ways-variables-and-data-interact-clone"></a></p>
+<h4 id="variables-y-datos-interactuando-con-clone"><a class="header" href="#variables-y-datos-interactuando-con-clone">Variables y datos interactuando con Clone</a></h4>
+<p>Si <em>queremos</em> copiar profundamente los datos del heap de la <code>String</code>, no solo
+los datos de la pila, podemos usar un método común llamado <code>clone</code>. Discutiremos
+la sintaxis del método en el Capítulo 5, pero debido a que los métodos son una
+característica común en muchos lenguajes de programación, probablemente los
+hayas visto antes.</p>
+<p>Aquí hay un ejemplo del método <code>clone</code> en acción:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let s1 = String::from("hola");
+    let s2 = s1.clone();
+
+    println!("s1 = {}, s2 = {}", s1, s2);
+<span class="boring">}</span></code></pre></pre>
+<p>Esto funciona bien y produce explícitamente el comportamiento mostrado en la
+Figura 4-3, donde los datos del heap <em>se copian</em>.</p>
+<p>Cuando veas una llamada a <code>clone</code>, sabrás que se está ejecutando algún código
+arbitrario y que ese código puede ser costoso. Es un indicador visual de que
+algo diferente está sucediendo.</p>
+<h4 id="solo-datos-del-stack-copiar"><a class="header" href="#solo-datos-del-stack-copiar">Solo datos del stack: Copiar</a></h4>
+<p>Hay otro problema que aún no hemos hablado. Este código usando enteros - parte
+de lo que se mostró en el Listado 4-2 - funciona y es válido:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let x = 5;
+    let y = x;
+
+    println!("x = {}, y = {}", x, y);
+<span class="boring">}</span></code></pre></pre>
+<p>Pero este código parece contradecir lo que acabamos de aprender: no tenemos una
+llamada a <code>clone</code>, pero <code>x</code> sigue siendo válido y no se movió a <code>y</code>.</p>
+<p>La razón es que los tipos como los enteros que tienen un tamaño conocido en el
+momento de la compilación se almacenan completamente en la pila, por lo que
+copiar los valores reales es rápido. Eso significa que no hay razón para que
+queramos evitar que <code>x</code> sea válido después de crear la variable <code>y</code>. En otras
+palabras, no hay diferencia entre copiar superficial y profunda aquí, por lo que
+llamar a <code>clone</code> no haría nada diferente de la copia superficial habitual, y
+podemos dejarlo fuera.</p>
+<p>Rust tiene una anotación especial llamada <code>Copy</code> que podemos colocar en tipos
+que se almacenan en la pila, como los enteros (hablaremos más sobre los
+<em>traits</em> en el <a href="ch10-02-traits.html">Capítulo 10</a><!-- ignore -->). Si un tipo implementa el
+<code>Copy</code> <em>trait</em>, las variables que lo usan no se mueven, sino que se copian
+trivialmente, haciendo que sigan siendo válidas después de asignarlas a otra
+variable.</p>
+<p>Rust no nos permitirá anotar un tipo con <code>Copy</code> si el tipo, o cualquiera de sus
+partes, ha implementado el <em>trait</em> <code>Drop</code>. Si el tipo necesita que algo
+especial suceda cuando el valor sale del alcance y agregamos la anotación <code>Copy</code>
+a ese tipo, obtendremos un error de tiempo de compilación. Para aprender cómo
+agregar la anotación <code>Copy</code> a tu tipo para implementar el <em>trait</em>, consulta
+<a href="appendix-03-derivable-traits.html">“Traits derivables”</a><!-- ignore --> en el Apéndice C.</p>
+<p>Entonces, ¿qué tipos implementan el <em>trait</em> <code>Copy</code>? Puedes consultar la
+documentación del tipo dado para asegurarte, pero como regla general, cualquier
+grupo de valores escalares simples puede implementar <code>Copy</code>, y nada que
+requiera asignación o sea alguna forma de recurso puede implementar <code>Copy</code>.
+Aquí hay algunos de los tipos que implementan <code>Copy</code>:</p>
+<ul>
+<li>Todos los tipos enteros, como <code>u32</code>.</li>
+<li>El tipo booleano, <code>bool</code>, con valores <code>true</code> y <code>false</code>.</li>
+<li>Todos los tipos de punto flotante, como <code>f64</code>.</li>
+<li>El tipo de carácter, <code>char</code>.</li>
+<li>Tuplas, si solo contienen tipos que también implementan <code>Copy</code>. Por ejemplo,
+<code>(i32, i32)</code> implementa <code>Copy</code>, pero <code>(i32, String)</code> no lo hace.</li>
+</ul>
+<h3 id="propiedad-y-funciones"><a class="header" href="#propiedad-y-funciones">Propiedad y funciones</a></h3>
+<p>Las mecánicas de pasar un valor a una función son similares a las de asignar un
+valor a una variable. Pasar una variable a una función moverá o copiará, como
+hace la asignación. La Lista 4-3 tiene un ejemplo con algunas anotaciones que
+muestran dónde entran y salen las variables del alcance.</p>
+<p><span class="filename">Nombre del archivo: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let s = String::from("hola");  // s aparece en el ámbito
+
+    tomar_ownership(s);             // El valor de s se mueve a la función...
+                                    // ... y ya no es valido aquí
+
+    let x = 5;                      // x aparece en el ámbito
+
+    hacer_una_copia(x);                  // x deberia moverse a la función,
+                                    // pero i32 implementa Copy, entonces es
+                                    // valido aún despues de llamar a la función
+
+} // Aquí termina el ámbito, x es destruido con drop. La memoria es liberada.
+  // s ya no existia porque habia sido movido a la función.
+  // Nada especial ocurre.
+
+fn tomar_ownership(un_string: String) { // un_string aparece en el ámbito
+    println!("{}", un_string);
+} // Aquí termina el ámbito, un_string es destruido con drop. 
+  // La memoria es liberada.
+
+fn hacer_una_copia(un_entero: i32) { // un_entero aparece en el ámbito
+    println!("{}", un_entero);
+} // Aquí termina el ámbito, un_entero es destruido. Nada especial ocurre.</code></pre></pre>
+<p><span class="caption">Lista 4-3: Funciones con propiedad y alcance
+anotados</span></p>
+<p>Si intentamos usar <code>s</code> después de llamar a <code>tomar_ownership</code>, Rust lanzaría un
+error de tiempo de compilación. Estas comprobaciones estáticas nos protegen de
+errores. Intenta agregar código a <code>main</code> que use <code>s</code> y <code>x</code> para ver dónde puedes
+usarlos y dónde las reglas de propiedad te impiden hacerlo.</p>
+<h3 id="valores-de-retorno-y-alcance"><a class="header" href="#valores-de-retorno-y-alcance">Valores de retorno y alcance</a></h3>
+<p>Los valores de retorno también pueden transferir la propiedad. La Lista 4-4
+muestra un ejemplo de una función que devuelve algún valor, con anotaciones
+similares a las de la Lista 4-3.</p>
+<p><span class="filename">Nombre del archivo: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let s1 = da_un_ownership();         // da_un_ownership es llamado y
+                                        // devuelve el valor de retorno
+                                        // a s1
+
+    let s2 = String::from("hola");     // s2 aparece en el ámbito
+
+    let s3 = toma_y_devuelve(s2);  // s2 es movido a la función
+                                        // toma_y_devuelve, que también
+                                        // retorna el valor de s2 a s3
+} // Fin el ámbito, s3 es destruido con drop y se libera la memoria. 
+  // s2 fue movido previamente, entonces no pasa nada. 
+  // s1 es destruido con drop y se libera la memoria.
+
+fn da_un_ownership() -&gt; String {             // da_un_ownership mueve su
+                                             // retorno a la función que la
+                                             // llama
+
+    let un_string = String::from("tuyo");    // un_string aparece en el ámbito
+
+    un_string                                // un_string es retornado y
+                                             // mueve su valor
+}
+
+// Esta función toma un String y devuelve uno
+fn toma_y_devuelve(un_string: String) -&gt; String { // un_string aparece 
+                                                  // en el ámbito
+
+    un_string  // un_string es retornado y mueve su valor
+}</code></pre></pre>
+<p><span class="caption">Lista 4-4: Transferencia de propiedad de los valores
+de retorno</span></p>
+<p>La propiedad (ownership) de una variable sigue el mismo patrón cada vez:
+asignar un valor a otra variable lo mueve. Cuando una variable que incluye datos
+en el heap sale del contexto de ejecución, el valor se limpiará por <code>drop</code> a menos que la
+propiedad de los datos se haya movido a otra variable.</p>
+<p>Aunque esto funciona, tomar la propiedad y luego devolver la propiedad con cada
+función es un poco tedioso. ¿Qué pasa si queremos que una función use un valor
+pero no tome la propiedad? Es bastante molesto que todo lo que pasamos también
+necesite volver a pasar si queremos usarlo de nuevo, además de cualquier dato
+que resulte del cuerpo de la función que también podríamos querer devolver.</p>
+<p>Rust nos permite devolver múltiples valores usando una tupla, como se muestra
+en la Lista 4-5.</p>
+<p><span class="filename">Nombre del archivo: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let s1 = String::from("hola");
+
+    let (s2, len) = calcular_longitud(s1);
+
+    println!("La longitud de '{}' es {}.", s2, len);
+}
+
+fn calcular_longitud(s: String) -&gt; (String, usize) {
+    let length = s.len(); // len() retorna la longitud de un String
+
+    (s, length)
+}</code></pre></pre>
+<p><span class="caption">Lista 4-5: Devolución de la propiedad de los
+parámetros</span></p>
+<p>Pero esto es demasiado ceremonioso y mucho trabajo para un concepto que debería
+ser común. Afortunadamente para nosotros, Rust tiene una característica para
+usar un valor sin transferir la propiedad, llamada <em>referencias</em>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch04-00-understanding-ownership.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch04-02-references-and-borrowing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch04-00-understanding-ownership.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch04-02-references-and-borrowing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>

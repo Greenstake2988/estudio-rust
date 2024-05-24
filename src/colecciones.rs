@@ -1,3 +1,4 @@
+
 fn main() {
     let v: Vec<i32> = Vec::new();
     let v = vec![1, 2, 3];
@@ -68,5 +69,18 @@ fn main() {
         println!("{b}");
     }
 
+    use std::collections::HashMap;
+
+    let mut puntajes = HashMap::new();
+
+    puntajes.insert(String::from("Azul"), 10);
+    puntajes.insert(String::from("Amarillo"), 50);
+
+    let nombre_del_equipo = String::from("Azul");
+    let puntaje = puntajes.get(&nombre_del_equipo).copied().unwrap_or(0);
+
+    for (llave, valor) in &puntajes {
+        println!("{llave}: {valor}");
+    }
 }
 

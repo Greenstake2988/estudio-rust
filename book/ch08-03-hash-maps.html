@@ -1,0 +1,499 @@
+<!DOCTYPE HTML>
+<html lang="es" class="sidebar-visible light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Almacenar Claves con Valores Asociados en HashMaps - El Lenguaje de Programación Rust</title>
+
+
+        <!-- Custom HTML head -->
+        
+            <link rel="canonical" href="https://www.rustlang-es.org/rust-book-es/" />
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <meta property="og:url" content="https://rustlanges.github.io">
+        <meta property="og:type" content="book">
+        <meta property="og:title" content="Almacenar Claves con Valores Asociados en HashMaps - El Lenguaje de Programación Rust">
+        <meta property="og:description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta property="og:image" content="https://rustlanges.github.io/rust-book-es/img/open-graph.png">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="./theme/catppuccin.css">
+        <link rel="stylesheet" href="./theme/catppuccin-highlight.css">
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title-page.html">El Lenguaje de Programación Rust</a></li><li class="chapter-item expanded affix "><a href="foreword.html">Prefacio</a></li><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Introducción</a></li><li class="chapter-item expanded "><a href="ch01-00-getting-started.html"><strong aria-hidden="true">1.</strong> Empezando</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-installation.html"><strong aria-hidden="true">1.1.</strong> Instalación</a></li><li class="chapter-item expanded "><a href="ch01-02-hello-world.html"><strong aria-hidden="true">1.2.</strong> ¡Hola, Mundo!</a></li><li class="chapter-item expanded "><a href="ch01-03-hello-cargo.html"><strong aria-hidden="true">1.3.</strong> ¡Hola, Cargo!</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-guessing-game-tutorial.html"><strong aria-hidden="true">2.</strong> Programando un juego de adivinanzas</a></li><li class="chapter-item expanded "><a href="ch03-00-common-programming-concepts.html"><strong aria-hidden="true">3.</strong> Conceptos Comunes de Programación</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-variables-and-mutability.html"><strong aria-hidden="true">3.1.</strong> Variables y Mutabilidad</a></li><li class="chapter-item expanded "><a href="ch03-02-data-types.html"><strong aria-hidden="true">3.2.</strong> Tipos de Datos</a></li><li class="chapter-item expanded "><a href="ch03-03-how-functions-work.html"><strong aria-hidden="true">3.3.</strong> Funciones</a></li><li class="chapter-item expanded "><a href="ch03-04-comments.html"><strong aria-hidden="true">3.4.</strong> Comentarios</a></li><li class="chapter-item expanded "><a href="ch03-05-control-flow.html"><strong aria-hidden="true">3.5.</strong> Flujo de Control</a></li></ol></li><li class="chapter-item expanded "><a href="ch04-00-understanding-ownership.html"><strong aria-hidden="true">4.</strong> Entendiendo el Ownership</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04-01-what-is-ownership.html"><strong aria-hidden="true">4.1.</strong> ¿Qué es el Ownership?</a></li><li class="chapter-item expanded "><a href="ch04-02-references-and-borrowing.html"><strong aria-hidden="true">4.2.</strong> Referencias y Prestamos</a></li><li class="chapter-item expanded "><a href="ch04-03-slices.html"><strong aria-hidden="true">4.3.</strong> El Tipo Slice</a></li></ol></li><li class="chapter-item expanded "><a href="ch05-00-structs.html"><strong aria-hidden="true">5.</strong> Usando Structs para Estructurar Datos Relacionados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05-01-defining-structs.html"><strong aria-hidden="true">5.1.</strong> Definiendo e Instanciando Structs</a></li><li class="chapter-item expanded "><a href="ch05-02-example-structs.html"><strong aria-hidden="true">5.2.</strong> Un Programa de Ejemplo Usando Structs</a></li><li class="chapter-item expanded "><a href="ch05-03-method-syntax.html"><strong aria-hidden="true">5.3.</strong> Sintaxis de Métodos</a></li></ol></li><li class="chapter-item expanded "><a href="ch06-00-enums.html"><strong aria-hidden="true">6.</strong> Enums y Pattern Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06-01-defining-an-enum.html"><strong aria-hidden="true">6.1.</strong> Definiendo un Enum</a></li><li class="chapter-item expanded "><a href="ch06-02-match.html"><strong aria-hidden="true">6.2.</strong> El operador de control de flujo match</a></li><li class="chapter-item expanded "><a href="ch06-03-if-let.html"><strong aria-hidden="true">6.3.</strong> Flujo de Control Conciso con if let</a></li></ol></li><li class="chapter-item expanded "><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"><strong aria-hidden="true">7.</strong> Administrando Proyectos en Crecimiento con Paquetes, Crates y Módulos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07-01-packages-and-crates.html"><strong aria-hidden="true">7.1.</strong> Paquetes y Crates</a></li><li class="chapter-item expanded "><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"><strong aria-hidden="true">7.2.</strong> Definiendo módulos para controlar el scope y la privacidad</a></li><li class="chapter-item expanded "><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"><strong aria-hidden="true">7.3.</strong> Paths para referirse a un item en el árbol de módulos</a></li><li class="chapter-item expanded "><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"><strong aria-hidden="true">7.4.</strong> Incluyendo rutas al Scope con la palabra clave use</a></li><li class="chapter-item expanded "><a href="ch07-05-separating-modules-into-different-files.html"><strong aria-hidden="true">7.5.</strong> Separando Módulos en Diferentes Archivos</a></li></ol></li><li class="chapter-item expanded "><a href="ch08-00-common-collections.html"><strong aria-hidden="true">8.</strong> Colecciones comunes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch08-01-vectors.html"><strong aria-hidden="true">8.1.</strong> Almacenando listas de valores con vectores</a></li><li class="chapter-item expanded "><a href="ch08-02-strings.html"><strong aria-hidden="true">8.2.</strong> Almacenando texto codificado en UTF-8 con Strings</a></li><li class="chapter-item expanded "><a href="ch08-03-hash-maps.html" class="active"><strong aria-hidden="true">8.3.</strong> Almacenar Claves con Valores Asociados en HashMaps</a></li></ol></li><li class="chapter-item expanded "><a href="ch09-00-error-handling.html"><strong aria-hidden="true">9.</strong> Manejo de Errores</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09-01-unrecoverable-errors-with-panic.html"><strong aria-hidden="true">9.1.</strong> Errores irrecuperables con panic!</a></li><li class="chapter-item expanded "><a href="ch09-02-recoverable-errors-with-result.html"><strong aria-hidden="true">9.2.</strong> Errores recuperables con Result</a></li><li class="chapter-item expanded "><a href="ch09-03-to-panic-or-not-to-panic.html"><strong aria-hidden="true">9.3.</strong> panic! o no panic!</a></li></ol></li><li class="chapter-item expanded "><a href="ch10-00-generics.html"><strong aria-hidden="true">10.</strong> Tipos Genéricos, Traits y Lifetimes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch10-01-syntax.html"><strong aria-hidden="true">10.1.</strong> Tipos de Datos Genéricos</a></li><li class="chapter-item expanded "><a href="ch10-02-traits.html"><strong aria-hidden="true">10.2.</strong> Traits: Definiendo Comportamiento Compartido</a></li><li class="chapter-item expanded "><a href="ch10-03-lifetime-syntax.html"><strong aria-hidden="true">10.3.</strong> Validando Referencias con Lifetimes</a></li></ol></li><li class="chapter-item expanded "><a href="ch11-00-testing.html"><strong aria-hidden="true">11.</strong> Escribiendo Tests Automatizados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch11-01-writing-tests.html"><strong aria-hidden="true">11.1.</strong> Cómo Escribir Tests</a></li><li class="chapter-item expanded "><a href="ch11-02-running-tests.html"><strong aria-hidden="true">11.2.</strong> Controlando Cómo Los Tests Son Ejecutados</a></li><li class="chapter-item expanded "><a href="ch11-03-test-organization.html"><strong aria-hidden="true">11.3.</strong> Organización De Los Tests</a></li></ol></li><li class="chapter-item expanded "><a href="ch12-00-an-io-project.html"><strong aria-hidden="true">12.</strong> Un proyecto de I/O: Construyendo un programa de línea de comandos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch12-01-accepting-command-line-arguments.html"><strong aria-hidden="true">12.1.</strong> Aceptando argumentos de línea de comandos</a></li><li class="chapter-item expanded "><a href="ch12-02-reading-a-file.html"><strong aria-hidden="true">12.2.</strong> Leyendo un archivo</a></li><li class="chapter-item expanded "><a href="ch12-03-improving-error-handling-and-modularity.html"><strong aria-hidden="true">12.3.</strong> Refactorizando para mejorar la modularidad y el manejo de errores</a></li><li class="chapter-item expanded "><a href="ch12-04-testing-the-librarys-functionality.html"><strong aria-hidden="true">12.4.</strong> Desarrollando la funcionalidad de la biblioteca con T.D.D.</a></li><li class="chapter-item expanded "><a href="ch12-05-working-with-environment-variables.html"><strong aria-hidden="true">12.5.</strong> Trabajando con Variables de Entorno</a></li><li class="chapter-item expanded "><a href="ch12-06-writing-to-stderr-instead-of-stdout.html"><strong aria-hidden="true">12.6.</strong> Escribiendo mensajes de error estándar en lugar del output estándar</a></li></ol></li><li class="chapter-item expanded "><a href="ch13-00-functional-features.html"><strong aria-hidden="true">13.</strong> Características De Lenguajes Funcionales: Iteradores y Closures</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch13-01-closures.html"><strong aria-hidden="true">13.1.</strong> Closures: Funciones anónimas que capturan su entorno</a></li><li class="chapter-item expanded "><a href="ch13-02-iterators.html"><strong aria-hidden="true">13.2.</strong> Procesando una serie de elementos con Iteradores</a></li><li class="chapter-item expanded "><a href="ch13-03-improving-our-io-project.html"><strong aria-hidden="true">13.3.</strong> Mejorando nuestro proyecto I/O</a></li><li class="chapter-item expanded "><a href="ch13-04-performance.html"><strong aria-hidden="true">13.4.</strong> Comparando Performance: Bucles vs. Iteradores</a></li></ol></li><li class="chapter-item expanded "><a href="ch14-00-more-about-cargo.html"><strong aria-hidden="true">14.</strong> Más sobre Cargo y Crates.io</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch14-01-release-profiles.html"><strong aria-hidden="true">14.1.</strong> Personalizando Compilaciones con Perfiles de Lanzamiento</a></li><li class="chapter-item expanded "><a href="ch14-02-publishing-to-crates-io.html"><strong aria-hidden="true">14.2.</strong> Publicando un Crate a Crates.io</a></li><li class="chapter-item expanded "><a href="ch14-03-cargo-workspaces.html"><strong aria-hidden="true">14.3.</strong> Cargo Workspaces</a></li><li class="chapter-item expanded "><a href="ch14-04-installing-binaries.html"><strong aria-hidden="true">14.4.</strong> Instalando Binarios con cargo install</a></li><li class="chapter-item expanded "><a href="ch14-05-extending-cargo.html"><strong aria-hidden="true">14.5.</strong> Extendiendo Cargo con Comandos Personalizados</a></li></ol></li><li class="chapter-item expanded "><a href="ch15-00-smart-pointers.html"><strong aria-hidden="true">15.</strong> Smart Pointers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch15-01-box.html"><strong aria-hidden="true">15.1.</strong> Usando Box&lt;T&gt; para Apuntar a Datos en el Heap</a></li><li class="chapter-item expanded "><a href="ch15-02-deref.html"><strong aria-hidden="true">15.2.</strong> Tratando los Smart Pointers como Referencias Regulares con el Trait Deref</a></li><li class="chapter-item expanded "><a href="ch15-03-drop.html"><strong aria-hidden="true">15.3.</strong> Ejecutando Código al Limpiar con el Trait Drop</a></li><li class="chapter-item expanded "><a href="ch15-04-rc.html"><strong aria-hidden="true">15.4.</strong> Rc&lt;T&gt;, el Smart Pointer de Conteo de Referencias</a></li><li class="chapter-item expanded "><a href="ch15-05-interior-mutability.html"><strong aria-hidden="true">15.5.</strong> RefCell&lt;T&gt; y el Patrón de Mutabilidad Interior</a></li><li class="chapter-item expanded "><a href="ch15-06-reference-cycles.html"><strong aria-hidden="true">15.6.</strong> Referencias Circulares Pueden Fugar Memoria</a></li></ol></li><li class="chapter-item expanded "><a href="ch16-00-concurrency.html"><strong aria-hidden="true">16.</strong> Concurrencia Sin Miedo</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch16-01-threads.html"><strong aria-hidden="true">16.1.</strong> Usando Threads para Ejecutar Código Simultáneamente</a></li><li class="chapter-item expanded "><a href="ch16-02-message-passing.html"><strong aria-hidden="true">16.2.</strong> Usando el Pasaje de Mensajes para Transferir Datos entre Hilos</a></li><li class="chapter-item expanded "><a href="ch16-03-shared-state.html"><strong aria-hidden="true">16.3.</strong> Concurrencia con Estado Compartido</a></li><li class="chapter-item expanded "><a href="ch16-04-extensible-concurrency-sync-and-send.html"><strong aria-hidden="true">16.4.</strong> Concurrencia Extensible con los Traits Sync y Send</a></li></ol></li><li class="chapter-item expanded "><a href="ch17-00-oop.html"><strong aria-hidden="true">17.</strong> Rust como un Lenguaje de Programación Orientado a Objetos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch17-01-what-is-oo.html"><strong aria-hidden="true">17.1.</strong> Características de Lenguajes Orientados a Objetos</a></li><li class="chapter-item expanded "><a href="ch17-02-trait-objects.html"><strong aria-hidden="true">17.2.</strong> Usando Trait Objects que Permiten Valores de Diferentes Tipos</a></li><li class="chapter-item expanded "><a href="ch17-03-oo-design-patterns.html"><strong aria-hidden="true">17.3.</strong> Implementando un Patrón de Diseño Orientado a Objetos</a></li></ol></li><li class="chapter-item expanded "><a href="ch18-00-patterns.html"><strong aria-hidden="true">18.</strong> Patterns and Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch18-01-all-the-places-for-patterns.html"><strong aria-hidden="true">18.1.</strong> Todos los lugares donde se pueden usar Patterns</a></li><li class="chapter-item expanded "><a href="ch18-02-refutability.html"><strong aria-hidden="true">18.2.</strong> Refutabilidad: Si un Pattern Puede Fallar al Hacer Match</a></li><li class="chapter-item expanded "><a href="ch18-03-pattern-syntax.html"><strong aria-hidden="true">18.3.</strong> Sintaxis de los Patterns</a></li></ol></li><li class="chapter-item expanded "><a href="ch19-00-advanced-features.html"><strong aria-hidden="true">19.</strong> Características Avanzadas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch19-01-unsafe-rust.html"><strong aria-hidden="true">19.1.</strong> Rust Inseguro</a></li><li class="chapter-item expanded "><a href="ch19-03-advanced-traits.html"><strong aria-hidden="true">19.2.</strong> Advanced Traits</a></li><li class="chapter-item expanded "><a href="ch19-04-advanced-types.html"><strong aria-hidden="true">19.3.</strong> Advanced Types</a></li><li class="chapter-item expanded "><a href="ch19-05-advanced-functions-and-closures.html"><strong aria-hidden="true">19.4.</strong> Advanced Functions and Closures</a></li><li class="chapter-item expanded "><a href="ch19-06-macros.html"><strong aria-hidden="true">19.5.</strong> Macros</a></li></ol></li><li class="chapter-item expanded "><a href="ch20-00-final-project-a-web-server.html"><strong aria-hidden="true">20.</strong> Final Project: Building a Multithreaded Web Server</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch20-01-single-threaded.html"><strong aria-hidden="true">20.1.</strong> Building a Single-Threaded Web Server</a></li><li class="chapter-item expanded "><a href="ch20-02-multithreaded.html"><strong aria-hidden="true">20.2.</strong> Turning Our Single-Threaded Server into a Multithreaded Server</a></li><li class="chapter-item expanded "><a href="ch20-03-graceful-shutdown-and-cleanup.html"><strong aria-hidden="true">20.3.</strong> Graceful Shutdown and Cleanup</a></li></ol></li><li class="chapter-item expanded "><a href="appendix-00.html"><strong aria-hidden="true">21.</strong> Apéndice</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="appendix-01-keywords.html"><strong aria-hidden="true">21.1.</strong> A - Palabras claves</a></li><li class="chapter-item expanded "><a href="appendix-02-operators.html"><strong aria-hidden="true">21.2.</strong> B - Operadores y Símbolos</a></li><li class="chapter-item expanded "><a href="appendix-03-derivable-traits.html"><strong aria-hidden="true">21.3.</strong> C - Derivable Traits</a></li><li class="chapter-item expanded "><a href="appendix-04-useful-development-tools.html"><strong aria-hidden="true">21.4.</strong> D - Useful Development Tools</a></li><li class="chapter-item expanded "><a href="appendix-05-editions.html"><strong aria-hidden="true">21.5.</strong> E - Editions</a></li><li class="chapter-item expanded "><a href="appendix-06-translation.html"><strong aria-hidden="true">21.6.</strong> F - Translations of the Book</a></li><li class="chapter-item expanded "><a href="appendix-07-nightly-rust.html"><strong aria-hidden="true">21.7.</strong> G - Cómo se hace Rust y “Rust Nightly”</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="latte">Latte</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="frappe">Frappé</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="macchiato">Macchiato</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mocha">Mocha</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">El Lenguaje de Programación Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/RustLangES/rust-book-es" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="almacenar-claves-con-valores-asociados-en-hashmaps"><a class="header" href="#almacenar-claves-con-valores-asociados-en-hashmaps">Almacenar Claves con Valores Asociados en HashMaps</a></h2>
+<p>La última de nuestras colecciones comunes es el <em>hash map</em>. El tipo <code>HashMap&lt;K, V&gt;</code> almacena un mapeo de claves de tipo <code>K</code> a valores de tipo <code>V</code> usando una
+<em>función hash</em>, que determina cómo coloca estas claves y valores en la memoria.
+Muchos lenguajes de programación admiten este tipo de estructura de datos, pero
+a menudo usan un nombre diferente, como hash, map, object, hash table,
+diccionario o arreglos asociativos, solo para nombrar algunos.</p>
+<p>Los hash maps son útiles cuando desea buscar datos no usando un índice, como
+puede hacerlo con vectores, sino usando una clave que puede ser de cualquier
+tipo. Por ejemplo, en un juego, podría realizar un seguimiento de la puntuación
+de cada equipo en un hash map en el que cada clave es el nombre de un equipo y
+los valores son la puntuación de cada equipo. Dado un nombre de equipo, puede
+recuperar su puntuación.</p>
+<p>Repasaremos la API básica de los hash maps en esta sección, pero muchas más
+cosas buenas se esconden en las funciones definidas en <code>HashMap&lt;K, V&gt;</code> por la
+biblioteca estándar. Como siempre, consulte la documentación de la biblioteca
+estándar para obtener más información.</p>
+<h3 id="creando-un-nuevo-hashmap"><a class="header" href="#creando-un-nuevo-hashmap">Creando un nuevo HashMap</a></h3>
+<p>Una forma de crear un hash map vacío es usar <code>new</code> y agregar elementos con
+<code>insert</code>. En el Listado 8-20, estamos realizando un seguimiento de las
+puntuaciones de dos equipos cuyos nombres son <em>Blue</em> y <em>Yellow</em>. El equipo
+Blue comienza con 10 puntos y el equipo Yellow comienza con 50.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-20: Creando un nuevo hash map e insertando
+algunas claves y valores</span></p>
+<p>Ten en cuenta que es importante importar primero el módulo <code>HashMap</code> de la
+biblioteca estándar de colecciones. De nuestras tres colecciones comunes,
+ésta es la menos utilizada, por lo que no se incluye automáticamente en las
+características del <em>prelude</em>. Además, los hash maps tienen menos soporte por
+parte de la biblioteca estándar; por ejemplo, no hay una macro incorporada para
+construirlos.</p>
+<p>Al igual que los vectores, los hash maps almacenan sus datos en el <em>heap</em>. Este
+<code>HashMap</code> tiene claves de tipo <code>String</code> y valores de tipo <code>i32</code>. Al igual que los
+vectores, los hash maps son homogéneos: todas las claves deben tener el mismo
+tipo entre sí y todos los valores deben tener el mismo tipo.</p>
+<h3 id="accediendo-a-los-valores-en-un-hashmap"><a class="header" href="#accediendo-a-los-valores-en-un-hashmap">Accediendo a los valores en un HashMap</a></h3>
+<p>Podemos obtener un valor de un hash map proporcionando su clave al método <code>get</code>
+como se muestra en el listado 8-21.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+
+    let team_name = String::from("Blue");
+    let score = scores.get(&amp;team_name).copied().unwrap_or(0);
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-21: Acceso al puntaje para el equipo Blue
+almacenado en el hash map</span></p>
+<p>Aquí, <code>score</code> tendrá el valor que está asociado con el equipo Blue, y el
+resultado será <code>10</code>. El método <code>get</code> devuelve un <code>Option&lt;&amp;V&gt;</code>; si no hay un
+valor para ese clave en el hash map, <code>get</code> devolverá <code>None</code>. Este programa
+maneja un <code>Option</code> llamando a <code>copied</code> para obtener un <code>Option&lt;i32&gt;</code> en lugar
+de un <code>Option&lt;&amp;i32&gt;</code>, luego <code>unwrap_or</code> para establecer <code>score</code> en cero si
+<code>scores</code> no tiene una entrada para la clave.</p>
+<p>Podemos iterar sobre cada par clave/valor en un hash map de manera similar a
+como lo hacemos con vectores, usando un ciclo <code>for</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+
+    for (key, value) in &amp;scores {
+        println!("{key}: {value}");
+    }
+<span class="boring">}</span></code></pre></pre>
+<p>Este código imprimirá cada par en un orden arbitrario:</p>
+<pre><code class="language-text">Yellow: 50
+Blue: 10
+</code></pre>
+<h3 id="hashmaps-y-ownership"><a class="header" href="#hashmaps-y-ownership">HashMaps y Ownership</a></h3>
+<p>Para los tipos que implementan el trait <code>Copy</code>, como <code>i32</code>, los valores se
+copian en el hash map. Para valores de propiedad como <code>String</code>, los valores se
+moverán y el hash map será el propietario de esos valores, como se demuestra
+en el listado 8-22.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let field_name = String::from("Favorite color");
+    let field_value = String::from("Blue");
+
+    let mut map = HashMap::new();
+    map.insert(field_name, field_value);
+    // field_name and field_value are invalid at this point, try using them and
+    // see what compiler error you get!
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-22: Mostrando que claves y valores son propiedad
+del hash map una vez que se insertan</span></p>
+<p>No podemos usar <code>field_name</code> y <code>field_value</code> después de que se hayan movido al
+hash map con la llamada a <code>insert</code>.</p>
+<p>Si insertamos referencias a valores en el hash map, los valores no se moverán
+al hash map. Los valores a los que apuntan las referencias deben ser válidos
+al menos mientras el hash map sea válido. Hablaremos más sobre estos problemas
+en la sección <a href="ch10-03-lifetime-syntax.html#validando-referencias-con-lifetimes">“Validando referencias con Lifetimes”</a><!-- ignore --> en el
+Capítulo 10.</p>
+<h3 id="actualizando-un-hashmap"><a class="header" href="#actualizando-un-hashmap">Actualizando un HashMap</a></h3>
+<p>Aunque la cantidad de pares clave/valor es creciente, cada clave única solo puede
+tener un valor asociado con ella a la vez (pero no viceversa: por ejemplo, el
+equipo Blue y el equipo Yellow podrían tener el valor 10 almacenados en el hash
+map <code>scores</code>).</p>
+<p>Cuando queremos cambiar los datos en un hash map, tenemos que decidir cómo
+manejar el caso en el que una clave ya tiene un valor asignado. Podrías
+reemplazar el valor antiguo por el nuevo valor, ignorando completamente el
+valor antiguo. Podrías mantener el valor antiguo e ignorar el nuevo valor,
+agregando el nuevo valor solo si la clave <em>no</em> tiene ya un valor. O podrías
+combinar el valor antiguo y el nuevo valor. ¡Veamos cómo hacer cada una de
+estas!</p>
+<h4 id="reemplazando-un-valor"><a class="header" href="#reemplazando-un-valor">Reemplazando un valor</a></h4>
+<p>Si insertamos una clave y un valor en un hash map y luego insertamos esa misma
+clave con un valor diferente, el valor asociado con esa clave se reemplazará.
+Aunque el código en el listado 8-23 llama a <code>insert</code> dos veces, el hash map
+solo contendrá un par clave/valor porque estamos insertando el valor para la clave
+del equipo Blue dos veces.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Blue"), 25);
+
+    println!("{:?}", scores);
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-23: Reemplazando un valor almacenado con una
+clave en particular</span></p>
+<p>Este código imprimirá <code>{"Blue": 25}</code>. El valor original de <code>10</code> ha sido
+sobrescrito.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="only-inserting-a-value-if-the-key-has-no-value"></a></p>
+<h4 id="insertando-una-clave-y-un-valor-solo-si-una-clave-no-está-presente"><a class="header" href="#insertando-una-clave-y-un-valor-solo-si-una-clave-no-está-presente">Insertando una clave y un valor solo si una clave no está presente</a></h4>
+<p>Es común verificar si una clave en particular ya existe en el hash map con un
+valor y luego realizar las siguientes acciones: si la clave existe en el hash
+map, el valor existente debe permanecer tal como está. Si la clave no existe,
+insertarla junto con su valor.</p>
+<p>Los hash maps tienen una API especial para esto llamada <code>entry</code> que toma la clave
+que desea verificar como parámetro. El valor de retorno del método <code>entry</code> es
+un enum llamado <code>Entry</code> que representa un valor que puede o no existir. Digamos
+que queremos verificar si la clave para el equipo Yellow tiene un valor
+asociado. Si no lo tiene, queremos insertar el valor 50, y lo mismo para el
+equipo Blue. Usando la API <code>entry</code>, el código se ve como el listado 8-24.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+    scores.insert(String::from("Blue"), 10);
+
+    scores.entry(String::from("Yellow")).or_insert(50);
+    scores.entry(String::from("Blue")).or_insert(50);
+
+    println!("{:?}", scores);
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-24: Usando el método <code>entry</code> para insertar solo
+si la clave aún no tiene un valor</span></p>
+<p>El método <code>or_insert</code> en <code>Entry</code> está definido para devolver una referencia
+mutable al valor correspondiente a la clave <code>Entry</code> si esa clave existe, y si no,
+inserta el parámetro como el nuevo valor para esta clave y devuelve una
+referencia mutable al nuevo valor. Esta técnica es mucho más limpia que
+escribir la lógica nosotros mismos y, además, juega mejor con el borrow
+checker.</p>
+<p>Ejecutar el código en el listado 8-24 imprimirá <code>{"Yellow": 50, "Blue": 10}</code>.
+La primera llamada a <code>entry</code> insertará la clave para el equipo Yellow con el
+valor 50 porque el equipo Yellow no tiene un valor todavía. La segunda llamada
+a <code>entry</code> no cambiará el hash map porque el equipo Blue ya tiene el valor 10.</p>
+<h4 id="actualizando-un-valor-basado-en-el-valor-anterior"><a class="header" href="#actualizando-un-valor-basado-en-el-valor-anterior">Actualizando un valor basado en el valor anterior</a></h4>
+<p>Otro caso común para los hash maps es buscar un valor para una clave y luego
+actualizar ese valor en función del valor anterior. Por ejemplo, el listado 8-25
+muestra un código que cuenta cuántas veces aparece cada palabra en algún texto.
+Usamos un hash map con las palabras como claves y aumentamos el valor para
+mantener un recuento de cuántas veces hemos visto esa palabra. Si es la primera
+vez que vemos una palabra, primero insertaremos el valor 0.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let text = "hello world wonderful world";
+
+    let mut map = HashMap::new();
+
+    for word in text.split_whitespace() {
+        let count = map.entry(word).or_insert(0);
+        *count += 1;
+    }
+
+    println!("{:?}", map);
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-25: Contando ocurrencias de palabras usando un
+hash map que almacena palabras y cuenta</span></p>
+<p>Este código imprimirá <code>{"world": 2, "hello": 1, "wonderful": 1}</code>. Es posible
+que veas los mismos pares clave/valor en un orden diferente: recuerda la sección
+<a href="#accediendo-a-los-valores-en-un-hashmap">“Accediendo a valores en un hash map”</a><!-- ignore --> que iterar sobre
+un hash map ocurre en un orden arbitrario.</p>
+<p>El método <code>split_whitespace</code> devuelve un iterator sobre sub-slices, separados
+por espacios en blanco, del valor en <code>text</code>. El método <code>or_insert</code> devuelve una
+referencia mutable (<code>&amp;mut V</code>) al valor para la clave especificada. Aquí
+almacenamos esa referencia mutable en la variable <code>count</code>, por lo que para
+asignar a ese valor, primero debemos desreferenciar <code>count</code> usando el asterisco
+(<code>*</code>). La referencia mutable sale del ámbito al final del ciclo <code>for</code>, por lo
+que todos estos cambios son seguros y permitidos por las reglas del borrowing.</p>
+<h3 id="funciones-de-hashing"><a class="header" href="#funciones-de-hashing">Funciones de Hashing</a></h3>
+<p>Por defecto, <code>HashMap</code> usa una función de hashing llamada <em>SipHash</em> que puede
+proporcionar resistencia a ataques de Denegación de Servicio (DoS) que
+involucran tablas hash<sup class="footnote-reference"><a href="#siphash">1</a></sup><!-- ignore -->. Este no es el algoritmo de
+hashing más rápido disponible, pero el compromiso por una mejor seguridad que
+viene con la caída en el rendimiento vale la pena. Si perfilas tu código y
+encuentras que la función de hash predeterminada es demasiado lenta para tus
+propósitos, puedes cambiar a otra función especificando un hasher diferente. Un
+<em>hasher</em> es un tipo que implementa el trait <code>BuildHasher</code>. Hablaremos sobre
+traits y cómo implementarlos en el Capítulo 10. No necesariamente tienes que
+implementar tu propio hasher desde cero;
+<a href="https://crates.io/">crates.io</a><!-- ignore -->
+tiene bibliotecas compartidas por otros usuarios de Rust que proporcionan
+hashes que implementan muchos algoritmos de hashing comunes.</p>
+<div class="footnote-definition" id="siphash"><sup class="footnote-definition-label">1</sup>
+<p><a href="https://en.wikipedia.org/wiki/SipHash">https://en.wikipedia.org/wiki/SipHash</a></p>
+</div>
+<h2 id="resumen"><a class="header" href="#resumen">Resumen</a></h2>
+<p>Los vectores, los strings y los hash maps proporcionan una funcionalidad
+importante que necesitarás cuando quieras almacenar, acceder y modificar datos.
+Aquí hay algunos ejercicios que ahora deberías estar equipado para resolver:</p>
+<ul>
+<li>Dada una lista de enteros, usa un vector y devuelve la mediana (cuando se
+ordena, el valor en la posición media) y la moda (el valor que ocurre con más
+frecuencia; un hash map será útil aquí) de la lista.</li>
+<li>Convierte strings a pig latin. La primera consonante de cada palabra se
+mueve al final de la palabra y se agrega "ay", por lo que "primero" se
+convierte en "rimepay". Sin embargo, si la palabra comienza con una vocal,
+simplemente agregue "hay" al final de la palabra ("manzanaay"). ¡Ten en
+cuenta las reglas de UTF-8!</li>
+<li>Usando un hash map y vectores, cree un texto de interfaz para permitir que un
+usuario agregue nombres de empleados a un departamento en una empresa. Por
+ejemplo, "Agregar Sally a Ingeniería" o "Agregar Amir a Ventas". Luego,
+permita que el usuario recupere una lista de todas las personas en un
+departamento o todas las personas en la empresa por departamento, ordenadas
+alfabéticamente.</li>
+</ul>
+<p>La documentación de la biblioteca estándar describe métodos que los vectores,
+strings y hash maps tienen que ser útiles para estos ejercicios.</p>
+<p>Nos estamos adentrando en programas más complejos en los que las operaciones
+pueden fallar, por lo que es un momento perfecto para discutir el manejo de
+errores. ¡Haremos eso a continuación!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch08-02-strings.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch09-00-error-handling.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch08-02-strings.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch09-00-error-handling.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>

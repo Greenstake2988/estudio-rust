@@ -1,0 +1,689 @@
+<!DOCTYPE HTML>
+<html lang="es" class="sidebar-visible light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Flujo de Control - El Lenguaje de Programación Rust</title>
+
+
+        <!-- Custom HTML head -->
+        
+            <link rel="canonical" href="https://www.rustlang-es.org/rust-book-es/" />
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <meta property="og:url" content="https://rustlanges.github.io">
+        <meta property="og:type" content="book">
+        <meta property="og:title" content="Flujo de Control - El Lenguaje de Programación Rust">
+        <meta property="og:description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta property="og:image" content="https://rustlanges.github.io/rust-book-es/img/open-graph.png">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="./theme/catppuccin.css">
+        <link rel="stylesheet" href="./theme/catppuccin-highlight.css">
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title-page.html">El Lenguaje de Programación Rust</a></li><li class="chapter-item expanded affix "><a href="foreword.html">Prefacio</a></li><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Introducción</a></li><li class="chapter-item expanded "><a href="ch01-00-getting-started.html"><strong aria-hidden="true">1.</strong> Empezando</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-installation.html"><strong aria-hidden="true">1.1.</strong> Instalación</a></li><li class="chapter-item expanded "><a href="ch01-02-hello-world.html"><strong aria-hidden="true">1.2.</strong> ¡Hola, Mundo!</a></li><li class="chapter-item expanded "><a href="ch01-03-hello-cargo.html"><strong aria-hidden="true">1.3.</strong> ¡Hola, Cargo!</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-guessing-game-tutorial.html"><strong aria-hidden="true">2.</strong> Programando un juego de adivinanzas</a></li><li class="chapter-item expanded "><a href="ch03-00-common-programming-concepts.html"><strong aria-hidden="true">3.</strong> Conceptos Comunes de Programación</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-variables-and-mutability.html"><strong aria-hidden="true">3.1.</strong> Variables y Mutabilidad</a></li><li class="chapter-item expanded "><a href="ch03-02-data-types.html"><strong aria-hidden="true">3.2.</strong> Tipos de Datos</a></li><li class="chapter-item expanded "><a href="ch03-03-how-functions-work.html"><strong aria-hidden="true">3.3.</strong> Funciones</a></li><li class="chapter-item expanded "><a href="ch03-04-comments.html"><strong aria-hidden="true">3.4.</strong> Comentarios</a></li><li class="chapter-item expanded "><a href="ch03-05-control-flow.html" class="active"><strong aria-hidden="true">3.5.</strong> Flujo de Control</a></li></ol></li><li class="chapter-item expanded "><a href="ch04-00-understanding-ownership.html"><strong aria-hidden="true">4.</strong> Entendiendo el Ownership</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04-01-what-is-ownership.html"><strong aria-hidden="true">4.1.</strong> ¿Qué es el Ownership?</a></li><li class="chapter-item expanded "><a href="ch04-02-references-and-borrowing.html"><strong aria-hidden="true">4.2.</strong> Referencias y Prestamos</a></li><li class="chapter-item expanded "><a href="ch04-03-slices.html"><strong aria-hidden="true">4.3.</strong> El Tipo Slice</a></li></ol></li><li class="chapter-item expanded "><a href="ch05-00-structs.html"><strong aria-hidden="true">5.</strong> Usando Structs para Estructurar Datos Relacionados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05-01-defining-structs.html"><strong aria-hidden="true">5.1.</strong> Definiendo e Instanciando Structs</a></li><li class="chapter-item expanded "><a href="ch05-02-example-structs.html"><strong aria-hidden="true">5.2.</strong> Un Programa de Ejemplo Usando Structs</a></li><li class="chapter-item expanded "><a href="ch05-03-method-syntax.html"><strong aria-hidden="true">5.3.</strong> Sintaxis de Métodos</a></li></ol></li><li class="chapter-item expanded "><a href="ch06-00-enums.html"><strong aria-hidden="true">6.</strong> Enums y Pattern Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06-01-defining-an-enum.html"><strong aria-hidden="true">6.1.</strong> Definiendo un Enum</a></li><li class="chapter-item expanded "><a href="ch06-02-match.html"><strong aria-hidden="true">6.2.</strong> El operador de control de flujo match</a></li><li class="chapter-item expanded "><a href="ch06-03-if-let.html"><strong aria-hidden="true">6.3.</strong> Flujo de Control Conciso con if let</a></li></ol></li><li class="chapter-item expanded "><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"><strong aria-hidden="true">7.</strong> Administrando Proyectos en Crecimiento con Paquetes, Crates y Módulos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07-01-packages-and-crates.html"><strong aria-hidden="true">7.1.</strong> Paquetes y Crates</a></li><li class="chapter-item expanded "><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"><strong aria-hidden="true">7.2.</strong> Definiendo módulos para controlar el scope y la privacidad</a></li><li class="chapter-item expanded "><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"><strong aria-hidden="true">7.3.</strong> Paths para referirse a un item en el árbol de módulos</a></li><li class="chapter-item expanded "><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"><strong aria-hidden="true">7.4.</strong> Incluyendo rutas al Scope con la palabra clave use</a></li><li class="chapter-item expanded "><a href="ch07-05-separating-modules-into-different-files.html"><strong aria-hidden="true">7.5.</strong> Separando Módulos en Diferentes Archivos</a></li></ol></li><li class="chapter-item expanded "><a href="ch08-00-common-collections.html"><strong aria-hidden="true">8.</strong> Colecciones comunes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch08-01-vectors.html"><strong aria-hidden="true">8.1.</strong> Almacenando listas de valores con vectores</a></li><li class="chapter-item expanded "><a href="ch08-02-strings.html"><strong aria-hidden="true">8.2.</strong> Almacenando texto codificado en UTF-8 con Strings</a></li><li class="chapter-item expanded "><a href="ch08-03-hash-maps.html"><strong aria-hidden="true">8.3.</strong> Almacenar Claves con Valores Asociados en HashMaps</a></li></ol></li><li class="chapter-item expanded "><a href="ch09-00-error-handling.html"><strong aria-hidden="true">9.</strong> Manejo de Errores</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09-01-unrecoverable-errors-with-panic.html"><strong aria-hidden="true">9.1.</strong> Errores irrecuperables con panic!</a></li><li class="chapter-item expanded "><a href="ch09-02-recoverable-errors-with-result.html"><strong aria-hidden="true">9.2.</strong> Errores recuperables con Result</a></li><li class="chapter-item expanded "><a href="ch09-03-to-panic-or-not-to-panic.html"><strong aria-hidden="true">9.3.</strong> panic! o no panic!</a></li></ol></li><li class="chapter-item expanded "><a href="ch10-00-generics.html"><strong aria-hidden="true">10.</strong> Tipos Genéricos, Traits y Lifetimes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch10-01-syntax.html"><strong aria-hidden="true">10.1.</strong> Tipos de Datos Genéricos</a></li><li class="chapter-item expanded "><a href="ch10-02-traits.html"><strong aria-hidden="true">10.2.</strong> Traits: Definiendo Comportamiento Compartido</a></li><li class="chapter-item expanded "><a href="ch10-03-lifetime-syntax.html"><strong aria-hidden="true">10.3.</strong> Validando Referencias con Lifetimes</a></li></ol></li><li class="chapter-item expanded "><a href="ch11-00-testing.html"><strong aria-hidden="true">11.</strong> Escribiendo Tests Automatizados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch11-01-writing-tests.html"><strong aria-hidden="true">11.1.</strong> Cómo Escribir Tests</a></li><li class="chapter-item expanded "><a href="ch11-02-running-tests.html"><strong aria-hidden="true">11.2.</strong> Controlando Cómo Los Tests Son Ejecutados</a></li><li class="chapter-item expanded "><a href="ch11-03-test-organization.html"><strong aria-hidden="true">11.3.</strong> Organización De Los Tests</a></li></ol></li><li class="chapter-item expanded "><a href="ch12-00-an-io-project.html"><strong aria-hidden="true">12.</strong> Un proyecto de I/O: Construyendo un programa de línea de comandos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch12-01-accepting-command-line-arguments.html"><strong aria-hidden="true">12.1.</strong> Aceptando argumentos de línea de comandos</a></li><li class="chapter-item expanded "><a href="ch12-02-reading-a-file.html"><strong aria-hidden="true">12.2.</strong> Leyendo un archivo</a></li><li class="chapter-item expanded "><a href="ch12-03-improving-error-handling-and-modularity.html"><strong aria-hidden="true">12.3.</strong> Refactorizando para mejorar la modularidad y el manejo de errores</a></li><li class="chapter-item expanded "><a href="ch12-04-testing-the-librarys-functionality.html"><strong aria-hidden="true">12.4.</strong> Desarrollando la funcionalidad de la biblioteca con T.D.D.</a></li><li class="chapter-item expanded "><a href="ch12-05-working-with-environment-variables.html"><strong aria-hidden="true">12.5.</strong> Trabajando con Variables de Entorno</a></li><li class="chapter-item expanded "><a href="ch12-06-writing-to-stderr-instead-of-stdout.html"><strong aria-hidden="true">12.6.</strong> Escribiendo mensajes de error estándar en lugar del output estándar</a></li></ol></li><li class="chapter-item expanded "><a href="ch13-00-functional-features.html"><strong aria-hidden="true">13.</strong> Características De Lenguajes Funcionales: Iteradores y Closures</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch13-01-closures.html"><strong aria-hidden="true">13.1.</strong> Closures: Funciones anónimas que capturan su entorno</a></li><li class="chapter-item expanded "><a href="ch13-02-iterators.html"><strong aria-hidden="true">13.2.</strong> Procesando una serie de elementos con Iteradores</a></li><li class="chapter-item expanded "><a href="ch13-03-improving-our-io-project.html"><strong aria-hidden="true">13.3.</strong> Mejorando nuestro proyecto I/O</a></li><li class="chapter-item expanded "><a href="ch13-04-performance.html"><strong aria-hidden="true">13.4.</strong> Comparando Performance: Bucles vs. Iteradores</a></li></ol></li><li class="chapter-item expanded "><a href="ch14-00-more-about-cargo.html"><strong aria-hidden="true">14.</strong> Más sobre Cargo y Crates.io</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch14-01-release-profiles.html"><strong aria-hidden="true">14.1.</strong> Personalizando Compilaciones con Perfiles de Lanzamiento</a></li><li class="chapter-item expanded "><a href="ch14-02-publishing-to-crates-io.html"><strong aria-hidden="true">14.2.</strong> Publicando un Crate a Crates.io</a></li><li class="chapter-item expanded "><a href="ch14-03-cargo-workspaces.html"><strong aria-hidden="true">14.3.</strong> Cargo Workspaces</a></li><li class="chapter-item expanded "><a href="ch14-04-installing-binaries.html"><strong aria-hidden="true">14.4.</strong> Instalando Binarios con cargo install</a></li><li class="chapter-item expanded "><a href="ch14-05-extending-cargo.html"><strong aria-hidden="true">14.5.</strong> Extendiendo Cargo con Comandos Personalizados</a></li></ol></li><li class="chapter-item expanded "><a href="ch15-00-smart-pointers.html"><strong aria-hidden="true">15.</strong> Smart Pointers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch15-01-box.html"><strong aria-hidden="true">15.1.</strong> Usando Box&lt;T&gt; para Apuntar a Datos en el Heap</a></li><li class="chapter-item expanded "><a href="ch15-02-deref.html"><strong aria-hidden="true">15.2.</strong> Tratando los Smart Pointers como Referencias Regulares con el Trait Deref</a></li><li class="chapter-item expanded "><a href="ch15-03-drop.html"><strong aria-hidden="true">15.3.</strong> Ejecutando Código al Limpiar con el Trait Drop</a></li><li class="chapter-item expanded "><a href="ch15-04-rc.html"><strong aria-hidden="true">15.4.</strong> Rc&lt;T&gt;, el Smart Pointer de Conteo de Referencias</a></li><li class="chapter-item expanded "><a href="ch15-05-interior-mutability.html"><strong aria-hidden="true">15.5.</strong> RefCell&lt;T&gt; y el Patrón de Mutabilidad Interior</a></li><li class="chapter-item expanded "><a href="ch15-06-reference-cycles.html"><strong aria-hidden="true">15.6.</strong> Referencias Circulares Pueden Fugar Memoria</a></li></ol></li><li class="chapter-item expanded "><a href="ch16-00-concurrency.html"><strong aria-hidden="true">16.</strong> Concurrencia Sin Miedo</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch16-01-threads.html"><strong aria-hidden="true">16.1.</strong> Usando Threads para Ejecutar Código Simultáneamente</a></li><li class="chapter-item expanded "><a href="ch16-02-message-passing.html"><strong aria-hidden="true">16.2.</strong> Usando el Pasaje de Mensajes para Transferir Datos entre Hilos</a></li><li class="chapter-item expanded "><a href="ch16-03-shared-state.html"><strong aria-hidden="true">16.3.</strong> Concurrencia con Estado Compartido</a></li><li class="chapter-item expanded "><a href="ch16-04-extensible-concurrency-sync-and-send.html"><strong aria-hidden="true">16.4.</strong> Concurrencia Extensible con los Traits Sync y Send</a></li></ol></li><li class="chapter-item expanded "><a href="ch17-00-oop.html"><strong aria-hidden="true">17.</strong> Rust como un Lenguaje de Programación Orientado a Objetos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch17-01-what-is-oo.html"><strong aria-hidden="true">17.1.</strong> Características de Lenguajes Orientados a Objetos</a></li><li class="chapter-item expanded "><a href="ch17-02-trait-objects.html"><strong aria-hidden="true">17.2.</strong> Usando Trait Objects que Permiten Valores de Diferentes Tipos</a></li><li class="chapter-item expanded "><a href="ch17-03-oo-design-patterns.html"><strong aria-hidden="true">17.3.</strong> Implementando un Patrón de Diseño Orientado a Objetos</a></li></ol></li><li class="chapter-item expanded "><a href="ch18-00-patterns.html"><strong aria-hidden="true">18.</strong> Patterns and Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch18-01-all-the-places-for-patterns.html"><strong aria-hidden="true">18.1.</strong> Todos los lugares donde se pueden usar Patterns</a></li><li class="chapter-item expanded "><a href="ch18-02-refutability.html"><strong aria-hidden="true">18.2.</strong> Refutabilidad: Si un Pattern Puede Fallar al Hacer Match</a></li><li class="chapter-item expanded "><a href="ch18-03-pattern-syntax.html"><strong aria-hidden="true">18.3.</strong> Sintaxis de los Patterns</a></li></ol></li><li class="chapter-item expanded "><a href="ch19-00-advanced-features.html"><strong aria-hidden="true">19.</strong> Características Avanzadas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch19-01-unsafe-rust.html"><strong aria-hidden="true">19.1.</strong> Rust Inseguro</a></li><li class="chapter-item expanded "><a href="ch19-03-advanced-traits.html"><strong aria-hidden="true">19.2.</strong> Advanced Traits</a></li><li class="chapter-item expanded "><a href="ch19-04-advanced-types.html"><strong aria-hidden="true">19.3.</strong> Advanced Types</a></li><li class="chapter-item expanded "><a href="ch19-05-advanced-functions-and-closures.html"><strong aria-hidden="true">19.4.</strong> Advanced Functions and Closures</a></li><li class="chapter-item expanded "><a href="ch19-06-macros.html"><strong aria-hidden="true">19.5.</strong> Macros</a></li></ol></li><li class="chapter-item expanded "><a href="ch20-00-final-project-a-web-server.html"><strong aria-hidden="true">20.</strong> Final Project: Building a Multithreaded Web Server</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch20-01-single-threaded.html"><strong aria-hidden="true">20.1.</strong> Building a Single-Threaded Web Server</a></li><li class="chapter-item expanded "><a href="ch20-02-multithreaded.html"><strong aria-hidden="true">20.2.</strong> Turning Our Single-Threaded Server into a Multithreaded Server</a></li><li class="chapter-item expanded "><a href="ch20-03-graceful-shutdown-and-cleanup.html"><strong aria-hidden="true">20.3.</strong> Graceful Shutdown and Cleanup</a></li></ol></li><li class="chapter-item expanded "><a href="appendix-00.html"><strong aria-hidden="true">21.</strong> Apéndice</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="appendix-01-keywords.html"><strong aria-hidden="true">21.1.</strong> A - Palabras claves</a></li><li class="chapter-item expanded "><a href="appendix-02-operators.html"><strong aria-hidden="true">21.2.</strong> B - Operadores y Símbolos</a></li><li class="chapter-item expanded "><a href="appendix-03-derivable-traits.html"><strong aria-hidden="true">21.3.</strong> C - Derivable Traits</a></li><li class="chapter-item expanded "><a href="appendix-04-useful-development-tools.html"><strong aria-hidden="true">21.4.</strong> D - Useful Development Tools</a></li><li class="chapter-item expanded "><a href="appendix-05-editions.html"><strong aria-hidden="true">21.5.</strong> E - Editions</a></li><li class="chapter-item expanded "><a href="appendix-06-translation.html"><strong aria-hidden="true">21.6.</strong> F - Translations of the Book</a></li><li class="chapter-item expanded "><a href="appendix-07-nightly-rust.html"><strong aria-hidden="true">21.7.</strong> G - Cómo se hace Rust y “Rust Nightly”</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="latte">Latte</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="frappe">Frappé</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="macchiato">Macchiato</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mocha">Mocha</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">El Lenguaje de Programación Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/RustLangES/rust-book-es" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="flujo-de-control"><a class="header" href="#flujo-de-control">Flujo de Control</a></h2>
+<p>La capacidad de ejecutar algún código dependiendo de si una condición es <code>true</code>
+y ejecutar algún código repetidamente mientras una condición es <code>true</code> son
+elementos básicos en la mayoría de los lenguajes de programación.
+Las construcciones más comunes que le permiten controlar el flujo de ejecución
+del código Rust son las expresiones <code>if</code> y los bucles.</p>
+<h3 id="expresiones-if"><a class="header" href="#expresiones-if">Expresiones <code>if</code></a></h3>
+<p>Una expresión <code>if</code> le permite dividir su código según las condiciones.
+Proporciona una condición y luego dice: “Si se cumple esta condición, ejecute
+este bloque de código. Si la condición no se cumple, no ejecute este bloque de
+código.”</p>
+<p>Cree un nuevo proyecto llamado <em>branches</em> en su directorio <em>projects</em> para
+explorar la expresión <code>if</code>. En el archivo <em>src/main.rs</em>, ingrese lo siguiente:</p>
+<p><span class="filename">Nombre de archivo: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let number = 3;
+
+    if number &lt; 5 {
+        println!("condition was true");
+    } else {
+        println!("condition was false");
+    }
+}</code></pre></pre>
+<p>Todas las expresiones <code>if</code> comienzan con la palabra clave <code>if</code>, seguida de una
+condición. En este caso, la condición comprueba si la variable <code>number</code> tiene un
+valor menor que 5. Colocamos el bloque de código para ejecutar si la condición
+es <code>true</code> inmediatamente después de la condición dentro de llaves. Los bloques
+de código asociados con las condiciones en las expresiones <code>if</code> a veces se
+llaman <em>brazos</em>, al igual que los brazos en las expresiones <code>match</code> que
+discutimos en la sección
+<a href="ch02-00-guessing-game-tutorial.html#comparando-la-adivinanza-con-el-numero-secreto">“Comparando la Adivinanza
+con el Número Secreto”</a><!--ignore -->
+del Capítulo 2.</p>
+<p>Opcionalmente, también podemos incluir una expresión <code>else</code>, que elegimos
+hacer aquí, para dar al programa un bloque de código alternativo para ejecutar
+si la condición evaluada es <code>false</code>. Si no proporciona una expresión <code>else</code>
+y la condición es <code>false</code>, el programa va a ignorar el bloque <code>if</code> y continuará
+con el siguiente fragmento de código.</p>
+<p>Intente ejecutar este código; Debería ver la siguiente salida:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/branches`
+condition was true
+</code></pre>
+<p>Vamos a intentar cambiar el valor de <code>number</code> a un valor que haga que la
+condición sea <code>false</code> para ver qué sucede:</p>
+<pre><code class="language-rust ignore"><span class="boring">fn main() {
+</span>    let number = 7;
+<span class="boring">
+</span><span class="boring">    if number &lt; 5 {
+</span><span class="boring">        println!("condition was true");
+</span><span class="boring">    } else {
+</span><span class="boring">        println!("condition was false");
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+<p>Ejecute el programa nuevamente y observe la salida:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/branches`
+condition was false
+</code></pre>
+<p>También vale la pena señalar que la condición en este código <em>debe</em> ser un
+<code>bool</code>. Si la condición no es un <code>bool</code>, obtendremos un error. Por ejemplo,
+intente ejecutar el siguiente código:</p>
+<p><span class="filename">Nombre de archivo: src/main.rs</span></p>
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let number = 3;
+
+    if number {
+        println!("number was three");
+    }
+}</code></pre>
+<p>La condición <code>if</code> se evalúa como un valor de <code>3</code> esta vez, y Rust arroja un
+error:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+error[E0308]: mismatched types
+ --&gt; src/main.rs:4:8
+  |
+4 |     if number {
+  |        ^^^^^^ expected `bool`, found integer
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `branches` due to previous error
+</code></pre>
+<p>El error indica que Rust esperaba un <code>bool</code> pero obtuvo un entero. A diferencia
+de los lenguajes como Ruby y JavaScript, Rust no intentará convertir
+automáticamente los tipos no booleanos en un booleano. Debes ser explícito y
+siempre proporcionar a <code>if</code> un booleano como su condición. Si queremos que el
+bloque de código <code>if</code> se ejecute solo cuando un número no sea igual a <code>0</code>, por
+ejemplo, podemos cambiar la expresión <code>if</code> a lo siguiente:</p>
+<p><span class="filename">Nombre de archivo: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let number = 3;
+
+    if number != 0 {
+        println!("number was something other than zero");
+    }
+}</code></pre></pre>
+<p>Ejecutando este código imprimirá <code>number was something other than zero</code>.</p>
+<h4 id="manejo-de-múltiples-condiciones-con-else-if"><a class="header" href="#manejo-de-múltiples-condiciones-con-else-if">Manejo de múltiples condiciones con <code>else if</code></a></h4>
+<p>Puede usar múltiples condiciones combinando <code>if</code> y <code>else</code> en una expresión
+<code>else if</code>. Por ejemplo:</p>
+<p><span class="filename">Nombre de archivo: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let number = 6;
+
+    if number % 4 == 0 {
+        println!("number is divisible by 4");
+    } else if number % 3 == 0 {
+        println!("number is divisible by 3");
+    } else if number % 2 == 0 {
+        println!("number is divisible by 2");
+    } else {
+        println!("number is not divisible by 4, 3, or 2");
+    }
+}</code></pre></pre>
+<p>Este programa tiene cuatro posibles caminos que puede tomar. Después de
+ejecutarlo, debería ver la siguiente salida:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/branches`
+number is divisible by 3
+</code></pre>
+<p>Cuando se ejecuta este programa, verifica cada expresión <code>if</code> en orden y
+ejecuta el primer cuerpo para el cual la condición se evalúa como <code>true</code>. Tenga
+en cuenta que incluso si 6 es divisible por 2, no vemos la salida <code>number is divisible by 2</code>, ni vemos el texto <code>number is not divisible by 4, 3, or 2</code> del
+bloque <code>else</code>. Esto se debe a que Rust solo ejecuta el bloque para la primera
+condición <code>true</code>, y una vez que encuentra una, ni siquiera verifica el resto.</p>
+<p>El uso de demasiadas expresiones <code>else if</code> puede ensuciar su código, por lo que
+si tiene más de una, es posible que desee refactorizar su código. El capítulo 6
+describe una poderosa construcción de ramificación de Rust llamada <code>match</code> para
+estos casos.</p>
+<h4 id="usando-if-en-una-declaración-let"><a class="header" href="#usando-if-en-una-declaración-let">Usando <code>if</code> en una declaración <code>let</code></a></h4>
+<p>Dado que <code>if</code> es una expresión, podemos usarlo en el lado derecho de una
+declaración <code>let</code> para asignar el resultado a una variable, como en el Listado
+3-2.</p>
+<p><span class="filename">Nombre de archivo: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let condition = true;
+    let number = if condition { 5 } else { 6 };
+
+    println!("The value of number is: {number}");
+}</code></pre></pre>
+<p><span class="caption">Listado 3-2: Asignando el resultado de una expresión
+<code>if</code> a una variable</span></p>
+<p>La variable <code>number</code> estará vinculada a un valor basado en el resultado de la
+expresión <code>if</code>. Ejecute este código para ver qué sucede:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.30s
+     Running `target/debug/branches`
+The value of number is: 5
+</code></pre>
+<p>Recuerde que los bloques de código se evalúan en la última expresión de ellos y
+los números por sí mismos también son expresiones. En este caso, el valor de
+la expresión <code>if</code> en su conjunto depende de qué bloque de código se ejecuta.
+Esto significa que los valores que tienen el potencial de ser resultados de cada
+rama del <code>if</code> deben ser del mismo tipo; en el Listado 3-2, los resultados de
+ambas ramas del <code>if</code> y la rama <code>else</code> fueron enteros <code>i32</code>. Si los tipos no
+coinciden, como en el siguiente ejemplo, obtendremos un error:</p>
+<p><span class="filename">Nombre de archivo: src/main.rs</span></p>
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let condition = true;
+
+    let number = if condition { 5 } else { "six" };
+
+    println!("The value of number is: {number}");
+}</code></pre>
+<p>Cuando intentamos compilar este código, obtendremos un error. Las ramas <code>if</code> y
+<code>else</code> tienen tipos de valor que son incompatibles, y Rust indica exactamente
+dónde encontrar el problema en el programa:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+error[E0308]: `if` and `else` have incompatible types
+ --&gt; src/main.rs:4:44
+  |
+4 |     let number = if condition { 5 } else { "six" };
+  |                                 -          ^^^^^ expected integer, found `&amp;str`
+  |                                 |
+  |                                 expected because of this
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `branches` due to previous error
+</code></pre>
+<p>La expresión en el bloque <code>if</code> se evalúa como un entero, y la expresión en el
+bloque <code>else</code> se evalúa como una cadena. Esto no funcionará porque las
+variables deben tener un solo tipo, y Rust necesita saber en tiempo de
+compilación qué tipo tiene la variable <code>number</code>, definitivamente. Conocer el
+tipo de <code>number</code> permite al compilador verificar que el tipo sea válido en
+cualquier lugar que usemos <code>number</code>. Rust no podría hacerlo si el tipo de
+<code>number</code> solo se determinara en tiempo de ejecución; el compilador sería más
+complejo y haría menos garantías sobre el código si tuviera que rastrear
+diversos tipos hipotéticos para cualquier variable.</p>
+<h3 id="repetición-con-bucles"><a class="header" href="#repetición-con-bucles">Repetición con bucles</a></h3>
+<p>A menudo es útil ejecutar un bloque de código más de una vez. Para esta tarea,
+Rust proporciona varios <em>bucles</em>, que ejecutarán el código dentro del cuerpo del
+bucle hasta el final y luego comenzarán de inmediato desde el principio. Para
+experimentar con los bucles, hagamos un nuevo proyecto llamado <em>loops</em>.</p>
+<p>Rust tiene tres tipos de bucles: <code>loop</code>, <code>while</code> y <code>for</code>. Vamos a probar cada
+uno.</p>
+<h4 id="repetir-código-con-loop"><a class="header" href="#repetir-código-con-loop">Repetir código con <code>loop</code></a></h4>
+<p>La palabra clave <code>loop</code> le dice a Rust que ejecute un bloque de código una y
+otra vez para siempre o hasta que le indique explícitamente que se detenga.</p>
+<p>Como ejemplo, cambie el archivo <em>src/main.rs</em> en su directorio <em>loops</em> para
+que se vea así:</p>
+<p><span class="filename">Nombre de archivo: src/main.rs</span></p>
+<pre><code class="language-rust ignore">fn main() {
+    loop {
+        println!("again!");
+    }
+}</code></pre>
+<p>Cuando ejecutemos este programa, veremos <code>again!</code> impreso una y otra vez
+continuamente hasta que detengamos manualmente el programa. La mayoría de los
+terminales admiten el atajo de teclado <span class="keystroke">ctrl-c</span>
+para interrumpir un programa que está atascado en un bucle continuo.
+Inténtelo:</p>
+<!-- manual-regeneration
+cd listings/ch03-common-programming-concepts/no-listing-32-loop
+cargo run
+CTRL-C
+-->
+<pre><code class="language-console">$ cargo run
+   Compiling loops v0.1.0 (file:///projects/loops)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.29s
+     Running `target/debug/loops`
+again!
+again!
+again!
+again!
+^Cagain!
+</code></pre>
+<p>El símbolo <code>^C</code> representa dónde presionó <span
+class="keystroke">ctrl-c</span>. Puede que vea o no la palabra <code>again!</code>
+impresa después del <code>^C</code>, dependiendo de dónde estaba el código en el bucle
+cuando recibió la señal de interrupción.</p>
+<p>Afortunadamente, Rust también proporciona una forma de salir de un bucle
+utilizando código. Puede colocar la palabra clave <code>break</code> dentro del bucle para
+decirle al programa cuándo dejar de ejecutar el bucle. Recuerde que hicimos
+esto en el juego de adivinanzas en la sección <a href="ch02-00-guessing-game-tutorial.html#salir-despues-de-una-adivinanza-correcta">“Salir después de una
+adivinanza correcta”</a><!-- ignore --> del
+capítulo 2 para salir del programa cuando el usuario ganó el juego adivinando
+el número correcto.</p>
+<p>También usamos <code>continue</code> en el juego de adivinanzas, que en un bucle le dice
+al programa que omita cualquier código restante en esta iteración del bucle y
+pase a la siguiente iteración.</p>
+<h4 id="devolviendo-valores-de-los-bucles"><a class="header" href="#devolviendo-valores-de-los-bucles">Devolviendo valores de los bucles</a></h4>
+<p>Una de las aplicaciones de un <code>loop</code> es volver a intentar una operación que
+sabe que puede fallar, como verificar si un hilo ha completado su trabajo. Es
+posible que también necesite pasar el resultado de esa operación fuera del
+bucle al resto de su código. Para hacer esto, puede agregar el valor que desea
+devolver después de la expresión <code>break</code> que usa para detener el bucle; ese
+valor se devolverá fuera del bucle para que pueda usarlo, como se muestra aquí:</p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let mut counter = 0;
+
+    let result = loop {
+        counter += 1;
+
+        if counter == 10 {
+            break counter * 2;
+        }
+    };
+
+    println!("The result is {result}");
+}</code></pre></pre>
+<p>Antes del bucle, declaramos una variable llamada <code>counter</code> e inicializamos en
+<code>0</code>. Luego declaramos una variable llamada <code>result</code> para contener el valor
+devuelto del bucle. En cada iteración del bucle, agregamos <code>1</code> a la variable
+<code>counter</code>, y luego verificamos si el <code>counter</code> es igual a <code>10</code>. Cuando lo es,
+usamos la palabra clave <code>break</code> con el valor <code>counter * 2</code>. Después del bucle,
+usamos un punto y coma para terminar la instrucción que asigna el valor a
+<code>result</code>. Finalmente, imprimimos el valor en <code>result</code>, que en este caso es
+<code>20</code>.</p>
+<h4 id="etiquetas-de-bucle-para-distinguir-entre-varios-bucles"><a class="header" href="#etiquetas-de-bucle-para-distinguir-entre-varios-bucles">Etiquetas de bucle para distinguir entre varios bucles</a></h4>
+<p>Si tiene bucles dentro de bucles, <code>break</code> y <code>continue</code> se aplican al bucle más
+interior en ese punto. Opcionalmente, puede especificar una <em>etiqueta de bucle</em>
+en un bucle que luego puede usar con <code>break</code> o <code>continue</code> para especificar que
+esas palabras clave se aplican al bucle etiquetado en lugar del bucle más
+interior. Las etiquetas de bucle deben comenzar con una comilla simple. Aquí
+hay un ejemplo con dos bucles anidados:</p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let mut count = 0;
+    'counting_up: loop {
+        println!("count = {count}");
+        let mut remaining = 10;
+
+        loop {
+            println!("remaining = {remaining}");
+            if remaining == 9 {
+                break;
+            }
+            if count == 2 {
+                break 'counting_up;
+            }
+            remaining -= 1;
+        }
+
+        count += 1;
+    }
+    println!("End count = {count}");
+}</code></pre></pre>
+<p>El bucle externo tiene la etiqueta <code>'counting_up</code>, y contará de 0 a 2. El bucle
+interior sin etiqueta cuenta de 10 a 9. El primer <code>break</code> que no especifique
+una etiqueta solo saldrá del bucle interno. La instrucción <code>break 'counting_up;</code> saldrá del bucle externo. Este código imprime:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling loops v0.1.0 (file:///projects/loops)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.58s
+     Running `target/debug/loops`
+count = 0
+remaining = 10
+remaining = 9
+count = 1
+remaining = 10
+remaining = 9
+count = 2
+remaining = 10
+End count = 2
+</code></pre>
+<h4 id="bucles-condicionales-con-while"><a class="header" href="#bucles-condicionales-con-while">Bucles condicionales con <code>while</code></a></h4>
+<p>Un programa a menudo necesitará evaluar una condición dentro de un bucle.
+Mientras la condición sea <code>true</code>, el bucle se ejecuta. Cuando la condición deja
+de ser <code>true</code>, el programa llama a <code>break</code>, deteniendo el bucle. Es posible
+implementar un comportamiento como este usando una combinación de <code>loop</code>, <code>if</code>,
+<code>else</code> y <code>break</code>; puede intentarlo ahora en un programa, si lo desea. Sin
+embargo, este patrón es tan común que Rust tiene una construcción de lenguaje
+integrada para ello, llamada <code>while</code> loop. En el Listado 3-3, usamos <code>while</code>
+para ejecutar el programa tres veces, contando hacia atrás cada vez, y luego,
+después del bucle, imprimir un mensaje y salir.</p>
+<p><span class="filename">Nombre de archivo: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let mut number = 3;
+
+    while number != 0 {
+        println!("{number}!");
+
+        number -= 1;
+    }
+
+    println!("LIFTOFF!!!");
+}</code></pre></pre>
+<p><span class="caption">Listado 3-3: Usando un bucle <code>while</code> para ejecutar código
+mientras una condición es verdadera</span></p>
+<p>Esta expresion elimina mucho anidamiento que sería necesario si usara <code>loop</code>,
+<code>if</code>, <code>else</code> y <code>break</code>, y es más claro. Mientras una condición se evalúa como
+<code>true</code>, el código se ejecuta; de lo contrario, sale del bucle.</p>
+<h4 id="bucle-a-traves-de-una-coleccion-con-for"><a class="header" href="#bucle-a-traves-de-una-coleccion-con-for">Bucle a traves de una coleccion con <code>for</code></a></h4>
+<p>Puede elegir usar la construcción <code>while</code> para iterar sobre los elementos de una
+colección, como una matriz. Por ejemplo, el bucle en el Listado 3-4 imprime
+cada elemento en la matriz <code>a</code>.</p>
+<p><span class="filename">Nombre de archivo: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let a = [10, 20, 30, 40, 50];
+    let mut index = 0;
+
+    while index &lt; 5 {
+        println!("the value is: {}", a[index]);
+
+        index += 1;
+    }
+}</code></pre></pre>
+<p><span class="caption">Listado 3-4: Bucle a través de cada elemento de una
+colección usando un bucle <code>while</code></span></p>
+<p>Aquí, el código cuenta hacia arriba a través de los elementos en la matriz. Se
+inicia en el índice <code>0</code>, y luego se ejecuta hasta que alcanza el índice final
+en la matriz (es decir, cuando <code>index &lt; 5</code> ya no es <code>true</code>). Ejecutar este
+código imprimirá cada elemento en la matriz:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling loops v0.1.0 (file:///projects/loops)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.32s
+     Running `target/debug/loops`
+the value is: 10
+the value is: 20
+the value is: 30
+the value is: 40
+the value is: 50
+</code></pre>
+<p>Todos los cinco valores de la matriz aparecen en la terminal, como se esperaba.
+Aunque <code>index</code> llegará a un valor de <code>5</code> en algún momento, el bucle deja de
+ejecutarse antes de intentar obtener un sexto valor de la matriz.</p>
+<p>Sin embargo, este enfoque es propenso a errores; podríamos causar que el
+programa se descomponga si el valor del índice o la condición de prueba es
+incorrecta. Por ejemplo, si cambia la definición de la matriz <code>a</code> para tener
+cuatro elementos, pero olvida actualizar la condición a <code>while index &lt; 4</code>, el
+código se descompondría. También es lento, porque el compilador agrega código
+de tiempo de ejecución para realizar la verificación condicional de si el
+índice está dentro de los límites de la matriz en cada iteración del bucle.</p>
+<p>Como una alternativa más concisa, puede usar un bucle <code>for</code> y ejecutar algún
+código para cada elemento en una colección. Un bucle <code>for</code> se ve como el código
+en el Listado 3-5.</p>
+<p><span class="filename">Nombre de archivo: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let a = [10, 20, 30, 40, 50];
+
+    for element in a {
+        println!("the value is: {element}");
+    }
+}</code></pre></pre>
+<p><span class="caption">Listado 3-5: Bucle a través de cada elemento de una
+colección usando un bucle <code>for</code></span></p>
+<p>Cuando ejecutamos este código, veremos la misma salida que en el Listado 3-4.
+Lo más importante es que ahora hemos aumentado la seguridad del código y
+eliminado la posibilidad de errores que podrían deberse a ir más allá del final
+de la matriz o no ir lo suficientemente lejos y perder algunos elementos.</p>
+<p>Usando el bucle <code>for</code>, no necesitaría recordar cambiar cualquier otro código si
+cambiara el número de valores en la matriz, como lo haría con el método usado en
+el Listado 3-4.</p>
+<p>La seguridad y concisión de los bucles <code>for</code> los convierten en la
+estructura de bucle más utilizada en Rust. Incluso en situaciones en las que
+quiera ejecutar algún código un cierto número de veces, como en el ejemplo de
+cuenta regresiva que usó un bucle <code>while</code> en el Listado 3-3, la mayoría de los
+Rustaceans usarían un bucle <code>for</code>. La forma de hacerlo sería usar un <code>Range</code>,
+proporcionado por la biblioteca estándar, que genera todos los números en
+secuencia a partir de un número y termina antes de otro número.</p>
+<p>Así es como se vería la cuenta regresiva usando un bucle <code>for</code> y otro método que
+aún no hemos hablado, <code>rev</code>, para invertir el rango:</p>
+<p><span class="filename">Nombre de archivo: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    for number in (1..4).rev() {
+        println!("{number}!");
+    }
+    println!("LIFTOFF!!!");
+}</code></pre></pre>
+<p>Este código es un poco más agradable, ¿verdad?</p>
+<h2 id="resumen"><a class="header" href="#resumen">Resumen</a></h2>
+<p>¡Lo lograste! Este fue un capítulo de gran tamaño: aprendiste sobre variables,
+tipos de datos escalares y compuestos, funciones, comentarios, expresiones <code>if</code>
+y bucles. Para practicar con los conceptos discutidos en este capítulo, intente
+construir programas para hacer lo siguiente:</p>
+<ul>
+<li>Convertir temperaturas entre Fahrenheit y Celsius.</li>
+<li>Generar el número de Fibonacci <em>n</em>.</li>
+<li>Imprimir las letras de la canción navideña "Los doce días de Navidad",
+aprovechando la repetición en la canción.</li>
+</ul>
+<p>Cuando esté listo para continuar, hablaremos sobre un concepto en Rust que
+<em>no</em> existe comúnmente en otros lenguajes de programación: la propiedad.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch03-04-comments.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch04-00-understanding-ownership.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch03-04-comments.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch04-00-understanding-ownership.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>

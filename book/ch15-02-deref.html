@@ -1,0 +1,612 @@
+<!DOCTYPE HTML>
+<html lang="es" class="sidebar-visible light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Tratando los Smart Pointers como Referencias Regulares con el Trait Deref - El Lenguaje de Programación Rust</title>
+
+
+        <!-- Custom HTML head -->
+        
+            <link rel="canonical" href="https://www.rustlang-es.org/rust-book-es/" />
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <meta property="og:url" content="https://rustlanges.github.io">
+        <meta property="og:type" content="book">
+        <meta property="og:title" content="Tratando los Smart Pointers como Referencias Regulares con el Trait Deref - El Lenguaje de Programación Rust">
+        <meta property="og:description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta property="og:image" content="https://rustlanges.github.io/rust-book-es/img/open-graph.png">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="./theme/catppuccin.css">
+        <link rel="stylesheet" href="./theme/catppuccin-highlight.css">
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title-page.html">El Lenguaje de Programación Rust</a></li><li class="chapter-item expanded affix "><a href="foreword.html">Prefacio</a></li><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Introducción</a></li><li class="chapter-item expanded "><a href="ch01-00-getting-started.html"><strong aria-hidden="true">1.</strong> Empezando</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-installation.html"><strong aria-hidden="true">1.1.</strong> Instalación</a></li><li class="chapter-item expanded "><a href="ch01-02-hello-world.html"><strong aria-hidden="true">1.2.</strong> ¡Hola, Mundo!</a></li><li class="chapter-item expanded "><a href="ch01-03-hello-cargo.html"><strong aria-hidden="true">1.3.</strong> ¡Hola, Cargo!</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-guessing-game-tutorial.html"><strong aria-hidden="true">2.</strong> Programando un juego de adivinanzas</a></li><li class="chapter-item expanded "><a href="ch03-00-common-programming-concepts.html"><strong aria-hidden="true">3.</strong> Conceptos Comunes de Programación</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-variables-and-mutability.html"><strong aria-hidden="true">3.1.</strong> Variables y Mutabilidad</a></li><li class="chapter-item expanded "><a href="ch03-02-data-types.html"><strong aria-hidden="true">3.2.</strong> Tipos de Datos</a></li><li class="chapter-item expanded "><a href="ch03-03-how-functions-work.html"><strong aria-hidden="true">3.3.</strong> Funciones</a></li><li class="chapter-item expanded "><a href="ch03-04-comments.html"><strong aria-hidden="true">3.4.</strong> Comentarios</a></li><li class="chapter-item expanded "><a href="ch03-05-control-flow.html"><strong aria-hidden="true">3.5.</strong> Flujo de Control</a></li></ol></li><li class="chapter-item expanded "><a href="ch04-00-understanding-ownership.html"><strong aria-hidden="true">4.</strong> Entendiendo el Ownership</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04-01-what-is-ownership.html"><strong aria-hidden="true">4.1.</strong> ¿Qué es el Ownership?</a></li><li class="chapter-item expanded "><a href="ch04-02-references-and-borrowing.html"><strong aria-hidden="true">4.2.</strong> Referencias y Prestamos</a></li><li class="chapter-item expanded "><a href="ch04-03-slices.html"><strong aria-hidden="true">4.3.</strong> El Tipo Slice</a></li></ol></li><li class="chapter-item expanded "><a href="ch05-00-structs.html"><strong aria-hidden="true">5.</strong> Usando Structs para Estructurar Datos Relacionados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05-01-defining-structs.html"><strong aria-hidden="true">5.1.</strong> Definiendo e Instanciando Structs</a></li><li class="chapter-item expanded "><a href="ch05-02-example-structs.html"><strong aria-hidden="true">5.2.</strong> Un Programa de Ejemplo Usando Structs</a></li><li class="chapter-item expanded "><a href="ch05-03-method-syntax.html"><strong aria-hidden="true">5.3.</strong> Sintaxis de Métodos</a></li></ol></li><li class="chapter-item expanded "><a href="ch06-00-enums.html"><strong aria-hidden="true">6.</strong> Enums y Pattern Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06-01-defining-an-enum.html"><strong aria-hidden="true">6.1.</strong> Definiendo un Enum</a></li><li class="chapter-item expanded "><a href="ch06-02-match.html"><strong aria-hidden="true">6.2.</strong> El operador de control de flujo match</a></li><li class="chapter-item expanded "><a href="ch06-03-if-let.html"><strong aria-hidden="true">6.3.</strong> Flujo de Control Conciso con if let</a></li></ol></li><li class="chapter-item expanded "><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"><strong aria-hidden="true">7.</strong> Administrando Proyectos en Crecimiento con Paquetes, Crates y Módulos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07-01-packages-and-crates.html"><strong aria-hidden="true">7.1.</strong> Paquetes y Crates</a></li><li class="chapter-item expanded "><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"><strong aria-hidden="true">7.2.</strong> Definiendo módulos para controlar el scope y la privacidad</a></li><li class="chapter-item expanded "><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"><strong aria-hidden="true">7.3.</strong> Paths para referirse a un item en el árbol de módulos</a></li><li class="chapter-item expanded "><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"><strong aria-hidden="true">7.4.</strong> Incluyendo rutas al Scope con la palabra clave use</a></li><li class="chapter-item expanded "><a href="ch07-05-separating-modules-into-different-files.html"><strong aria-hidden="true">7.5.</strong> Separando Módulos en Diferentes Archivos</a></li></ol></li><li class="chapter-item expanded "><a href="ch08-00-common-collections.html"><strong aria-hidden="true">8.</strong> Colecciones comunes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch08-01-vectors.html"><strong aria-hidden="true">8.1.</strong> Almacenando listas de valores con vectores</a></li><li class="chapter-item expanded "><a href="ch08-02-strings.html"><strong aria-hidden="true">8.2.</strong> Almacenando texto codificado en UTF-8 con Strings</a></li><li class="chapter-item expanded "><a href="ch08-03-hash-maps.html"><strong aria-hidden="true">8.3.</strong> Almacenar Claves con Valores Asociados en HashMaps</a></li></ol></li><li class="chapter-item expanded "><a href="ch09-00-error-handling.html"><strong aria-hidden="true">9.</strong> Manejo de Errores</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09-01-unrecoverable-errors-with-panic.html"><strong aria-hidden="true">9.1.</strong> Errores irrecuperables con panic!</a></li><li class="chapter-item expanded "><a href="ch09-02-recoverable-errors-with-result.html"><strong aria-hidden="true">9.2.</strong> Errores recuperables con Result</a></li><li class="chapter-item expanded "><a href="ch09-03-to-panic-or-not-to-panic.html"><strong aria-hidden="true">9.3.</strong> panic! o no panic!</a></li></ol></li><li class="chapter-item expanded "><a href="ch10-00-generics.html"><strong aria-hidden="true">10.</strong> Tipos Genéricos, Traits y Lifetimes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch10-01-syntax.html"><strong aria-hidden="true">10.1.</strong> Tipos de Datos Genéricos</a></li><li class="chapter-item expanded "><a href="ch10-02-traits.html"><strong aria-hidden="true">10.2.</strong> Traits: Definiendo Comportamiento Compartido</a></li><li class="chapter-item expanded "><a href="ch10-03-lifetime-syntax.html"><strong aria-hidden="true">10.3.</strong> Validando Referencias con Lifetimes</a></li></ol></li><li class="chapter-item expanded "><a href="ch11-00-testing.html"><strong aria-hidden="true">11.</strong> Escribiendo Tests Automatizados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch11-01-writing-tests.html"><strong aria-hidden="true">11.1.</strong> Cómo Escribir Tests</a></li><li class="chapter-item expanded "><a href="ch11-02-running-tests.html"><strong aria-hidden="true">11.2.</strong> Controlando Cómo Los Tests Son Ejecutados</a></li><li class="chapter-item expanded "><a href="ch11-03-test-organization.html"><strong aria-hidden="true">11.3.</strong> Organización De Los Tests</a></li></ol></li><li class="chapter-item expanded "><a href="ch12-00-an-io-project.html"><strong aria-hidden="true">12.</strong> Un proyecto de I/O: Construyendo un programa de línea de comandos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch12-01-accepting-command-line-arguments.html"><strong aria-hidden="true">12.1.</strong> Aceptando argumentos de línea de comandos</a></li><li class="chapter-item expanded "><a href="ch12-02-reading-a-file.html"><strong aria-hidden="true">12.2.</strong> Leyendo un archivo</a></li><li class="chapter-item expanded "><a href="ch12-03-improving-error-handling-and-modularity.html"><strong aria-hidden="true">12.3.</strong> Refactorizando para mejorar la modularidad y el manejo de errores</a></li><li class="chapter-item expanded "><a href="ch12-04-testing-the-librarys-functionality.html"><strong aria-hidden="true">12.4.</strong> Desarrollando la funcionalidad de la biblioteca con T.D.D.</a></li><li class="chapter-item expanded "><a href="ch12-05-working-with-environment-variables.html"><strong aria-hidden="true">12.5.</strong> Trabajando con Variables de Entorno</a></li><li class="chapter-item expanded "><a href="ch12-06-writing-to-stderr-instead-of-stdout.html"><strong aria-hidden="true">12.6.</strong> Escribiendo mensajes de error estándar en lugar del output estándar</a></li></ol></li><li class="chapter-item expanded "><a href="ch13-00-functional-features.html"><strong aria-hidden="true">13.</strong> Características De Lenguajes Funcionales: Iteradores y Closures</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch13-01-closures.html"><strong aria-hidden="true">13.1.</strong> Closures: Funciones anónimas que capturan su entorno</a></li><li class="chapter-item expanded "><a href="ch13-02-iterators.html"><strong aria-hidden="true">13.2.</strong> Procesando una serie de elementos con Iteradores</a></li><li class="chapter-item expanded "><a href="ch13-03-improving-our-io-project.html"><strong aria-hidden="true">13.3.</strong> Mejorando nuestro proyecto I/O</a></li><li class="chapter-item expanded "><a href="ch13-04-performance.html"><strong aria-hidden="true">13.4.</strong> Comparando Performance: Bucles vs. Iteradores</a></li></ol></li><li class="chapter-item expanded "><a href="ch14-00-more-about-cargo.html"><strong aria-hidden="true">14.</strong> Más sobre Cargo y Crates.io</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch14-01-release-profiles.html"><strong aria-hidden="true">14.1.</strong> Personalizando Compilaciones con Perfiles de Lanzamiento</a></li><li class="chapter-item expanded "><a href="ch14-02-publishing-to-crates-io.html"><strong aria-hidden="true">14.2.</strong> Publicando un Crate a Crates.io</a></li><li class="chapter-item expanded "><a href="ch14-03-cargo-workspaces.html"><strong aria-hidden="true">14.3.</strong> Cargo Workspaces</a></li><li class="chapter-item expanded "><a href="ch14-04-installing-binaries.html"><strong aria-hidden="true">14.4.</strong> Instalando Binarios con cargo install</a></li><li class="chapter-item expanded "><a href="ch14-05-extending-cargo.html"><strong aria-hidden="true">14.5.</strong> Extendiendo Cargo con Comandos Personalizados</a></li></ol></li><li class="chapter-item expanded "><a href="ch15-00-smart-pointers.html"><strong aria-hidden="true">15.</strong> Smart Pointers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch15-01-box.html"><strong aria-hidden="true">15.1.</strong> Usando Box&lt;T&gt; para Apuntar a Datos en el Heap</a></li><li class="chapter-item expanded "><a href="ch15-02-deref.html" class="active"><strong aria-hidden="true">15.2.</strong> Tratando los Smart Pointers como Referencias Regulares con el Trait Deref</a></li><li class="chapter-item expanded "><a href="ch15-03-drop.html"><strong aria-hidden="true">15.3.</strong> Ejecutando Código al Limpiar con el Trait Drop</a></li><li class="chapter-item expanded "><a href="ch15-04-rc.html"><strong aria-hidden="true">15.4.</strong> Rc&lt;T&gt;, el Smart Pointer de Conteo de Referencias</a></li><li class="chapter-item expanded "><a href="ch15-05-interior-mutability.html"><strong aria-hidden="true">15.5.</strong> RefCell&lt;T&gt; y el Patrón de Mutabilidad Interior</a></li><li class="chapter-item expanded "><a href="ch15-06-reference-cycles.html"><strong aria-hidden="true">15.6.</strong> Referencias Circulares Pueden Fugar Memoria</a></li></ol></li><li class="chapter-item expanded "><a href="ch16-00-concurrency.html"><strong aria-hidden="true">16.</strong> Concurrencia Sin Miedo</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch16-01-threads.html"><strong aria-hidden="true">16.1.</strong> Usando Threads para Ejecutar Código Simultáneamente</a></li><li class="chapter-item expanded "><a href="ch16-02-message-passing.html"><strong aria-hidden="true">16.2.</strong> Usando el Pasaje de Mensajes para Transferir Datos entre Hilos</a></li><li class="chapter-item expanded "><a href="ch16-03-shared-state.html"><strong aria-hidden="true">16.3.</strong> Concurrencia con Estado Compartido</a></li><li class="chapter-item expanded "><a href="ch16-04-extensible-concurrency-sync-and-send.html"><strong aria-hidden="true">16.4.</strong> Concurrencia Extensible con los Traits Sync y Send</a></li></ol></li><li class="chapter-item expanded "><a href="ch17-00-oop.html"><strong aria-hidden="true">17.</strong> Rust como un Lenguaje de Programación Orientado a Objetos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch17-01-what-is-oo.html"><strong aria-hidden="true">17.1.</strong> Características de Lenguajes Orientados a Objetos</a></li><li class="chapter-item expanded "><a href="ch17-02-trait-objects.html"><strong aria-hidden="true">17.2.</strong> Usando Trait Objects que Permiten Valores de Diferentes Tipos</a></li><li class="chapter-item expanded "><a href="ch17-03-oo-design-patterns.html"><strong aria-hidden="true">17.3.</strong> Implementando un Patrón de Diseño Orientado a Objetos</a></li></ol></li><li class="chapter-item expanded "><a href="ch18-00-patterns.html"><strong aria-hidden="true">18.</strong> Patterns and Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch18-01-all-the-places-for-patterns.html"><strong aria-hidden="true">18.1.</strong> Todos los lugares donde se pueden usar Patterns</a></li><li class="chapter-item expanded "><a href="ch18-02-refutability.html"><strong aria-hidden="true">18.2.</strong> Refutabilidad: Si un Pattern Puede Fallar al Hacer Match</a></li><li class="chapter-item expanded "><a href="ch18-03-pattern-syntax.html"><strong aria-hidden="true">18.3.</strong> Sintaxis de los Patterns</a></li></ol></li><li class="chapter-item expanded "><a href="ch19-00-advanced-features.html"><strong aria-hidden="true">19.</strong> Características Avanzadas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch19-01-unsafe-rust.html"><strong aria-hidden="true">19.1.</strong> Rust Inseguro</a></li><li class="chapter-item expanded "><a href="ch19-03-advanced-traits.html"><strong aria-hidden="true">19.2.</strong> Advanced Traits</a></li><li class="chapter-item expanded "><a href="ch19-04-advanced-types.html"><strong aria-hidden="true">19.3.</strong> Advanced Types</a></li><li class="chapter-item expanded "><a href="ch19-05-advanced-functions-and-closures.html"><strong aria-hidden="true">19.4.</strong> Advanced Functions and Closures</a></li><li class="chapter-item expanded "><a href="ch19-06-macros.html"><strong aria-hidden="true">19.5.</strong> Macros</a></li></ol></li><li class="chapter-item expanded "><a href="ch20-00-final-project-a-web-server.html"><strong aria-hidden="true">20.</strong> Final Project: Building a Multithreaded Web Server</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch20-01-single-threaded.html"><strong aria-hidden="true">20.1.</strong> Building a Single-Threaded Web Server</a></li><li class="chapter-item expanded "><a href="ch20-02-multithreaded.html"><strong aria-hidden="true">20.2.</strong> Turning Our Single-Threaded Server into a Multithreaded Server</a></li><li class="chapter-item expanded "><a href="ch20-03-graceful-shutdown-and-cleanup.html"><strong aria-hidden="true">20.3.</strong> Graceful Shutdown and Cleanup</a></li></ol></li><li class="chapter-item expanded "><a href="appendix-00.html"><strong aria-hidden="true">21.</strong> Apéndice</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="appendix-01-keywords.html"><strong aria-hidden="true">21.1.</strong> A - Palabras claves</a></li><li class="chapter-item expanded "><a href="appendix-02-operators.html"><strong aria-hidden="true">21.2.</strong> B - Operadores y Símbolos</a></li><li class="chapter-item expanded "><a href="appendix-03-derivable-traits.html"><strong aria-hidden="true">21.3.</strong> C - Derivable Traits</a></li><li class="chapter-item expanded "><a href="appendix-04-useful-development-tools.html"><strong aria-hidden="true">21.4.</strong> D - Useful Development Tools</a></li><li class="chapter-item expanded "><a href="appendix-05-editions.html"><strong aria-hidden="true">21.5.</strong> E - Editions</a></li><li class="chapter-item expanded "><a href="appendix-06-translation.html"><strong aria-hidden="true">21.6.</strong> F - Translations of the Book</a></li><li class="chapter-item expanded "><a href="appendix-07-nightly-rust.html"><strong aria-hidden="true">21.7.</strong> G - Cómo se hace Rust y “Rust Nightly”</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="latte">Latte</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="frappe">Frappé</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="macchiato">Macchiato</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mocha">Mocha</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">El Lenguaje de Programación Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/RustLangES/rust-book-es" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="tratando-los-smart-pointers-como-referencias-regulares-con-el-trait-deref"><a class="header" href="#tratando-los-smart-pointers-como-referencias-regulares-con-el-trait-deref">Tratando los Smart Pointers como Referencias Regulares con el Trait <code>Deref</code></a></h2>
+<p>Implementar el trait <code>Deref</code> te permite personalizar el comportamiento del
+<em>operador de desreferencia</em> <code>*</code> (no confundir con el operador de multiplicación
+o el operador de glob). Al implementar <code>Deref</code> de tal manera que un smart
+pointer pueda ser tratado como una referencia regular, puedes escribir código
+que opere en referencias y usar ese código con smart pointers también.</p>
+<p>Primero veamos cómo funciona el operador de desreferencia con referencias
+regulares. Luego intentaremos definir un tipo personalizado que se comporte
+como <code>Box&lt;T&gt;</code>, y veremos por qué el operador de desreferencia no funciona como
+una referencia en nuestro tipo recién definido. Exploraremos cómo implementar
+el trait <code>Deref</code> hace posible que los smart pointers trabajen de manera similar
+a las referencias. Luego veremos la característica de <em>deref coercion</em> de Rust
+y cómo nos permite trabajar con referencias o smart pointers.</p>
+<blockquote>
+<p>Nota: hay una gran diferencia entre el tipo <code>MyBox&lt;T&gt;</code> que estamos a punto de
+construir y el tipo <code>Box&lt;T&gt;</code> real: nuestra versión no almacenará sus datos en
+el heap. Nos estamos enfocando en este ejemplo en <code>Deref</code>, por lo que dónde
+se almacenan los datos es menos importante que el comportamiento similar al
+de un puntero.</p>
+</blockquote>
+<!-- Old link, do not remove -->
+<p><a id="following-the-pointer-to-the-value-with-the-dereference-operator"></a></p>
+<h3 id="siguiendo-el-puntero-al-valor"><a class="header" href="#siguiendo-el-puntero-al-valor">Siguiendo el puntero al valor</a></h3>
+<p>Una referencia regular es un tipo de puntero, y una forma de pensar en un
+puntero es como una flecha a un valor almacenado en otro lugar. En el Listado
+15-6, creamos una referencia a un valor <code>i32</code> y luego usamos el operador de
+desreferencia para seguir la referencia al valor:</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let x = 5;
+    let y = &amp;x;
+
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
+}</code></pre></pre>
+<p><span class="caption">Listing 15-6: Utilizando el operador de dereferencia
+para seguir una referencia a un valor <code>i32</code></span></p>
+<p>La variable <code>x</code> contiene un valor <code>i32</code> de <code>5</code>. Establecemos <code>y</code> igual a una
+referencia a <code>x</code>. Podemos afirmar que <code>x</code> es igual a <code>5</code>. Sin embargo, si
+queremos hacer una afirmación sobre el valor en <code>y</code>, tenemos que usar <code>*y</code> para
+seguir la referencia al valor al que apunta (de ahí <em>desreferencia</em>) para que
+el compilador pueda comparar el valor real. Una vez que desreferenciamos <code>y</code>,
+tenemos acceso al valor entero al que apunta <code>y</code> que podemos comparar con <code>5</code>.</p>
+<p>Si intentamos escribir <code>assert_eq!(5, y);</code> en su lugar, obtendríamos este error
+de compilación:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling deref-example v0.1.0 (file:///projects/deref-example)
+error[E0277]: can't compare `{integer}` with `&amp;{integer}`
+ --&gt; src/main.rs:6:5
+  |
+6 |     assert_eq!(5, y);
+  |     ^^^^^^^^^^^^^^^^ no implementation for `{integer} == &amp;{integer}`
+  |
+  = help: the trait `PartialEq&lt;&amp;{integer}&gt;` is not implemented for `{integer}`
+  = help: the following other types implement trait `PartialEq&lt;Rhs&gt;`:
+            f32
+            f64
+            i128
+            i16
+            i32
+            i64
+            i8
+            isize
+          and 6 others
+  = note: this error originates in the macro `assert_eq` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `deref-example` due to previous error
+</code></pre>
+<p>Comparar un número y una referencia a un número no está permitido porque son
+tipos diferentes. Debemos usar el operador de desreferencia para seguir la
+referencia al valor al que apunta.</p>
+<h3 id="usando-boxt-como-una-referencia"><a class="header" href="#usando-boxt-como-una-referencia">Usando <code>Box&lt;T&gt;</code> como una referencia</a></h3>
+<p>Podemos reescribir el código del Listado 15-6 para usar un <code>Box&lt;T&gt;</code> en lugar de
+una referencia; el operador de desreferencia usado en el <code>Box&lt;T&gt;</code> en el Listado
+15-7 funciona de la misma manera que el operador de desreferencia usado en la
+referencia en el Listado 15-6:</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    let x = 5;
+    let y = Box::new(x);
+
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
+}</code></pre></pre>
+<p><span class="caption">Listing 15-7: Utilizando el operador de dereferencia
+en un <code>Box&lt;i32&gt;</code></span></p>
+<p>La principal diferencia entre el Listado 15-7 y el Listado 15-6 es que aquí
+definimos <code>y</code> como una instancia de <code>Box&lt;T&gt;</code> apuntando a una copia del valor de
+<code>x</code> en lugar de ser una referencia que apunta al valor de <code>x</code>. En la última
+afirmación, podemos usar el operador de desreferencia para seguir el puntero del
+<code>Box&lt;T&gt;</code> de la misma manera que lo hicimos cuando <code>y</code> era una referencia. A
+continuación, exploraremos que es lo especial de <code>Box&lt;T&gt;</code> que nos permite el
+uso del operador de desreferencia al definir nuestro propio tipo.</p>
+<h3 id="definiendo-nuestro-propio-smart-pointer"><a class="header" href="#definiendo-nuestro-propio-smart-pointer">Definiendo nuestro propio Smart Pointer</a></h3>
+<p>Construyamos un smart pointer similar al tipo <code>Box&lt;T&gt;</code> proporcionado por la
+biblioteca estándar para experimentar cómo los smart pointers se comportan de
+manera diferente a las referencias por defecto. Luego veremos cómo agregar la
+capacidad de usar el operador de desreferencia.</p>
+<p>El tipo <code>Box&lt;T&gt;</code> es finalmente definido como una tupla struct con un elemento,
+por lo que el Listado 15-8 define un tipo <code>MyBox&lt;T&gt;</code> de la misma manera.
+También definiremos una función <code>new</code> para que coincida con la función <code>new</code>
+definida en <code>Box&lt;T&gt;</code>.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">struct MyBox&lt;T&gt;(T);
+
+impl&lt;T&gt; MyBox&lt;T&gt; {
+    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+        MyBox(x)
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre></pre>
+<p><span class="caption">Listing 15-8: Definiendo un tipo <code>MyBox&lt;T&gt;</code></span></p>
+<p>Definimos un struct llamado <code>MyBox</code> y declaramos un parámetro generic <code>T</code>,
+porque queremos que nuestro tipo contenga valores de cualquier tipo. El tipo
+<code>MyBox</code> es una tupla struct con un elemento de tipo <code>T</code>. La función <code>MyBox::new</code>
+toma un parámetro de tipo <code>T</code> y devuelve una instancia de <code>MyBox</code> que contiene
+el valor pasado.</p>
+<p>Vamos a intentar añadir la función <code>main</code> del Listado 15-7 al Listado 15-8 y
+cambiarla para usar el tipo <code>MyBox&lt;T&gt;</code> que hemos definido en lugar de <code>Box&lt;T&gt;</code>.
+El código en el Listado 15-9 no se compilará porque Rust no sabe cómo
+desreferenciar <code>MyBox</code>.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">struct MyBox&lt;T&gt;(T);
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; MyBox&lt;T&gt; {
+</span><span class="boring">    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+</span><span class="boring">        MyBox(x)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let x = 5;
+    let y = MyBox::new(x);
+
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
+}</code></pre>
+<p><span class="caption">Listing 15-9: Intentando usar <code>MyBox&lt;T&gt;</code> de la misma
+manera en que usamos referencias y <code>Box&lt;T&gt;</code></span></p>
+<p>Aquí está el error de compilación resultante:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling deref-example v0.1.0 (file:///projects/deref-example)
+error[E0614]: type `MyBox&lt;{integer}&gt;` cannot be dereferenced
+  --&gt; src/main.rs:14:19
+   |
+14 |     assert_eq!(5, *y);
+   |                   ^^
+
+For more information about this error, try `rustc --explain E0614`.
+error: could not compile `deref-example` due to previous error
+</code></pre>
+<p>Nuestro tipo <code>MyBox&lt;T&gt;</code> no puede ser desreferenciado porque no hemos
+implementado esa capacidad en nuestro tipo. Para habilitar la desreferencia con
+el operador <code>*</code>, implementamos el trait <code>Deref</code>.</p>
+<h3 id="tratando-un-tipo-como-una-referencia-implementando-el-trait-deref"><a class="header" href="#tratando-un-tipo-como-una-referencia-implementando-el-trait-deref">Tratando un tipo como una referencia implementando el trait <code>Deref</code></a></h3>
+<p>Como discutimos en la sección del Capítulo 10
+<a href="ch10-02-traits.html#implementando-un-trait-en-un-tipo">“Implementando un Trait en un Tipo”</a><!-- ignore--> , para
+implementar un trait, necesitamos proporcionar implementaciones para los métodos
+requeridos del trait. El trait <code>Deref</code>, proporcionado por la biblioteca
+estándar, requiere que implementemos un método llamado <code>deref</code> que tome <code>self</code>
+y devuelva una referencia al dato interno. El Listado 15-10 contiene una
+implementación de <code>Deref</code> para agregar a la definición de <code>MyBox</code>:</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">use std::ops::Deref;
+
+impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
+    type Target = T;
+
+    fn deref(&amp;self) -&gt; &amp;Self::Target {
+        &amp;self.0
+    }
+}
+<span class="boring">
+</span><span class="boring">struct MyBox&lt;T&gt;(T);
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; MyBox&lt;T&gt; {
+</span><span class="boring">    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+</span><span class="boring">        MyBox(x)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let x = 5;
+</span><span class="boring">    let y = MyBox::new(x);
+</span><span class="boring">
+</span><span class="boring">    assert_eq!(5, x);
+</span><span class="boring">    assert_eq!(5, *y);
+</span><span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listing 15-10: Implementando <code>Deref</code> en <code>MyBox&lt;T&gt;</code></span></p>
+<p>La sintaxis <code>type Target = T;</code> define un tipo asociado que será utilizado por el
+trait <code>Deref</code>. Los tipos asociados son una forma ligeramente diferente de
+declarar un parámetro genérico, pero no necesitas preocuparte por ellos por
+ahora; los cubriremos con más detalle en el Capítulo 19.</p>
+<p>Rellenamos el cuerpo del método <code>deref</code> con <code>&amp;self.0</code> para que <code>deref</code> devuelva
+una referencia al valor al que queremos acceder con el operador <code>*</code>. Recordemos
+de la sección <a href="ch05-01-defining-structs.html#usando-structs-de-tuplas-sin-campos-nombrados-para-crear-diferentes-tipos">“Usando Tuplas Structs sin Campos Nombrados para Crear Diferentes
+Tipos”</a><!-- ignore --> del Capítulo 5 que <code>.0</code> accede al primer
+valor en una tupla struct. ¡La función <code>main</code> en el Listado 15-9 que llama a <code>*</code>
+en el valor <code>MyBox&lt;T&gt;</code> ahora compila, y las afirmaciones pasan!</p>
+<p>Sin el trait <code>Deref</code>, el compilador no sabe cómo desreferenciar referencias <code>&amp;</code>.
+El método <code>deref</code> le da al compilador la capacidad de tomar un valor de
+cualquier tipo que implemente <code>Deref</code> y llamar al método <code>deref</code> para obtener
+una referencia <code>&amp;</code> que sabe cómo desreferenciar.</p>
+<p>Cuando ingresamos <code>*y</code> en el Listado 15-9, en realidad Rust ejecuta este código:</p>
+<pre><code class="language-rust ignore">*(y.deref())</code></pre>
+<p>Rust sustituye el operador <code>*</code> con una llamada al método <code>deref</code>, y luego
+realiza una desreferenciación directa, por lo que no tenemos que pensar si
+necesitamos llamar al método <code>deref</code>. Esta característica de Rust nos permite
+escribir código que funciona de manera idéntica si tenemos una referencia
+regular o un tipo que implementa <code>Deref</code>.</p>
+<p>La razón por la cual el método <code>deref</code> devuelve una referencia a un valor, y
+por qué la desreferenciación simple fuera de los paréntesis en <code>*(y.deref())</code>
+todavía es necesaria, tiene que ver con el sistema de propiedad. Si el método
+<code>deref</code> devolviera el valor directamente en lugar de una referencia al valor,
+el valor se movería fuera de <code>self</code>. No queremos tomar posesión del valor
+interno dentro de <code>MyBox&lt;T&gt;</code> en este caso o en la mayoría de los casos en los
+que usamos el operador de desreferencia.</p>
+<p>Nota que el operador <code>*</code> es reemplazado con una llamada al método <code>deref</code> y
+luego una llamada al operador <code>*</code> solo una vez, cada vez que usamos un <code>*</code> en
+nuestro código. Debido a que la sustitución del operador <code>*</code> no se repite
+infinitamente, terminamos con datos de tipo <code>i32</code>, que coincide con el <code>5</code> en
+<code>assert_eq!</code> en el Listado 15-9.</p>
+<h3 id="coerciones-implicitas-de-deref-con-funciones-y-metodos"><a class="header" href="#coerciones-implicitas-de-deref-con-funciones-y-metodos">Coerciones implicitas de Deref con funciones y metodos</a></h3>
+<p>La <em>coerción Deref</em> convierte una referencia a un tipo que implementa el trait
+<code>Deref</code> en una referencia a otro tipo. Por ejemplo, la coerción Deref puede
+convertir <code>&amp;String</code> en <code>&amp;str</code> porque <code>String</code> implementa el trait <code>Deref</code> de
+manera que devuelve <code>&amp;str</code>. La coerción Deref es una conveniencia que Rust
+realiza en los argumentos de las funciones y métodos, y solo funciona en tipos
+que implementan el trait <code>Deref</code>. Sucede automáticamente cuando pasamos una
+referencia al valor de un tipo particular como argumento a una función o método
+que no coincide con el tipo de parámetro en la definición de la función o
+método. Una secuencia de llamadas al método <code>deref</code> convierte el tipo que
+proporcionamos en el tipo que necesita el parámetro.</p>
+<p>La coerción Deref se agregó a Rust para que los programadores que escriben
+llamadas a funciones y métodos no necesiten agregar tantas referencias y
+desreferencias explícitas con <code>&amp;</code> y <code>*</code>. La característica de coerción Deref
+también nos permite escribir más código que puede funcionar para referencias o
+smart pointers.</p>
+<p>Para ver la coerción Deref en acción, usemos el tipo <code>MyBox&lt;T&gt;</code> que definimos
+en el Listado 15-8 y la implementación de <code>Deref</code> que agregamos en el Listado
+15-10. El Listado 15-11 muestra la definición de una función que tiene un
+parámetro de tipo string slice:</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust">fn hello(name: &amp;str) {
+    println!("Hello, {name}!");
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre></pre>
+<p><span class="caption">Listing 15-11: Una función <code>hello</code> que tiene el parámetro
+<code>name</code> de tipo <code>&amp;str</code></span></p>
+<p>Llamamos a la función <code>hello</code> con un string slice como un argumento, como
+<code>hello("Rust");</code> por ejemplo. La coerción Deref hace posible llamar a <code>hello</code>
+con una referencia a un valor de tipo <code>MyBox&lt;String&gt;</code>, como se muestra en el
+Listado 15-12:</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">use std::ops::Deref;
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
+</span><span class="boring">    type Target = T;
+</span><span class="boring">
+</span><span class="boring">    fn deref(&amp;self) -&gt; &amp;T {
+</span><span class="boring">        &amp;self.0
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct MyBox&lt;T&gt;(T);
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; MyBox&lt;T&gt; {
+</span><span class="boring">    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+</span><span class="boring">        MyBox(x)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn hello(name: &amp;str) {
+</span><span class="boring">    println!("Hello, {name}!");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let m = MyBox::new(String::from("Rust"));
+    hello(&amp;m);
+}</code></pre></pre>
+<p><span class="caption">Listing 15-12: Llamando a <code>hello</code> con una referencia a un
+valor <code>MyBox&lt;String&gt;</code>, lo cual funciona debido a la coerción deref</span></p>
+<p>Aquí estamos llamando a la función <code>hello</code> con el argumento <code>&amp;m</code>, que es una
+referencia a un valor <code>MyBox&lt;String&gt;</code>. Debido a que implementamos el trait
+<code>Deref</code> en <code>MyBox&lt;T&gt;</code> en el Listado 15-10, Rust puede convertir <code>&amp;MyBox&lt;String&gt;</code>
+en <code>&amp;String</code> llamando a <code>deref</code>. La biblioteca estándar proporciona una
+implementación de <code>Deref</code> en <code>String</code> que devuelve una cadena de texto, y esto
+está en la documentación de la API de <code>Deref</code>. Rust llama a <code>deref</code> nuevamente
+para convertir el <code>&amp;String</code> en <code>&amp;str</code>, que coincide con la definición de la
+función <code>hello</code>.</p>
+<p>Si Rust no implementara la coerción Deref, tendríamos que escribir el código
+en el Listado 15-13 en lugar del código en el Listado 15-12 para llamar a
+<code>hello</code> con un valor de tipo <code>&amp;MyBox&lt;String&gt;</code>.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">use std::ops::Deref;
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
+</span><span class="boring">    type Target = T;
+</span><span class="boring">
+</span><span class="boring">    fn deref(&amp;self) -&gt; &amp;T {
+</span><span class="boring">        &amp;self.0
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct MyBox&lt;T&gt;(T);
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; MyBox&lt;T&gt; {
+</span><span class="boring">    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+</span><span class="boring">        MyBox(x)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn hello(name: &amp;str) {
+</span><span class="boring">    println!("Hello, {name}!");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let m = MyBox::new(String::from("Rust"));
+    hello(&amp;(*m)[..]);
+}</code></pre></pre>
+<p><span class="caption">Listing 15-13: El código que tendríamos que escribir si
+Rust no tuviera deref coerción</span></p>
+<p>El <code>(*m)</code> desreferencia el <code>MyBox&lt;String&gt;</code> en un <code>String</code>. Luego, el <code>&amp;</code> y
+<code>[..]</code> toman un string slice del <code>String</code> que es igual a todo el string para
+coincidir con la firma de <code>hello</code>. Este código sin coerciones de desreferencia
+es más difícil de leer, escribir y entender con todos estos símbolos
+involucrados. La coerción Deref permite que Rust maneje estas conversiones
+automáticamente.</p>
+<p>Cuando el trait <code>Deref</code> está definido para el tipo involucrado, Rust analizará
+los tipos y usará <code>Deref::deref</code> tantas veces como sea necesario para obtener
+una referencia que coincida con el tipo del parámetro. El número de veces que
+<code>Deref::deref</code> necesita ser insertado se resuelve en tiempo de compilación, por
+lo que no hay penalización en tiempo de ejecución por aprovechar la coerción
+Deref!</p>
+<h3 id="cómo-interactúa-la-coerción-deref-con-la-mutabilidad"><a class="header" href="#cómo-interactúa-la-coerción-deref-con-la-mutabilidad">Cómo interactúa la coerción Deref con la mutabilidad</a></h3>
+<p>Similar a cómo usas el trait <code>Deref</code> para anular el operador <code>*</code> en
+referencias inmutables, puedes usar el trait <code>DerefMut</code> para anular el operador
+<code>*</code> en referencias mutables.</p>
+<p>Rust realiza la coerción Deref cuando encuentra tipos e implementaciones de
+traits en tres casos:</p>
+<ul>
+<li>De <code>&amp;T</code> a <code>&amp;U</code> cuando <code>T: Deref&lt;Target=U&gt;</code></li>
+<li>De <code>&amp;mut T</code> a <code>&amp;mut U</code> cuando <code>T: DerefMut&lt;Target=U&gt;</code></li>
+<li>De <code>&amp;mut T</code> a <code>&amp;U</code> cuando <code>T: Deref&lt;Target=U&gt;</code></li>
+</ul>
+<p>Los dos primeros casos son iguales entre sí, excepto que el segundo implementa
+mutabilidad. El primer caso establece que si tienes un <code>&amp;T</code>, y <code>T</code> implementa
+<code>Deref</code> a algún tipo <code>U</code>, puedes obtener un <code>&amp;U</code> de forma transparente. El
+segundo caso establece que la misma coerción de desreferencia ocurre para
+referencias mutables.</p>
+<p>El tercer caso es más complicado. Rust también convertirá una referencia mutable
+en una inmutable. Pero lo contrario no es posible: una referencia inmutable
+nunca se puede convertir en una referencia mutable. Debido a las reglas de
+borrowing, si tienes una referencia mutable, esa referencia debe ser la única
+referencia a ese dato (de lo contrario, el programa no se compilaría). Convertir
+una referencia mutable a una inmutable nunca romperá las reglas de borrowing.
+Convertir una referencia inmutable a una mutable requeriría que la referencia
+inmutable inicial sea la única referencia inmutable a esos datos, pero las
+reglas de borrowing no garantizan eso. Por lo tanto, Rust no puede hacer la
+suposición de que convertir una referencia inmutable en una mutable es posible.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch15-01-box.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch15-03-drop.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch15-01-box.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch15-03-drop.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>

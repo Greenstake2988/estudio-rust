@@ -1,0 +1,642 @@
+<!DOCTYPE HTML>
+<html lang="es" class="sidebar-visible light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Almacenando texto codificado en UTF-8 con Strings - El Lenguaje de Programación Rust</title>
+
+
+        <!-- Custom HTML head -->
+        
+            <link rel="canonical" href="https://www.rustlang-es.org/rust-book-es/" />
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <meta property="og:url" content="https://rustlanges.github.io">
+        <meta property="og:type" content="book">
+        <meta property="og:title" content="Almacenando texto codificado en UTF-8 con Strings - El Lenguaje de Programación Rust">
+        <meta property="og:description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta property="og:image" content="https://rustlanges.github.io/rust-book-es/img/open-graph.png">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="./theme/catppuccin.css">
+        <link rel="stylesheet" href="./theme/catppuccin-highlight.css">
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title-page.html">El Lenguaje de Programación Rust</a></li><li class="chapter-item expanded affix "><a href="foreword.html">Prefacio</a></li><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Introducción</a></li><li class="chapter-item expanded "><a href="ch01-00-getting-started.html"><strong aria-hidden="true">1.</strong> Empezando</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-installation.html"><strong aria-hidden="true">1.1.</strong> Instalación</a></li><li class="chapter-item expanded "><a href="ch01-02-hello-world.html"><strong aria-hidden="true">1.2.</strong> ¡Hola, Mundo!</a></li><li class="chapter-item expanded "><a href="ch01-03-hello-cargo.html"><strong aria-hidden="true">1.3.</strong> ¡Hola, Cargo!</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-guessing-game-tutorial.html"><strong aria-hidden="true">2.</strong> Programando un juego de adivinanzas</a></li><li class="chapter-item expanded "><a href="ch03-00-common-programming-concepts.html"><strong aria-hidden="true">3.</strong> Conceptos Comunes de Programación</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-variables-and-mutability.html"><strong aria-hidden="true">3.1.</strong> Variables y Mutabilidad</a></li><li class="chapter-item expanded "><a href="ch03-02-data-types.html"><strong aria-hidden="true">3.2.</strong> Tipos de Datos</a></li><li class="chapter-item expanded "><a href="ch03-03-how-functions-work.html"><strong aria-hidden="true">3.3.</strong> Funciones</a></li><li class="chapter-item expanded "><a href="ch03-04-comments.html"><strong aria-hidden="true">3.4.</strong> Comentarios</a></li><li class="chapter-item expanded "><a href="ch03-05-control-flow.html"><strong aria-hidden="true">3.5.</strong> Flujo de Control</a></li></ol></li><li class="chapter-item expanded "><a href="ch04-00-understanding-ownership.html"><strong aria-hidden="true">4.</strong> Entendiendo el Ownership</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04-01-what-is-ownership.html"><strong aria-hidden="true">4.1.</strong> ¿Qué es el Ownership?</a></li><li class="chapter-item expanded "><a href="ch04-02-references-and-borrowing.html"><strong aria-hidden="true">4.2.</strong> Referencias y Prestamos</a></li><li class="chapter-item expanded "><a href="ch04-03-slices.html"><strong aria-hidden="true">4.3.</strong> El Tipo Slice</a></li></ol></li><li class="chapter-item expanded "><a href="ch05-00-structs.html"><strong aria-hidden="true">5.</strong> Usando Structs para Estructurar Datos Relacionados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05-01-defining-structs.html"><strong aria-hidden="true">5.1.</strong> Definiendo e Instanciando Structs</a></li><li class="chapter-item expanded "><a href="ch05-02-example-structs.html"><strong aria-hidden="true">5.2.</strong> Un Programa de Ejemplo Usando Structs</a></li><li class="chapter-item expanded "><a href="ch05-03-method-syntax.html"><strong aria-hidden="true">5.3.</strong> Sintaxis de Métodos</a></li></ol></li><li class="chapter-item expanded "><a href="ch06-00-enums.html"><strong aria-hidden="true">6.</strong> Enums y Pattern Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06-01-defining-an-enum.html"><strong aria-hidden="true">6.1.</strong> Definiendo un Enum</a></li><li class="chapter-item expanded "><a href="ch06-02-match.html"><strong aria-hidden="true">6.2.</strong> El operador de control de flujo match</a></li><li class="chapter-item expanded "><a href="ch06-03-if-let.html"><strong aria-hidden="true">6.3.</strong> Flujo de Control Conciso con if let</a></li></ol></li><li class="chapter-item expanded "><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"><strong aria-hidden="true">7.</strong> Administrando Proyectos en Crecimiento con Paquetes, Crates y Módulos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07-01-packages-and-crates.html"><strong aria-hidden="true">7.1.</strong> Paquetes y Crates</a></li><li class="chapter-item expanded "><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"><strong aria-hidden="true">7.2.</strong> Definiendo módulos para controlar el scope y la privacidad</a></li><li class="chapter-item expanded "><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"><strong aria-hidden="true">7.3.</strong> Paths para referirse a un item en el árbol de módulos</a></li><li class="chapter-item expanded "><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"><strong aria-hidden="true">7.4.</strong> Incluyendo rutas al Scope con la palabra clave use</a></li><li class="chapter-item expanded "><a href="ch07-05-separating-modules-into-different-files.html"><strong aria-hidden="true">7.5.</strong> Separando Módulos en Diferentes Archivos</a></li></ol></li><li class="chapter-item expanded "><a href="ch08-00-common-collections.html"><strong aria-hidden="true">8.</strong> Colecciones comunes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch08-01-vectors.html"><strong aria-hidden="true">8.1.</strong> Almacenando listas de valores con vectores</a></li><li class="chapter-item expanded "><a href="ch08-02-strings.html" class="active"><strong aria-hidden="true">8.2.</strong> Almacenando texto codificado en UTF-8 con Strings</a></li><li class="chapter-item expanded "><a href="ch08-03-hash-maps.html"><strong aria-hidden="true">8.3.</strong> Almacenar Claves con Valores Asociados en HashMaps</a></li></ol></li><li class="chapter-item expanded "><a href="ch09-00-error-handling.html"><strong aria-hidden="true">9.</strong> Manejo de Errores</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09-01-unrecoverable-errors-with-panic.html"><strong aria-hidden="true">9.1.</strong> Errores irrecuperables con panic!</a></li><li class="chapter-item expanded "><a href="ch09-02-recoverable-errors-with-result.html"><strong aria-hidden="true">9.2.</strong> Errores recuperables con Result</a></li><li class="chapter-item expanded "><a href="ch09-03-to-panic-or-not-to-panic.html"><strong aria-hidden="true">9.3.</strong> panic! o no panic!</a></li></ol></li><li class="chapter-item expanded "><a href="ch10-00-generics.html"><strong aria-hidden="true">10.</strong> Tipos Genéricos, Traits y Lifetimes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch10-01-syntax.html"><strong aria-hidden="true">10.1.</strong> Tipos de Datos Genéricos</a></li><li class="chapter-item expanded "><a href="ch10-02-traits.html"><strong aria-hidden="true">10.2.</strong> Traits: Definiendo Comportamiento Compartido</a></li><li class="chapter-item expanded "><a href="ch10-03-lifetime-syntax.html"><strong aria-hidden="true">10.3.</strong> Validando Referencias con Lifetimes</a></li></ol></li><li class="chapter-item expanded "><a href="ch11-00-testing.html"><strong aria-hidden="true">11.</strong> Escribiendo Tests Automatizados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch11-01-writing-tests.html"><strong aria-hidden="true">11.1.</strong> Cómo Escribir Tests</a></li><li class="chapter-item expanded "><a href="ch11-02-running-tests.html"><strong aria-hidden="true">11.2.</strong> Controlando Cómo Los Tests Son Ejecutados</a></li><li class="chapter-item expanded "><a href="ch11-03-test-organization.html"><strong aria-hidden="true">11.3.</strong> Organización De Los Tests</a></li></ol></li><li class="chapter-item expanded "><a href="ch12-00-an-io-project.html"><strong aria-hidden="true">12.</strong> Un proyecto de I/O: Construyendo un programa de línea de comandos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch12-01-accepting-command-line-arguments.html"><strong aria-hidden="true">12.1.</strong> Aceptando argumentos de línea de comandos</a></li><li class="chapter-item expanded "><a href="ch12-02-reading-a-file.html"><strong aria-hidden="true">12.2.</strong> Leyendo un archivo</a></li><li class="chapter-item expanded "><a href="ch12-03-improving-error-handling-and-modularity.html"><strong aria-hidden="true">12.3.</strong> Refactorizando para mejorar la modularidad y el manejo de errores</a></li><li class="chapter-item expanded "><a href="ch12-04-testing-the-librarys-functionality.html"><strong aria-hidden="true">12.4.</strong> Desarrollando la funcionalidad de la biblioteca con T.D.D.</a></li><li class="chapter-item expanded "><a href="ch12-05-working-with-environment-variables.html"><strong aria-hidden="true">12.5.</strong> Trabajando con Variables de Entorno</a></li><li class="chapter-item expanded "><a href="ch12-06-writing-to-stderr-instead-of-stdout.html"><strong aria-hidden="true">12.6.</strong> Escribiendo mensajes de error estándar en lugar del output estándar</a></li></ol></li><li class="chapter-item expanded "><a href="ch13-00-functional-features.html"><strong aria-hidden="true">13.</strong> Características De Lenguajes Funcionales: Iteradores y Closures</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch13-01-closures.html"><strong aria-hidden="true">13.1.</strong> Closures: Funciones anónimas que capturan su entorno</a></li><li class="chapter-item expanded "><a href="ch13-02-iterators.html"><strong aria-hidden="true">13.2.</strong> Procesando una serie de elementos con Iteradores</a></li><li class="chapter-item expanded "><a href="ch13-03-improving-our-io-project.html"><strong aria-hidden="true">13.3.</strong> Mejorando nuestro proyecto I/O</a></li><li class="chapter-item expanded "><a href="ch13-04-performance.html"><strong aria-hidden="true">13.4.</strong> Comparando Performance: Bucles vs. Iteradores</a></li></ol></li><li class="chapter-item expanded "><a href="ch14-00-more-about-cargo.html"><strong aria-hidden="true">14.</strong> Más sobre Cargo y Crates.io</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch14-01-release-profiles.html"><strong aria-hidden="true">14.1.</strong> Personalizando Compilaciones con Perfiles de Lanzamiento</a></li><li class="chapter-item expanded "><a href="ch14-02-publishing-to-crates-io.html"><strong aria-hidden="true">14.2.</strong> Publicando un Crate a Crates.io</a></li><li class="chapter-item expanded "><a href="ch14-03-cargo-workspaces.html"><strong aria-hidden="true">14.3.</strong> Cargo Workspaces</a></li><li class="chapter-item expanded "><a href="ch14-04-installing-binaries.html"><strong aria-hidden="true">14.4.</strong> Instalando Binarios con cargo install</a></li><li class="chapter-item expanded "><a href="ch14-05-extending-cargo.html"><strong aria-hidden="true">14.5.</strong> Extendiendo Cargo con Comandos Personalizados</a></li></ol></li><li class="chapter-item expanded "><a href="ch15-00-smart-pointers.html"><strong aria-hidden="true">15.</strong> Smart Pointers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch15-01-box.html"><strong aria-hidden="true">15.1.</strong> Usando Box&lt;T&gt; para Apuntar a Datos en el Heap</a></li><li class="chapter-item expanded "><a href="ch15-02-deref.html"><strong aria-hidden="true">15.2.</strong> Tratando los Smart Pointers como Referencias Regulares con el Trait Deref</a></li><li class="chapter-item expanded "><a href="ch15-03-drop.html"><strong aria-hidden="true">15.3.</strong> Ejecutando Código al Limpiar con el Trait Drop</a></li><li class="chapter-item expanded "><a href="ch15-04-rc.html"><strong aria-hidden="true">15.4.</strong> Rc&lt;T&gt;, el Smart Pointer de Conteo de Referencias</a></li><li class="chapter-item expanded "><a href="ch15-05-interior-mutability.html"><strong aria-hidden="true">15.5.</strong> RefCell&lt;T&gt; y el Patrón de Mutabilidad Interior</a></li><li class="chapter-item expanded "><a href="ch15-06-reference-cycles.html"><strong aria-hidden="true">15.6.</strong> Referencias Circulares Pueden Fugar Memoria</a></li></ol></li><li class="chapter-item expanded "><a href="ch16-00-concurrency.html"><strong aria-hidden="true">16.</strong> Concurrencia Sin Miedo</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch16-01-threads.html"><strong aria-hidden="true">16.1.</strong> Usando Threads para Ejecutar Código Simultáneamente</a></li><li class="chapter-item expanded "><a href="ch16-02-message-passing.html"><strong aria-hidden="true">16.2.</strong> Usando el Pasaje de Mensajes para Transferir Datos entre Hilos</a></li><li class="chapter-item expanded "><a href="ch16-03-shared-state.html"><strong aria-hidden="true">16.3.</strong> Concurrencia con Estado Compartido</a></li><li class="chapter-item expanded "><a href="ch16-04-extensible-concurrency-sync-and-send.html"><strong aria-hidden="true">16.4.</strong> Concurrencia Extensible con los Traits Sync y Send</a></li></ol></li><li class="chapter-item expanded "><a href="ch17-00-oop.html"><strong aria-hidden="true">17.</strong> Rust como un Lenguaje de Programación Orientado a Objetos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch17-01-what-is-oo.html"><strong aria-hidden="true">17.1.</strong> Características de Lenguajes Orientados a Objetos</a></li><li class="chapter-item expanded "><a href="ch17-02-trait-objects.html"><strong aria-hidden="true">17.2.</strong> Usando Trait Objects que Permiten Valores de Diferentes Tipos</a></li><li class="chapter-item expanded "><a href="ch17-03-oo-design-patterns.html"><strong aria-hidden="true">17.3.</strong> Implementando un Patrón de Diseño Orientado a Objetos</a></li></ol></li><li class="chapter-item expanded "><a href="ch18-00-patterns.html"><strong aria-hidden="true">18.</strong> Patterns and Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch18-01-all-the-places-for-patterns.html"><strong aria-hidden="true">18.1.</strong> Todos los lugares donde se pueden usar Patterns</a></li><li class="chapter-item expanded "><a href="ch18-02-refutability.html"><strong aria-hidden="true">18.2.</strong> Refutabilidad: Si un Pattern Puede Fallar al Hacer Match</a></li><li class="chapter-item expanded "><a href="ch18-03-pattern-syntax.html"><strong aria-hidden="true">18.3.</strong> Sintaxis de los Patterns</a></li></ol></li><li class="chapter-item expanded "><a href="ch19-00-advanced-features.html"><strong aria-hidden="true">19.</strong> Características Avanzadas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch19-01-unsafe-rust.html"><strong aria-hidden="true">19.1.</strong> Rust Inseguro</a></li><li class="chapter-item expanded "><a href="ch19-03-advanced-traits.html"><strong aria-hidden="true">19.2.</strong> Advanced Traits</a></li><li class="chapter-item expanded "><a href="ch19-04-advanced-types.html"><strong aria-hidden="true">19.3.</strong> Advanced Types</a></li><li class="chapter-item expanded "><a href="ch19-05-advanced-functions-and-closures.html"><strong aria-hidden="true">19.4.</strong> Advanced Functions and Closures</a></li><li class="chapter-item expanded "><a href="ch19-06-macros.html"><strong aria-hidden="true">19.5.</strong> Macros</a></li></ol></li><li class="chapter-item expanded "><a href="ch20-00-final-project-a-web-server.html"><strong aria-hidden="true">20.</strong> Final Project: Building a Multithreaded Web Server</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch20-01-single-threaded.html"><strong aria-hidden="true">20.1.</strong> Building a Single-Threaded Web Server</a></li><li class="chapter-item expanded "><a href="ch20-02-multithreaded.html"><strong aria-hidden="true">20.2.</strong> Turning Our Single-Threaded Server into a Multithreaded Server</a></li><li class="chapter-item expanded "><a href="ch20-03-graceful-shutdown-and-cleanup.html"><strong aria-hidden="true">20.3.</strong> Graceful Shutdown and Cleanup</a></li></ol></li><li class="chapter-item expanded "><a href="appendix-00.html"><strong aria-hidden="true">21.</strong> Apéndice</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="appendix-01-keywords.html"><strong aria-hidden="true">21.1.</strong> A - Palabras claves</a></li><li class="chapter-item expanded "><a href="appendix-02-operators.html"><strong aria-hidden="true">21.2.</strong> B - Operadores y Símbolos</a></li><li class="chapter-item expanded "><a href="appendix-03-derivable-traits.html"><strong aria-hidden="true">21.3.</strong> C - Derivable Traits</a></li><li class="chapter-item expanded "><a href="appendix-04-useful-development-tools.html"><strong aria-hidden="true">21.4.</strong> D - Useful Development Tools</a></li><li class="chapter-item expanded "><a href="appendix-05-editions.html"><strong aria-hidden="true">21.5.</strong> E - Editions</a></li><li class="chapter-item expanded "><a href="appendix-06-translation.html"><strong aria-hidden="true">21.6.</strong> F - Translations of the Book</a></li><li class="chapter-item expanded "><a href="appendix-07-nightly-rust.html"><strong aria-hidden="true">21.7.</strong> G - Cómo se hace Rust y “Rust Nightly”</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="latte">Latte</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="frappe">Frappé</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="macchiato">Macchiato</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mocha">Mocha</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">El Lenguaje de Programación Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/RustLangES/rust-book-es" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="almacenando-texto-codificado-en-utf-8-con-strings"><a class="header" href="#almacenando-texto-codificado-en-utf-8-con-strings">Almacenando texto codificado en UTF-8 con Strings</a></h2>
+<p>Hemos hablado de strings en el Capítulo 4, pero las veremos con más detalle
+Los nuevos Rustaceans suelen quedarse atascados en las cadenas por una
+combinación de tres razones: la propensión de Rust a exponer posibles errores,
+los strings son una estructura de datos más complicada de lo que muchos
+programadores le dan crédito, y UTF-8. Estos factores se combinan de una manera
+que puede parecer difícil cuando se viene de otros lenguajes de programación.</p>
+<p>Discutiremos strings en el contexto de las colecciones porque las strings se
+implementan como una colección de bytes, más algunos métodos para proporcionar
+funcionalidad útil cuando esos bytes se interpretan como texto. En esta
+sección, hablaremos sobre las operaciones en <code>String</code> que cada tipo de
+colección tiene, como crear, actualizar y leer. También discutiremos las
+formas en que <code>String</code> es diferente de las otras colecciones, es decir, cómo
+indexar en un <code>String</code> se complica por las diferencias entre cómo las personas
+y las computadoras interpretan los datos de <code>String</code>.</p>
+<h3 id="qué-es-un-string"><a class="header" href="#qué-es-un-string">¿Qué es un string?</a></h3>
+<p>Bien primero definamos lo que queremos decir con el término <em>string</em>. Rust solo
+tiene un tipo de string en el lenguaje principal, que es el string slice <code>str</code>
+que generalmente se ve en su forma prestada <code>&amp;str</code>. En el Capítulo 4, hablamos
+sobre <em>string slices</em>, que son referencias a algunos datos de cadena codificados
+en UTF-8 almacenados en otro lugar. Las literales de cadena, por ejemplo, se
+almacenan en el binario del programa y, por lo tanto, son trozos de cadena.</p>
+<p>El tipo <code>String</code>, que es proporcionado por la biblioteca estándar en lugar de
+codificado en el lenguaje principal, es un tipo de cadena que puede crecer, mutable,
+de propiedad, codificado en UTF-8. Cuando los Rustaceans se refieren a "strings" en Rust,
+pueden estar refiriéndose a cualquiera de los tipos <code>String</code> o <code>str</code>, no solo
+a uno de esos tipos. Aunque esta sección trata principalmente de <code>String</code>, ambos
+tipos se usan mucho en la biblioteca estándar de Rust, y tanto <code>String</code> como
+las rebanadas de cadena son codificadas en UTF-8.</p>
+<h3 id="creando-un-nuevo-string"><a class="header" href="#creando-un-nuevo-string">Creando un nuevo String</a></h3>
+<p>Muchas de las mismas operaciones disponibles con <code>Vec&lt;T&gt;</code> también están
+disponibles con <code>String</code>, ya que <code>String</code> se implementa en realidad como un
+envoltorio alrededor de un vector de bytes con algunas garantías, restricciones
+y capacidades adicionales. Un ejemplo de una función que funciona de la misma
+manera con <code>Vec&lt;T&gt;</code> y <code>String</code> es la función <code>new</code> para crear una instancia,
+que se muestra en el listado 8-11.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let mut s = String::new();
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-11: Creando un nuevo y vacío <code>String</code></span></p>
+<p>Esta línea crea un nuevo <code>String</code> vacío llamado <code>s</code>, que podemos luego cargar
+con datos. A menudo, tendremos algunos datos iniciales que queremos comenzar
+en el string. Para eso, usamos el método <code>to_string</code>, que está disponible en
+cualquier tipo que implemente el trait <code>Display</code>, como lo hacen los String
+Literals. El listado 8-12 muestra dos ejemplos.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let data = "initial contents";
+
+    let s = data.to_string();
+
+    // the method also works on a literal directly:
+    let s = "initial contents".to_string();
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-12: Usando el método <code>to_string</code> para crear un
+<code>String</code> a partir de un string literal</span></p>
+<p>Este código crea un string que contiene <code>initial contents</code>.</p>
+<p>Podemos también usar la función <code>String::from</code> para crear un <code>String</code> a partir
+de un string literal. El código en el listado 8-13 es equivalente al código del
+listado 8-12 que usa <code>to_string</code>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let s = String::from("initial contents");
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-13: Usando la función <code>String::from</code> para crear
+un <code>String</code> a partir de un string literal</span></p>
+<p>Debido a que los strings se usan para muchas cosas, podemos usar muchas APIs
+genéricas diferentes para strings, lo que nos proporciona muchas opciones.
+Algunos de ellos pueden parecer redundantes, ¡pero todos tienen su lugar! En
+este caso, <code>String::from</code> y <code>to_string</code> hacen lo mismo, por lo que elegir
+depende del estilo y la legibilidad.</p>
+<p>Recuerda que los strings son UTF-8 codificados, por lo que podemos incluir
+cualquier dato codificado correctamente en ellos, Como se muestra en el listado
+8-14.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let hello = String::from("السلام عليكم");
+    let hello = String::from("Dobrý den");
+    let hello = String::from("Hello");
+    let hello = String::from("שָׁלוֹם");
+    let hello = String::from("नमस्ते");
+    let hello = String::from("こんにちは");
+    let hello = String::from("안녕하세요");
+    let hello = String::from("你好");
+    let hello = String::from("Olá");
+    let hello = String::from("Здравствуйте");
+    let hello = String::from("Hola");
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-14: Almacenamiento de saludos en diferentes
+idiomas en strings</span></p>
+<p>Todos estos strings son valores válidos de <code>String</code>.</p>
+<h3 id="actualizando-un-string"><a class="header" href="#actualizando-un-string">Actualizando un String</a></h3>
+<p>Un <code>String</code> puede crecer en tamaño y su contenido puede cambiar, al igual que
+el contenido de un <code>Vec&lt;T&gt;</code>, si se introducen más datos en el. Además, puedes usar
+convenientemente el operador <code>+</code> o el macro <code>format!</code> para concatenar valores de
+<code>String</code>.</p>
+<h4 id="agregando-a-un-string-con-push_str-y-push"><a class="header" href="#agregando-a-un-string-con-push_str-y-push">Agregando a un String con <code>push_str</code> y <code>push</code></a></h4>
+<p>Podemos hacer crecer un <code>String</code> usando el método <code>push_str</code> para agregar un
+string slice, como se muestra en el listado 8-15.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let mut s = String::from("foo");
+    s.push_str("bar");
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-15: Agregando un string slice a un <code>String</code>
+usando el método <code>push_str</code></span></p>
+<p>Después de estas dos líneas, <code>s</code> contendrá <code>foobar</code>. El método <code>push_str</code> toma
+un string slice porque no necesariamente queremos tomar posesión del parámetro.
+Por ejemplo, en el código del listado 8-16, queremos poder usar <code>s2</code> después de
+agregar su contenido a <code>s1</code>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let mut s1 = String::from("foo");
+    let s2 = "bar";
+    s1.push_str(s2);
+    println!("s2 is {s2}");
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-16: Uso de un string slice después de agregar
+su contenido a un <code>String</code></span></p>
+<p>Si el método <code>push_str</code> tomara posesión de <code>s2</code>, no podríamos imprimir su valor
+en la última línea. ¡Sin embargo, este código funciona como esperamos!</p>
+<p>El método <code>push</code> toma un solo carácter como parámetro y lo agrega al <code>String</code>.
+El listado 8-17 agrega la letra <code>l</code> a un <code>String</code> usando el método <code>push</code>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let mut s = String::from("lo");
+    s.push('l');
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-17: Agregando un carácter a un valor <code>String</code>
+usando <code>push</code></span></p>
+<p>Como resultado, <code>s</code> contendrá <code>lol</code>.</p>
+<h4 id="concatenacion-con-el-operador--o-la-macro-format"><a class="header" href="#concatenacion-con-el-operador--o-la-macro-format">Concatenacion con el operador <code>+</code> o la Macro <code>format!</code></a></h4>
+<p>A veces, necesitarás combinar dos strings. Sin embargo, no es tan simple como
+usar el operador <code>+</code> con dos referencias a <code>String</code>. El código en el listado
+8-18 no compilará:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let s1 = String::from("Hello, ");
+    let s2 = String::from("world!");
+    let s3 = s1 + &amp;s2; // note s1 has been moved here and can no longer be used
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listado 8-18: Usando el operador <code>+</code> para combinar dos
+valores <code>String</code> en un nuevo valor <code>String</code></span></p>
+<p>El string <code>s3</code> contendrá <code>Hello, world!</code>. La razón por la que <code>s1</code> ya no es
+válido después de la adición, y la razón por la que usamos una referencia a
+<code>s2</code>, tiene que ver con la firma del método que se llama cuando usamos el
+operador <code>+</code>. El operador <code>+</code> usa el método <code>add</code>, cuya firma se ve algo como
+esto:</p>
+<pre><code class="language-rust ignore">fn add(self, s: &amp;str) -&gt; String {</code></pre>
+<p>En la biblioteca estándar, verás <code>add</code> definido usando genéricos y tipos
+asociados. Aquí, hemos sustituido tipos concretos, que es lo que sucede cuando
+llamamos a este método con valores <code>String</code>. Discutiremos los genéricos en el
+Capítulo 10. Esta firma nos da las pistas que necesitamos para entender las
+partes complicadas del operador <code>+</code>.</p>
+<p>Primero, <code>s2</code> tiene un <code>&amp;</code>, lo que significa que estamos agregando una referencia
+del segundo string al primer string. Esto se debe al parámetro <code>s</code> en la
+función <code>add</code>: solo podemos agregar un <code>&amp;str</code> a un <code>String</code>; no podemos agregar
+dos valores <code>String</code> juntos. Pero espera, el tipo de <code>&amp;s2</code> es <code>&amp;String</code>, no
+<code>&amp;str</code>, como se especifica en el segundo parámetro de <code>add</code>. ¿Entonces por qué
+compila el listado 8-18?</p>
+<p>La razón por la que podemos usar <code>s2</code> en la llamada a <code>add</code> es que el
+compilador puede <em>convertir</em> el argumento <code>&amp;String</code> en un <code>&amp;str</code>. Cuando<br />
+llamamos al método <code>add</code>, Rust usa una <em>coerción de dereferencia</em>, que aquí
+convierte <code>&amp;s2</code> en <code>&amp;s2[..]</code>. Discutiremos la coerción de dereferencia con más
+detalle en el Capítulo 15. Debido a que <code>add</code> no toma posesión del parámetro
+<code>s</code>, <code>s2</code> seguirá siendo un <code>String</code> válido después de esta operación.</p>
+<p>En segundo lugar, podemos ver en la firma que <code>add</code> toma el ownership de <code>self</code>,
+porque <code>self</code> no tiene un <code>&amp;</code>. Esto significa que <code>s1</code> en el listado 8-18 se
+moverá a la llamada de <code>add</code> y ya no será válido después de eso. Entonces,
+aunque <code>let s3 = s1 + &amp;s2;</code> parece que copiará ambos strings y creará uno
+nuevo, esta declaración realmente toma posesión de <code>s1</code>, agrega una copia del
+contenido de <code>s2</code> y luego devuelve la propiedad del resultado. En otras
+palabras, parece que está haciendo muchas copias, pero no lo está; la
+implementación es más eficiente que copiar.</p>
+<p>Si necesitamos concatenar múltiples strings, el comportamiento del operador <code>+</code>
+se vuelve difícil de manejar:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let s1 = String::from("tic");
+    let s2 = String::from("tac");
+    let s3 = String::from("toe");
+
+    let s = s1 + "-" + &amp;s2 + "-" + &amp;s3;
+<span class="boring">}</span></code></pre></pre>
+<p>En este punto, <code>s</code> contendrá <code>tic-tac-toe</code>. Con todos los caracteres <code>+</code> y <code>"</code>
+es difícil ver qué está pasando. Para una combinación de cadenas más
+complicada, podemos usar la macro <code>format!</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>    let s1 = String::from("tic");
+    let s2 = String::from("tac");
+    let s3 = String::from("toe");
+
+    let s = format!("{s1}-{s2}-{s3}");
+<span class="boring">}</span></code></pre></pre>
+<p>Este código también establece <code>s</code> en <code>tic-tac-toe</code>. La macro <code>format!</code> funciona
+como <code>println!</code>, pero en lugar de imprimir la salida en la pantalla, devuelve
+un <code>String</code> con el contenido. La versión del código que usa <code>format!</code> es mucho
+más fácil de leer, y el código generado por la macro <code>format!</code> usa referencias
+para que esta llamada no tome posesión de ninguno de sus parámetros.</p>
+<h3 id="indexando-en-strings"><a class="header" href="#indexando-en-strings">Indexando en Strings</a></h3>
+<p>En muchos otros lenguajes de programación, acceder a caracteres individuales en
+un string referenciándolos por índice es una operación válida y común. Sin
+embargo, si intentas acceder a partes de un <code>String</code> usando la sintaxis de
+indexación en Rust, obtendrás un error. Considera el código inválido en el
+listado 8-19.</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>    let s1 = String::from("hello");
+    let h = s1[0];
+<span class="boring">}</span></code></pre>
+<p><span class="caption">Listado 8-19: Intentando usar la sintaxis de indexación con
+un String</span></p>
+<p>Este código dará como resultado el siguiente error:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling collections v0.1.0 (file:///projects/collections)
+error[E0277]: the type `String` cannot be indexed by `{integer}`
+ --&gt; src/main.rs:3:13
+  |
+3 |     let h = s1[0];
+  |             ^^^^^ `String` cannot be indexed by `{integer}`
+  |
+  = help: the trait `Index&lt;{integer}&gt;` is not implemented for `String`
+  = help: the following other types implement trait `Index&lt;Idx&gt;`:
+            &lt;String as Index&lt;RangeFrom&lt;usize&gt;&gt;&gt;
+            &lt;String as Index&lt;RangeFull&gt;&gt;
+            &lt;String as Index&lt;RangeInclusive&lt;usize&gt;&gt;&gt;
+            &lt;String as Index&lt;RangeTo&lt;usize&gt;&gt;&gt;
+            &lt;String as Index&lt;RangeToInclusive&lt;usize&gt;&gt;&gt;
+            &lt;String as Index&lt;std::ops::Range&lt;usize&gt;&gt;&gt;
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `collections` due to previous error
+</code></pre>
+<p>El error y la nota cuentan la historia: los strings de Rust no admiten
+indexación. Pero, ¿por qué no? Para responder a esa pregunta, necesitamos
+discutir cómo Rust almacena los strings en la memoria.</p>
+<h4 id="representación-interna"><a class="header" href="#representación-interna">Representación Interna</a></h4>
+<p>Un <code>String</code> es un wrapper sobre un <code>Vec&lt;u8&gt;</code>. Veamos algunos de nuestros
+strings de ejemplo UTF-8 correctamente codificados del listado 8-14. Primero,
+este:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span><span class="boring">    let hello = String::from("السلام عليكم");
+</span><span class="boring">    let hello = String::from("Dobrý den");
+</span><span class="boring">    let hello = String::from("Hello");
+</span><span class="boring">    let hello = String::from("שָׁלוֹם");
+</span><span class="boring">    let hello = String::from("नमस्ते");
+</span><span class="boring">    let hello = String::from("こんにちは");
+</span><span class="boring">    let hello = String::from("안녕하세요");
+</span><span class="boring">    let hello = String::from("你好");
+</span><span class="boring">    let hello = String::from("Olá");
+</span><span class="boring">    let hello = String::from("Здравствуйте");
+</span>    let hello = String::from("Hola");
+<span class="boring">}</span></code></pre></pre>
+<p>En este caso, <code>len</code> será 4, lo que significa que el vector que almacena el
+string “Hola” tiene 4 bytes de largo. Cada una de estas letras toma 1 byte
+cuando se codifica en UTF-8. La siguiente línea, sin embargo, puede
+sorprenderte. (Nota que este string comienza con la letra cirílica Ze mayúscula,
+no con el número árabe 3.)</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span><span class="boring">    let hello = String::from("السلام عليكم");
+</span><span class="boring">    let hello = String::from("Dobrý den");
+</span><span class="boring">    let hello = String::from("Hello");
+</span><span class="boring">    let hello = String::from("שָׁלוֹם");
+</span><span class="boring">    let hello = String::from("नमस्ते");
+</span><span class="boring">    let hello = String::from("こんにちは");
+</span><span class="boring">    let hello = String::from("안녕하세요");
+</span><span class="boring">    let hello = String::from("你好");
+</span><span class="boring">    let hello = String::from("Olá");
+</span>    let hello = String::from("Здравствуйте");
+<span class="boring">    let hello = String::from("Hola");
+</span><span class="boring">}</span></code></pre></pre>
+<p>Cuando te preguntes que tan largo es el string, podrías decir 12. De hecho, la
+respuesta de Rust es 24: ese es el número de bytes que se necesitan para
+codificar “Здравствуйте” en UTF-8, porque cada valor escalar Unicode en ese
+string toma 2 bytes de almacenamiento. Por lo tanto, un índice en los bytes del
+string no siempre se correlacionará con un valor escalar Unicode válido. Para
+demostrarlo, considera este código inválido de Rust:</p>
+<pre><code class="language-rust ignore does_not_compile">let hello = "Здравствуйте";
+let answer = &amp;hello[0];</code></pre>
+<p>Tu Ahora sabes que <code>answer</code> no será <code>З</code>, la primera letra. Cuando codificado
+en UTF-8, el primer byte de <code>З</code> es <code>208</code> y el segundo es <code>151</code>, por lo que
+parecería que <code>answer</code> debería ser <code>208</code>, pero <code>208</code> no es un carácter válido
+por sí solo. Devolver <code>208</code> probablemente no sea lo que un usuario querría si
+pidieran la primera letra de esta cadena; sin embargo, esos son los únicos
+datos que Rust tiene en el índice de bytes 0. Los usuarios generalmente no
+quieren que se devuelva el valor de byte, incluso si la cadena contiene solo
+letras latinas: si <code>&amp;"hello"[0]</code> fuera un código válido que devolviera el valor
+de byte, devolvería <code>104</code>, no <code>h</code>.</p>
+<p>La respuesta, entonces, es que para evitar devolver un valor inesperado y
+causar errores que podrían no descubrirse de inmediato, Rust no compila este
+código en absoluto y evita malentendidos al comienzo del proceso de
+desarrollo.</p>
+<h4 id="bytes-valores-escalares-y-grupos-de-grafemas"><a class="header" href="#bytes-valores-escalares-y-grupos-de-grafemas">Bytes, valores escalares y grupos de grafemas</a></h4>
+<p>Otro punto sobre UTF-8 es que hay tres formas relevantes de ver las cadenas
+desde la perspectiva de Rust: como bytes, valores escalares y grupos de
+grafemas (lo más parecido a lo que llamaríamos <em>letras</em>).</p>
+<p>Si observamos la palabra “नमस्ते” en escritura Devanagari, se almacena como un
+vector de valores <code>u8</code> que se ve así:</p>
+<pre><code class="language-text">[224, 164, 168, 224, 164, 174, 224, 164, 184, 224, 165, 141, 224, 164, 164,
+224, 165, 135]
+</code></pre>
+<p>Eso es 18 bytes y es como las computadoras almacenan los datos. Si los
+observamos como valores escalares Unicode, que es lo que es el tipo <code>char</code> de
+Rust, esos bytes se ven así:</p>
+<pre><code class="language-text">['न', 'म', 'स', '्', 'त', 'े']
+</code></pre>
+<p>Aquí hay seis valores <code>char</code>, pero el cuarto y el sexto no son letras: son
+diacríticos que no tienen sentido por sí mismos. Finalmente, si los miramos
+como grupos de grafemas, obtendríamos lo que una persona llamaría las cuatro
+letras que componen la palabra hindi:</p>
+<pre><code class="language-text">["न", "म", "स्", "ते"]
+</code></pre>
+<p>Rust proporciona diferentes formas de interpretar los datos de string sin
+procesar que las computadoras almacenan para que cada programa pueda elegir la
+interpretación que necesita, sin importar en qué idioma humano estén los datos.</p>
+<p>Una última razón por la que Rust no permite indexar en un <code>String</code> para obtener
+un carácter es que se espera que las operaciones de indexación siempre tomen
+tiempo constante (O(1)). Pero no es posible garantizar ese rendimiento con un
+<code>String</code>, porque Rust tendría que recorrer el contenido desde el principio
+hasta el índice para determinar cuántos caracteres válidos había.</p>
+<h3 id="slicing-strings"><a class="header" href="#slicing-strings">Slicing Strings</a></h3>
+<p>La indexación en un <code>String</code> suele ser una mala idea porque no está claro cuál
+debería ser el tipo de retorno de la operación de indexación de string: un
+valor de byte, un carácter, un grupo de grafemas o una rebanada de string. Si
+realmente necesita usar índices para crear rebanadas de string, por lo tanto,
+Rust le pide que sea más específico.</p>
+<p>En lugar de indexar usando <code>[]</code> con un solo número, puede usar <code>[]</code> con un
+rango para crear un string slice conteniendo bytes particulares:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hello = "Здравствуйте";
+
+let s = &amp;hello[0..4];
+<span class="boring">}</span></code></pre></pre>
+<p>Aquí, <code>s</code> será un <code>&amp;str</code> que contiene los primeros 4 bytes del string. Antes,
+mencionamos que cada uno de estos caracteres era de 2 bytes, lo que significa
+que <code>s</code> será <code>Зд</code>.</p>
+<p>Si intentáramos hacer un slice con solo una parte de los bytes de un carácter,
+algo como <code>&amp;hello[0..1]</code>, Rust entraría en pánico en tiempo de
+ejecución de la misma manera que si se accediera a un índice no válido
+en un vector:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling collections v0.1.0 (file:///projects/collections)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.43s
+     Running `target/debug/collections`
+thread 'main' panicked at 'byte index 1 is not a char boundary; it is inside 'З' (bytes 0..2) of `Здравствуйте`', src/main.rs:4:14
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</code></pre>
+<p>Debemos usar rangos para crear string slices con precaución, porque hacerlo
+puede bloquear su programa.</p>
+<h3 id="métodos-para-iterar-sobre-strings"><a class="header" href="#métodos-para-iterar-sobre-strings">Métodos para iterar sobre Strings</a></h3>
+<p>La mejor manera de operar en partes de strings es ser explícito sobre si
+desea caracteres o bytes. Para valores escalares Unicode individuales, use el
+método <code>chars</code>. Llamar a <code>chars</code> en “Зд” separa y devuelve dos valores de tipo
+<code>char</code>, y puede iterar sobre el resultado para acceder a cada elemento:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>for c in "Зд".chars() {
+    println!("{c}");
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Este código imprimirá lo siguiente:</p>
+<pre><code class="language-text">З
+д
+</code></pre>
+<p>Alternativamente, el método <code>bytes</code> devuelve cada byte sin procesar, que puede
+ser apropiado para su dominio:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>for b in "Зд".bytes() {
+    println!("{b}");
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Este código imprimirá los cuatro bytes que componen el string:</p>
+<pre><code class="language-text">208
+151
+208
+180
+</code></pre>
+<p>Pero asegúrese de recordar que los valores escalares válidos Unicode pueden
+estar compuestos por más de 1 byte.</p>
+<p>Obtener grupos de grafemas de strings como con la escritura Devanagari es
+complejo, por lo que esta funcionalidad no es proporcionada por la biblioteca
+estándar. Los crates están disponibles en
+<a href="https://crates.io/">crates.io</a><!-- ignore --> si esta es la funcionalidad
+que necesita.</p>
+<h3 id="los-strings-no-son-tan-simples"><a class="header" href="#los-strings-no-son-tan-simples">Los Strings no son tan simples</a></h3>
+<p>Para resumir, los strings son complicados. Los diferentes lenguajes de
+programación hacen diferentes elecciones sobre cómo presentar esta complejidad
+al programador. Rust ha elegido hacer que el manejo correcto de los datos
+<code>String</code> sea el comportamiento predeterminado para todos los programas de Rust,
+lo que significa que los programadores tienen que pensar más en el manejo de
+datos UTF-8 por adelantado. Este compromiso expone más de la complejidad de
+las cadenas de lo que parece en otros lenguajes de programación, pero evita
+que tenga que manejar errores que involucran caracteres no ASCII más adelante
+en su ciclo de vida de desarrollo.</p>
+<p>La buena noticia es que la biblioteca estándar ofrece mucha funcionalidad
+construida a partir de los tipos <code>String</code> y <code>&amp;str</code> para ayudar a manejar estas
+situaciones complejas correctamente. Asegúrese de consultar la documentación
+para obtener métodos útiles como <code>contains</code> para buscar en un string y
+<code>replace</code> para sustituir partes de un string por otro string.</p>
+<p>Pasemos a algo un poco menos complejo: ¡Hash Maps!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch08-01-vectors.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch08-03-hash-maps.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch08-01-vectors.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch08-03-hash-maps.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE HTML>
+<html lang="es" class="sidebar-visible light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Building a Single-Threaded Web Server - El Lenguaje de Programación Rust</title>
+
+
+        <!-- Custom HTML head -->
+        
+            <link rel="canonical" href="https://www.rustlang-es.org/rust-book-es/" />
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <meta property="og:url" content="https://rustlanges.github.io">
+        <meta property="og:type" content="book">
+        <meta property="og:title" content="Building a Single-Threaded Web Server - El Lenguaje de Programación Rust">
+        <meta property="og:description" content="El libro oficial para aprender el lenguaje de programación Rust, con tutoriales y guías.">
+        <meta property="og:image" content="https://rustlanges.github.io/rust-book-es/img/open-graph.png">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="./theme/catppuccin.css">
+        <link rel="stylesheet" href="./theme/catppuccin-highlight.css">
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="title-page.html">El Lenguaje de Programación Rust</a></li><li class="chapter-item expanded affix "><a href="foreword.html">Prefacio</a></li><li class="chapter-item expanded affix "><a href="ch00-00-introduction.html">Introducción</a></li><li class="chapter-item expanded "><a href="ch01-00-getting-started.html"><strong aria-hidden="true">1.</strong> Empezando</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch01-01-installation.html"><strong aria-hidden="true">1.1.</strong> Instalación</a></li><li class="chapter-item expanded "><a href="ch01-02-hello-world.html"><strong aria-hidden="true">1.2.</strong> ¡Hola, Mundo!</a></li><li class="chapter-item expanded "><a href="ch01-03-hello-cargo.html"><strong aria-hidden="true">1.3.</strong> ¡Hola, Cargo!</a></li></ol></li><li class="chapter-item expanded "><a href="ch02-00-guessing-game-tutorial.html"><strong aria-hidden="true">2.</strong> Programando un juego de adivinanzas</a></li><li class="chapter-item expanded "><a href="ch03-00-common-programming-concepts.html"><strong aria-hidden="true">3.</strong> Conceptos Comunes de Programación</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch03-01-variables-and-mutability.html"><strong aria-hidden="true">3.1.</strong> Variables y Mutabilidad</a></li><li class="chapter-item expanded "><a href="ch03-02-data-types.html"><strong aria-hidden="true">3.2.</strong> Tipos de Datos</a></li><li class="chapter-item expanded "><a href="ch03-03-how-functions-work.html"><strong aria-hidden="true">3.3.</strong> Funciones</a></li><li class="chapter-item expanded "><a href="ch03-04-comments.html"><strong aria-hidden="true">3.4.</strong> Comentarios</a></li><li class="chapter-item expanded "><a href="ch03-05-control-flow.html"><strong aria-hidden="true">3.5.</strong> Flujo de Control</a></li></ol></li><li class="chapter-item expanded "><a href="ch04-00-understanding-ownership.html"><strong aria-hidden="true">4.</strong> Entendiendo el Ownership</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch04-01-what-is-ownership.html"><strong aria-hidden="true">4.1.</strong> ¿Qué es el Ownership?</a></li><li class="chapter-item expanded "><a href="ch04-02-references-and-borrowing.html"><strong aria-hidden="true">4.2.</strong> Referencias y Prestamos</a></li><li class="chapter-item expanded "><a href="ch04-03-slices.html"><strong aria-hidden="true">4.3.</strong> El Tipo Slice</a></li></ol></li><li class="chapter-item expanded "><a href="ch05-00-structs.html"><strong aria-hidden="true">5.</strong> Usando Structs para Estructurar Datos Relacionados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch05-01-defining-structs.html"><strong aria-hidden="true">5.1.</strong> Definiendo e Instanciando Structs</a></li><li class="chapter-item expanded "><a href="ch05-02-example-structs.html"><strong aria-hidden="true">5.2.</strong> Un Programa de Ejemplo Usando Structs</a></li><li class="chapter-item expanded "><a href="ch05-03-method-syntax.html"><strong aria-hidden="true">5.3.</strong> Sintaxis de Métodos</a></li></ol></li><li class="chapter-item expanded "><a href="ch06-00-enums.html"><strong aria-hidden="true">6.</strong> Enums y Pattern Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch06-01-defining-an-enum.html"><strong aria-hidden="true">6.1.</strong> Definiendo un Enum</a></li><li class="chapter-item expanded "><a href="ch06-02-match.html"><strong aria-hidden="true">6.2.</strong> El operador de control de flujo match</a></li><li class="chapter-item expanded "><a href="ch06-03-if-let.html"><strong aria-hidden="true">6.3.</strong> Flujo de Control Conciso con if let</a></li></ol></li><li class="chapter-item expanded "><a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"><strong aria-hidden="true">7.</strong> Administrando Proyectos en Crecimiento con Paquetes, Crates y Módulos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch07-01-packages-and-crates.html"><strong aria-hidden="true">7.1.</strong> Paquetes y Crates</a></li><li class="chapter-item expanded "><a href="ch07-02-defining-modules-to-control-scope-and-privacy.html"><strong aria-hidden="true">7.2.</strong> Definiendo módulos para controlar el scope y la privacidad</a></li><li class="chapter-item expanded "><a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html"><strong aria-hidden="true">7.3.</strong> Paths para referirse a un item en el árbol de módulos</a></li><li class="chapter-item expanded "><a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html"><strong aria-hidden="true">7.4.</strong> Incluyendo rutas al Scope con la palabra clave use</a></li><li class="chapter-item expanded "><a href="ch07-05-separating-modules-into-different-files.html"><strong aria-hidden="true">7.5.</strong> Separando Módulos en Diferentes Archivos</a></li></ol></li><li class="chapter-item expanded "><a href="ch08-00-common-collections.html"><strong aria-hidden="true">8.</strong> Colecciones comunes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch08-01-vectors.html"><strong aria-hidden="true">8.1.</strong> Almacenando listas de valores con vectores</a></li><li class="chapter-item expanded "><a href="ch08-02-strings.html"><strong aria-hidden="true">8.2.</strong> Almacenando texto codificado en UTF-8 con Strings</a></li><li class="chapter-item expanded "><a href="ch08-03-hash-maps.html"><strong aria-hidden="true">8.3.</strong> Almacenar Claves con Valores Asociados en HashMaps</a></li></ol></li><li class="chapter-item expanded "><a href="ch09-00-error-handling.html"><strong aria-hidden="true">9.</strong> Manejo de Errores</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch09-01-unrecoverable-errors-with-panic.html"><strong aria-hidden="true">9.1.</strong> Errores irrecuperables con panic!</a></li><li class="chapter-item expanded "><a href="ch09-02-recoverable-errors-with-result.html"><strong aria-hidden="true">9.2.</strong> Errores recuperables con Result</a></li><li class="chapter-item expanded "><a href="ch09-03-to-panic-or-not-to-panic.html"><strong aria-hidden="true">9.3.</strong> panic! o no panic!</a></li></ol></li><li class="chapter-item expanded "><a href="ch10-00-generics.html"><strong aria-hidden="true">10.</strong> Tipos Genéricos, Traits y Lifetimes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch10-01-syntax.html"><strong aria-hidden="true">10.1.</strong> Tipos de Datos Genéricos</a></li><li class="chapter-item expanded "><a href="ch10-02-traits.html"><strong aria-hidden="true">10.2.</strong> Traits: Definiendo Comportamiento Compartido</a></li><li class="chapter-item expanded "><a href="ch10-03-lifetime-syntax.html"><strong aria-hidden="true">10.3.</strong> Validando Referencias con Lifetimes</a></li></ol></li><li class="chapter-item expanded "><a href="ch11-00-testing.html"><strong aria-hidden="true">11.</strong> Escribiendo Tests Automatizados</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch11-01-writing-tests.html"><strong aria-hidden="true">11.1.</strong> Cómo Escribir Tests</a></li><li class="chapter-item expanded "><a href="ch11-02-running-tests.html"><strong aria-hidden="true">11.2.</strong> Controlando Cómo Los Tests Son Ejecutados</a></li><li class="chapter-item expanded "><a href="ch11-03-test-organization.html"><strong aria-hidden="true">11.3.</strong> Organización De Los Tests</a></li></ol></li><li class="chapter-item expanded "><a href="ch12-00-an-io-project.html"><strong aria-hidden="true">12.</strong> Un proyecto de I/O: Construyendo un programa de línea de comandos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch12-01-accepting-command-line-arguments.html"><strong aria-hidden="true">12.1.</strong> Aceptando argumentos de línea de comandos</a></li><li class="chapter-item expanded "><a href="ch12-02-reading-a-file.html"><strong aria-hidden="true">12.2.</strong> Leyendo un archivo</a></li><li class="chapter-item expanded "><a href="ch12-03-improving-error-handling-and-modularity.html"><strong aria-hidden="true">12.3.</strong> Refactorizando para mejorar la modularidad y el manejo de errores</a></li><li class="chapter-item expanded "><a href="ch12-04-testing-the-librarys-functionality.html"><strong aria-hidden="true">12.4.</strong> Desarrollando la funcionalidad de la biblioteca con T.D.D.</a></li><li class="chapter-item expanded "><a href="ch12-05-working-with-environment-variables.html"><strong aria-hidden="true">12.5.</strong> Trabajando con Variables de Entorno</a></li><li class="chapter-item expanded "><a href="ch12-06-writing-to-stderr-instead-of-stdout.html"><strong aria-hidden="true">12.6.</strong> Escribiendo mensajes de error estándar en lugar del output estándar</a></li></ol></li><li class="chapter-item expanded "><a href="ch13-00-functional-features.html"><strong aria-hidden="true">13.</strong> Características De Lenguajes Funcionales: Iteradores y Closures</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch13-01-closures.html"><strong aria-hidden="true">13.1.</strong> Closures: Funciones anónimas que capturan su entorno</a></li><li class="chapter-item expanded "><a href="ch13-02-iterators.html"><strong aria-hidden="true">13.2.</strong> Procesando una serie de elementos con Iteradores</a></li><li class="chapter-item expanded "><a href="ch13-03-improving-our-io-project.html"><strong aria-hidden="true">13.3.</strong> Mejorando nuestro proyecto I/O</a></li><li class="chapter-item expanded "><a href="ch13-04-performance.html"><strong aria-hidden="true">13.4.</strong> Comparando Performance: Bucles vs. Iteradores</a></li></ol></li><li class="chapter-item expanded "><a href="ch14-00-more-about-cargo.html"><strong aria-hidden="true">14.</strong> Más sobre Cargo y Crates.io</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch14-01-release-profiles.html"><strong aria-hidden="true">14.1.</strong> Personalizando Compilaciones con Perfiles de Lanzamiento</a></li><li class="chapter-item expanded "><a href="ch14-02-publishing-to-crates-io.html"><strong aria-hidden="true">14.2.</strong> Publicando un Crate a Crates.io</a></li><li class="chapter-item expanded "><a href="ch14-03-cargo-workspaces.html"><strong aria-hidden="true">14.3.</strong> Cargo Workspaces</a></li><li class="chapter-item expanded "><a href="ch14-04-installing-binaries.html"><strong aria-hidden="true">14.4.</strong> Instalando Binarios con cargo install</a></li><li class="chapter-item expanded "><a href="ch14-05-extending-cargo.html"><strong aria-hidden="true">14.5.</strong> Extendiendo Cargo con Comandos Personalizados</a></li></ol></li><li class="chapter-item expanded "><a href="ch15-00-smart-pointers.html"><strong aria-hidden="true">15.</strong> Smart Pointers</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch15-01-box.html"><strong aria-hidden="true">15.1.</strong> Usando Box&lt;T&gt; para Apuntar a Datos en el Heap</a></li><li class="chapter-item expanded "><a href="ch15-02-deref.html"><strong aria-hidden="true">15.2.</strong> Tratando los Smart Pointers como Referencias Regulares con el Trait Deref</a></li><li class="chapter-item expanded "><a href="ch15-03-drop.html"><strong aria-hidden="true">15.3.</strong> Ejecutando Código al Limpiar con el Trait Drop</a></li><li class="chapter-item expanded "><a href="ch15-04-rc.html"><strong aria-hidden="true">15.4.</strong> Rc&lt;T&gt;, el Smart Pointer de Conteo de Referencias</a></li><li class="chapter-item expanded "><a href="ch15-05-interior-mutability.html"><strong aria-hidden="true">15.5.</strong> RefCell&lt;T&gt; y el Patrón de Mutabilidad Interior</a></li><li class="chapter-item expanded "><a href="ch15-06-reference-cycles.html"><strong aria-hidden="true">15.6.</strong> Referencias Circulares Pueden Fugar Memoria</a></li></ol></li><li class="chapter-item expanded "><a href="ch16-00-concurrency.html"><strong aria-hidden="true">16.</strong> Concurrencia Sin Miedo</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch16-01-threads.html"><strong aria-hidden="true">16.1.</strong> Usando Threads para Ejecutar Código Simultáneamente</a></li><li class="chapter-item expanded "><a href="ch16-02-message-passing.html"><strong aria-hidden="true">16.2.</strong> Usando el Pasaje de Mensajes para Transferir Datos entre Hilos</a></li><li class="chapter-item expanded "><a href="ch16-03-shared-state.html"><strong aria-hidden="true">16.3.</strong> Concurrencia con Estado Compartido</a></li><li class="chapter-item expanded "><a href="ch16-04-extensible-concurrency-sync-and-send.html"><strong aria-hidden="true">16.4.</strong> Concurrencia Extensible con los Traits Sync y Send</a></li></ol></li><li class="chapter-item expanded "><a href="ch17-00-oop.html"><strong aria-hidden="true">17.</strong> Rust como un Lenguaje de Programación Orientado a Objetos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch17-01-what-is-oo.html"><strong aria-hidden="true">17.1.</strong> Características de Lenguajes Orientados a Objetos</a></li><li class="chapter-item expanded "><a href="ch17-02-trait-objects.html"><strong aria-hidden="true">17.2.</strong> Usando Trait Objects que Permiten Valores de Diferentes Tipos</a></li><li class="chapter-item expanded "><a href="ch17-03-oo-design-patterns.html"><strong aria-hidden="true">17.3.</strong> Implementando un Patrón de Diseño Orientado a Objetos</a></li></ol></li><li class="chapter-item expanded "><a href="ch18-00-patterns.html"><strong aria-hidden="true">18.</strong> Patterns and Matching</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch18-01-all-the-places-for-patterns.html"><strong aria-hidden="true">18.1.</strong> Todos los lugares donde se pueden usar Patterns</a></li><li class="chapter-item expanded "><a href="ch18-02-refutability.html"><strong aria-hidden="true">18.2.</strong> Refutabilidad: Si un Pattern Puede Fallar al Hacer Match</a></li><li class="chapter-item expanded "><a href="ch18-03-pattern-syntax.html"><strong aria-hidden="true">18.3.</strong> Sintaxis de los Patterns</a></li></ol></li><li class="chapter-item expanded "><a href="ch19-00-advanced-features.html"><strong aria-hidden="true">19.</strong> Características Avanzadas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch19-01-unsafe-rust.html"><strong aria-hidden="true">19.1.</strong> Rust Inseguro</a></li><li class="chapter-item expanded "><a href="ch19-03-advanced-traits.html"><strong aria-hidden="true">19.2.</strong> Advanced Traits</a></li><li class="chapter-item expanded "><a href="ch19-04-advanced-types.html"><strong aria-hidden="true">19.3.</strong> Advanced Types</a></li><li class="chapter-item expanded "><a href="ch19-05-advanced-functions-and-closures.html"><strong aria-hidden="true">19.4.</strong> Advanced Functions and Closures</a></li><li class="chapter-item expanded "><a href="ch19-06-macros.html"><strong aria-hidden="true">19.5.</strong> Macros</a></li></ol></li><li class="chapter-item expanded "><a href="ch20-00-final-project-a-web-server.html"><strong aria-hidden="true">20.</strong> Final Project: Building a Multithreaded Web Server</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ch20-01-single-threaded.html" class="active"><strong aria-hidden="true">20.1.</strong> Building a Single-Threaded Web Server</a></li><li class="chapter-item expanded "><a href="ch20-02-multithreaded.html"><strong aria-hidden="true">20.2.</strong> Turning Our Single-Threaded Server into a Multithreaded Server</a></li><li class="chapter-item expanded "><a href="ch20-03-graceful-shutdown-and-cleanup.html"><strong aria-hidden="true">20.3.</strong> Graceful Shutdown and Cleanup</a></li></ol></li><li class="chapter-item expanded "><a href="appendix-00.html"><strong aria-hidden="true">21.</strong> Apéndice</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="appendix-01-keywords.html"><strong aria-hidden="true">21.1.</strong> A - Palabras claves</a></li><li class="chapter-item expanded "><a href="appendix-02-operators.html"><strong aria-hidden="true">21.2.</strong> B - Operadores y Símbolos</a></li><li class="chapter-item expanded "><a href="appendix-03-derivable-traits.html"><strong aria-hidden="true">21.3.</strong> C - Derivable Traits</a></li><li class="chapter-item expanded "><a href="appendix-04-useful-development-tools.html"><strong aria-hidden="true">21.4.</strong> D - Useful Development Tools</a></li><li class="chapter-item expanded "><a href="appendix-05-editions.html"><strong aria-hidden="true">21.5.</strong> E - Editions</a></li><li class="chapter-item expanded "><a href="appendix-06-translation.html"><strong aria-hidden="true">21.6.</strong> F - Translations of the Book</a></li><li class="chapter-item expanded "><a href="appendix-07-nightly-rust.html"><strong aria-hidden="true">21.7.</strong> G - Cómo se hace Rust y “Rust Nightly”</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="latte">Latte</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="frappe">Frappé</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="macchiato">Macchiato</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mocha">Mocha</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">El Lenguaje de Programación Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/RustLangES/rust-book-es" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="construyendo-un-servidor-web-de-un-solo-hilo"><a class="header" href="#construyendo-un-servidor-web-de-un-solo-hilo">Construyendo un servidor web de un solo hilo</a></h2>
+<p>Comenzaremos haciendo funcionar un servidor web de un solo hilo. Antes de
+comenzar, veamos una breve descripción general de los protocolos involucrados
+en la construcción de servidores web. Los detalles de estos protocolos están
+fuera del alcance de este libro, pero una breve descripción general le dará la
+información que necesita.</p>
+<p>Los dos protocolos principales involucrados en los servidores web son <em>Hypertext
+Transfer Protocol</em> <em>(HTTP)</em> y <em>Transmission Control Protocol</em> <em>(TCP)</em>. Ambos
+protocolos son protocolos de <em>solicitud-respuesta</em>, lo que significa que un
+<em>cliente</em> inicia solicitudes y un <em>servidor</em> escucha las solicitudes y
+proporciona una respuesta al cliente. El contenido de esas solicitudes y
+respuestas está definido por los protocolos.</p>
+<p>TCP es el protocolo de nivel inferior que describe los detalles de cómo la
+información pasa de un servidor a otro, pero no especifica qué es esa
+información. HTTP se basa en TCP definiendo el contenido de las solicitudes y
+respuestas. Técnicamente, es posible usar HTTP con otros protocolos, pero en la
+gran mayoría de los casos, HTTP envía sus datos a través de TCP. Trabajaremos
+con los bytes sin procesar de las solicitudes y respuestas de TCP y HTTP.</p>
+<h3 id="escuchando-la-conexión-tcp"><a class="header" href="#escuchando-la-conexión-tcp">Escuchando la conexión TCP</a></h3>
+<p>Nuestro servidor web debe escuchar una conexión TCP, por lo que esa es la
+primera parte en la que trabajaremos. La biblioteca estándar ofrece un módulo
+<code>std::net</code> que nos permite hacer esto. Hagamos un nuevo proyecto de la manera
+habitual:</p>
+<pre><code class="language-console">$ cargo new hello
+     Created binary (application) `hello` project
+$ cd hello
+</code></pre>
+<p>Ahora agreguemos el código en el Listado 20-1 en <em>src/main.rs</em> para comenzar.
+Este código escuchará en la dirección local <code>127.0.0.1:7878</code> para flujos TCP
+entrantes. Cuando recibe un flujo entrante, imprimirá <code>¡Conexión establecida!</code>.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust no_run">use std::net::TcpListener;
+
+fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+
+    for stream in listener.incoming() {
+        let stream = stream.unwrap();
+
+        println!("Connection established!");
+    }
+}</code></pre></pre>
+<p><span class="caption">Listing 20-1: Escuchar transmisiones entrantes e imprimir
+un mensaje cuando recibimos una transmisión</span></p>
+<p>Usando <code>TcpListener</code>, podemos escuchar conexiones TCP en la dirección
+<code>127.0.0.1:7878</code>. En la dirección, la sección antes de los dos puntos es una
+dirección IP que representa su computadora (esto es lo mismo en todas las
+computadoras y no representa la computadora de los autores en particular), y
+<code>7878</code> es el puerto. Hemos elegido este puerto por dos razones: HTTP no se
+acepta normalmente en este puerto, por lo que es poco probable que nuestro
+servidor entre en conflicto con cualquier otro servidor web que pueda tener
+ejecutándose en su máquina, y 7878 es <em>rust</em> escrito en un teléfono.</p>
+<p>La función <code>bind</code> en este escenario funciona como la función <code>new</code> en que
+devolverá una nueva instancia de <code>TcpListener</code>. La función se llama <code>bind</code>
+porque, en redes, conectarse a un puerto para escuchar se conoce como “enlazar
+a un puerto”.</p>
+<p>La función <code>bind</code> devuelve un <code>Result&lt;T, E&gt;</code>, que indica que es posible que el
+enlace falle. Por ejemplo, conectarse al puerto 80 requiere privilegios de
+administrador (los no administradores solo pueden escuchar en puertos superiores
+a 1023), por lo que si intentáramos conectarnos al puerto 80 sin ser un
+administrador, el enlace no funcionaría. El enlace tampoco funcionaría, por
+ejemplo, si ejecutáramos dos instancias de nuestro programa y, por lo tanto,
+tuvimos dos programas escuchando el mismo puerto. Debido a que estamos
+escribiendo un servidor básico solo con fines de aprendizaje, no nos
+preocuparemos por manejar este tipo de errores; en su lugar, usamos <code>unwrap</code>
+para detener el programa si ocurren errores.</p>
+<p>El método <code>incoming</code> en <code>TcpListener</code> devuelve un iterator que nos da una
+secuencia de flujos (más específicamente, flujos de tipo <code>TcpStream</code>). Un solo
+<em>flujo</em> representa una conexión abierta entre el cliente y el servidor. Una
+<em>conexión</em> es el nombre del proceso de solicitud y respuesta completo en el que
+un cliente se conecta al servidor, el servidor genera una respuesta y el
+servidor cierra la conexión. Como tal, leeremos del <code>TcpStream</code> para ver lo que
+el cliente envió y luego escribiremos nuestra respuesta en el flujo para enviar
+datos de vuelta al cliente. En general, este bucle <code>for</code> procesará cada
+conexión a su vez y producirá una serie de flujos para que los manejemos.</p>
+<p>Por ahora, nuestro manejo del flujo consiste en llamar a <code>unwrap</code> para terminar
+nuestro programa si el flujo tienen algún error; si no hay errores, el programa
+imprime un mensaje. Agregaremos más funcionalidad para el caso de éxito en el
+siguiente listado. La razón por la que podríamos recibir errores del método
+<code>incoming</code> cuando un cliente se conecta al servidor es que en realidad no
+iteramos sobre las conexiones. En cambio, iteramos sobre <em>intentos de
+conexión</em>. La conexión podría no tener éxito por una serie de razones, muchas
+de ellas específicas del sistema operativo. Por ejemplo, muchos sistemas
+operativos tienen un límite para el número de conexiones abiertas simultáneas
+que pueden admitir; los nuevos intentos de conexión más allá de ese número
+producirán un error hasta que algunas de las conexiones abiertas se cierren.</p>
+<p>¡Intentemos ejecutar este código! Invoca <code>cargo run</code> en la terminal y luego
+carga <em>127.0.0.1:7878</em> en un navegador web. El navegador debería mostrar un
+mensaje de error como “Conexión restablecida”, porque el servidor no está
+enviando ningún dato actualmente. ¡Pero cuando miras tu terminal, deberías ver
+varios mensajes que se imprimieron cuando el navegador se conectó al servidor!</p>
+<pre><code class="language-text">     Running `target/debug/hello`
+Connection established!
+Connection established!
+Connection established!
+</code></pre>
+<p>A veces, verás múltiples mensajes impresos para una solicitud del navegador; la
+razón podría ser que el navegador está haciendo una solicitud para la página
+además de una solicitud para otros recursos, como el icono <em>favicon.ico</em> que
+aparece en la pestaña del navegador.</p>
+<p>También podría ser que el navegador esté intentando conectarse al servidor
+varias veces porque el servidor no está respondiendo con ningún dato. Cuando
+<code>stream</code> sale del scope y se descarta al final del bucle, la conexión se cierra
+como parte de la implementación de <code>drop</code>. Los navegadores a veces tratan con
+conexiones cerradas volviendo a intentar, porque el problema podría ser
+temporal. ¡El factor importante es que hemos obtenido con éxito un controlador
+para una conexión TCP!</p>
+<p>Recuerda detener el programa presionando <span class="keystroke">ctrl-c</span>
+cuando hayas terminado de ejecutar una versión particular del código. Luego
+reinicia el programa invocando el comando <code>cargo run</code> después de haber hecho
+cambios de código para asegurarte de que estás ejecutando el código más nuevo.</p>
+<h3 id="leyendo-la-solicitud"><a class="header" href="#leyendo-la-solicitud">Leyendo la solicitud</a></h3>
+<p>¡Vamos a implementar la funcionalidad para leer la solicitud del navegador!. Para
+separar las preocupaciones de obtener primero una conexión y luego tomar alguna
+acción con la conexión, iniciaremos una nueva función para procesar conexiones.
+En esta nueva función <code>handle_connection</code>, leeremos datos del flujo TCP e
+imprimiremos para que podamos ver los datos que se envían desde el navegador.
+Cambia el código para que se vea como el Listado 20-2.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust no_run">use std::{
+    io::{prelude::*, BufReader},
+    net::{TcpListener, TcpStream},
+};
+
+fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+
+    for stream in listener.incoming() {
+        let stream = stream.unwrap();
+
+        handle_connection(stream);
+    }
+}
+
+fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&amp;mut stream);
+    let http_request: Vec&lt;_&gt; = buf_reader
+        .lines()
+        .map(|result| result.unwrap())
+        .take_while(|line| !line.is_empty())
+        .collect();
+
+    println!("Request: {:#?}", http_request);
+}</code></pre></pre>
+<p><span class="caption">Listing 20-2: Leyendo desde el <code>TcpStream</code> e imprimiendo
+los datos</span></p>
+<p>Importamos <code>std::io::prelude</code> y <code>std::io::BufReader</code> para obtener acceso a los
+traits y tipos que nos permiten leer del flujo. En el bucle <code>for</code> en la función
+<code>main</code>, en lugar de imprimir un mensaje que diga que hicimos una conexión,
+ahora llamamos a la nueva función <code>handle_connection</code> y le pasamos el <code>stream</code>.</p>
+<p>En la función <code>handle_connection</code>, creamos una nueva instancia de <code>BufReader</code>
+que envuelve una referencia mutable al <code>stream</code>. <code>BufReader</code> agrega
+almacenamiento en búfer al administrar las llamadas a los métodos del trait
+<code>std::io::Read</code> por nosotros.</p>
+<p>Creamos una variable llamada <code>http_request</code> para recopilar las líneas de la
+solicitud que el navegador envía a nuestro servidor. Indicamos que queremos
+recopilar estas líneas en un vector agregando la anotación de tipo <code>Vec&lt;_&gt;</code>.</p>
+<p><code>BufReader</code> implementa el trait <code>std::io::BufRead</code>, que proporciona el método
+<code>lines</code>. El método <code>lines</code> devuelve un iterator de <code>Result&lt;String, std::io::Error&gt;</code> al dividir el flujo de datos cada vez que ve un byte de nueva
+línea. Para obtener cada <code>String</code>, mapeamos y <code>unwrap</code> cada <code>Result</code>. El
+<code>Result</code> podría ser un error si los datos no son válidos UTF-8 o si hubo un
+problema al leer del flujo. Nuevamente, un programa de producción debería
+manejar estos errores de manera más elegante, pero estamos eligiendo detener el
+programa en el caso de error por simplicidad.</p>
+<p>El navegador señala el final de una solicitud HTTP enviando dos caracteres de
+nueva línea seguidos, por lo que para obtener una solicitud del flujo, tomamos
+líneas hasta que obtenemos una línea que es el string vacío. Una vez que hemos
+recopilado las líneas en el vector, las imprimimos usando el formato de
+depuración bonito para que podamos echar un vistazo a las instrucciones que el
+navegador web está enviando a nuestro servidor.</p>
+<p>¡Probemos este código! Inicia el programa y luego carga realiza una solicitud
+en un navegador web nuevamente. Ten en cuenta que aún obtendremos una página de
+error en el navegador, pero la salida del programa en la terminal se verá
+similar a esto:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling hello v0.1.0 (file:///projects/hello)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.42s
+     Running `target/debug/hello`
+Request: [
+    "GET / HTTP/1.1",
+    "Host: 127.0.0.1:7878",
+    "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:99.0) Gecko/20100101 Firefox/99.0",
+    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Language: en-US,en;q=0.5",
+    "Accept-Encoding: gzip, deflate, br",
+    "DNT: 1",
+    "Connection: keep-alive",
+    "Upgrade-Insecure-Requests: 1",
+    "Sec-Fetch-Dest: document",
+    "Sec-Fetch-Mode: navigate",
+    "Sec-Fetch-Site: none",
+    "Sec-Fetch-User: ?1",
+    "Cache-Control: max-age=0",
+]
+</code></pre>
+<p>Dependiendo de tu navegador, podrías obtener una salida ligeramente diferente.
+Ahora que estamos imprimiendo los datos de la solicitud, podemos ver por qué
+obtenemos múltiples conexiones desde una solicitud del navegador al mirar la
+ruta después de <code>GET</code> en la primera línea de la solicitud. Si las conexiones
+repetidas están solicitando <em>/</em>, sabemos que el navegador está tratando de
+obtener <em>/</em> repetidamente porque no está obteniendo una respuesta de nuestro
+programa.</p>
+<p>Descompongamos estos datos de solicitud para comprender lo que el navegador
+está pidiendo a nuestro programa.</p>
+<h3 id="una-mirada-más-cercana-a-una-solicitud-http"><a class="header" href="#una-mirada-más-cercana-a-una-solicitud-http">Una mirada más cercana a una solicitud HTTP</a></h3>
+<p>HTTP es un protocolo de texto, y una solicitud toma este formato:</p>
+<pre><code class="language-text">Method Request-URI HTTP-Version CRLF
+headers CRLF
+message-body
+</code></pre>
+<p>La primera línea es la <em>línea de solicitud</em> que contiene información sobre lo
+que el cliente está solicitando. La primera parte de la línea de solicitud
+indica el <em>método</em> que se está utilizando, como <code>GET</code> o <code>POST</code>, que describe
+cómo el cliente está haciendo esta solicitud. Nuestro cliente usó una solicitud
+<code>GET</code>, lo que significa que está solicitando información.</p>
+<p>La siguiente parte de la línea de solicitud es <em>/</em>, que indica el
+<em>Uniform Resource Identifier</em> <em>(URI)</em> que el cliente está solicitando: un URI
+es casi, pero no exactamente, lo mismo que un <em>Uniform Resource Locator</em>
+<em>(URL)</em>. La diferencia entre URIs y URLs no es importante para nuestros
+propósitos en este capítulo, pero la especificación HTTP usa el término URI,
+por lo que podemos simplemente sustituir mentalmente URL por URI aquí.</p>
+<p>La última parte es la versión de HTTP que utiliza el cliente, y luego la línea
+de solicitud termina en una secuencia <em>CRLF</em>. (CRLF significa <em>carriage return</em>
+y <em>line feed</em>, que son términos de los días de la máquina de escribir!) La
+secuencia CRLF también se puede escribir como <code>\r\n</code>, donde <code>\r</code> es un retorno
+de carro y <code>\n</code> es un avance de línea. La secuencia CRLF separa la línea de
+solicitud del resto de los datos de la solicitud. Tenga en cuenta que cuando se
+imprime el CRLF, vemos que comienza una nueva línea en lugar de <code>\r\n</code>.</p>
+<p>Al examinar los datos de la línea de solicitud que hemos recibido al ejecutar
+nuestro programa hasta ahora, vemos que <code>GET</code> es el método, <em>/</em> es el URI de
+solicitud y <code>HTTP/1.1</code> es la versión.</p>
+<p>Después de la línea de solicitud, las líneas restantes a partir de <code>Host:</code> en
+adelante son encabezados. Las solicitudes <code>GET</code> no tienen cuerpo.</p>
+<p>Intenta hacer una solicitud desde un navegador diferente o solicitar una
+dirección diferente, como <em>127.0.0.1:7878/test</em>, para ver cómo cambian los
+datos de la solicitud.</p>
+<p>Ahora que sabemos lo que el navegador está solicitando, ¡enviemos algunos
+datos de vuelta!</p>
+<h3 id="escribiendo-una-respuesta"><a class="header" href="#escribiendo-una-respuesta">Escribiendo una respuesta</a></h3>
+<p>Vamos a implementar el envío de datos en respuesta a una solicitud del
+cliente. Las respuestas tienen el siguiente formato:</p>
+<pre><code class="language-text">HTTP-Version Status-Code Reason-Phrase CRLF
+headers CRLF
+message-body
+</code></pre>
+<p>La primera línea es una <em>línea de estado</em> que contiene la versión HTTP
+utilizada en la respuesta, un código de estado numérico que resume el resultado
+de la solicitud y una frase de motivo que proporciona una descripción textual
+del código de estado. Después de la secuencia CRLF hay encabezados, otra
+secuencia CRLF y el cuerpo de la respuesta.</p>
+<p>Aquí hay un ejemplo de respuesta que usa la versión HTTP 1.1, tiene un código
+de estado 200, una frase de motivo OK, no tiene encabezados y no tiene cuerpo:</p>
+<pre><code class="language-text">HTTP/1.1 200 OK\r\n\r\n
+</code></pre>
+<p>El código de estado 200 es la respuesta de éxito estándar. El texto es una
+respuesta HTTP exitosa. ¡Escribamos esto en el flujo como nuestra respuesta a
+una solicitud exitosa! Desde la función <code>handle_connection</code>, elimine el
+<code>println!</code> que estaba imprimiendo los datos de la solicitud y reemplácelo con
+el código en el Listado 20-3.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust no_run"><span class="boring">use std::{
+</span><span class="boring">    io::{prelude::*, BufReader},
+</span><span class="boring">    net::{TcpListener, TcpStream},
+</span><span class="boring">};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+</span><span class="boring">
+</span><span class="boring">    for stream in listener.incoming() {
+</span><span class="boring">        let stream = stream.unwrap();
+</span><span class="boring">
+</span><span class="boring">        handle_connection(stream);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&amp;mut stream);
+    let http_request: Vec&lt;_&gt; = buf_reader
+        .lines()
+        .map(|result| result.unwrap())
+        .take_while(|line| !line.is_empty())
+        .collect();
+
+    let response = "HTTP/1.1 200 OK\r\n\r\n";
+
+    stream.write_all(response.as_bytes()).unwrap();
+}</code></pre></pre>
+<p><span class="caption">Listing 20-3: Escribiendo una pequeña respuesta HTTP
+exitosa en el flujo de datos</span></p>
+<p>El primer cambio introduce la variable <code>response</code>, que contiene los datos
+del mensaje de éxito. Luego, llamamos a <code>as_bytes</code> en nuestra <code>response</code> para
+convertir los datos de string en bytes. El método <code>write_all</code> en <code>stream</code> toma
+un <code>&amp;[u8]</code> y envía esos bytes directamente por la conexión. Debido a que la
+operación <code>write_all</code> podría fallar, usamos <code>unwrap</code> en cualquier resultado de
+error como antes. Nuevamente, en una aplicación real agregarías manejo de
+errores aquí.</p>
+<p>Con estos cambios, ejecutemos nuestro código y hagamos una solicitud. Como ya
+no estamos imprimiendo ningún dato en la terminal, no veremos ninguna salida
+aparte de la salida generada por Cargo. Cuando cargues <em>127.0.0.1:7878</em> en un
+navegador web, deberías ver una página en blanco en lugar de un error. ¡Acabas
+de codificar a mano la recepción de una solicitud HTTP y el envío de una
+respuesta!</p>
+<h3 id="devolviendo-html-real"><a class="header" href="#devolviendo-html-real">Devolviendo HTML real</a></h3>
+<p>Vamos a implementar la funcionalidad para devolver algo más que una página en
+blanco. Crea el nuevo archivo <em>hello.html</em> en la raíz de tu directorio del
+proyecto, no en el directorio <em>src</em>. Puedes introducir cualquier HTML que
+quieras; el Listado 20-4 muestra una posibilidad.</p>
+<p><span class="filename">Filename: hello.html</span></p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Hello!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello!&lt;/h1&gt;
+    &lt;p&gt;Hi from Rust&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><span class="caption">Listing 20-4: Un ejemplo de archivo HTML para devolver en
+una respuesta</span></p>
+<p>Esto es un documento HTML5 mínimo con un encabezado y un poco de texto. Para
+devolver esto desde el servidor cuando se recibe una solicitud, modificaremos
+<code>handle_connection</code> como se muestra en el Listado 20-5 para leer el archivo
+HTML, agregarlo a la respuesta como un cuerpo y enviarlo.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust no_run">use std::{
+    fs,
+    io::{prelude::*, BufReader},
+    net::{TcpListener, TcpStream},
+};
+// --snip--
+
+<span class="boring">fn main() {
+</span><span class="boring">    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+</span><span class="boring">
+</span><span class="boring">    for stream in listener.incoming() {
+</span><span class="boring">        let stream = stream.unwrap();
+</span><span class="boring">
+</span><span class="boring">        handle_connection(stream);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&amp;mut stream);
+    let http_request: Vec&lt;_&gt; = buf_reader
+        .lines()
+        .map(|result| result.unwrap())
+        .take_while(|line| !line.is_empty())
+        .collect();
+
+    let status_line = "HTTP/1.1 200 OK";
+    let contents = fs::read_to_string("hello.html").unwrap();
+    let length = contents.len();
+
+    let response =
+        format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+
+    stream.write_all(response.as_bytes()).unwrap();
+}</code></pre></pre>
+<p><span class="caption">Listing 20-5: Enviando el contenido de <em>hello.html</em> como
+el cuerpo de la respuesta</span></p>
+<p>Hemos agregado <code>fs</code> a la declaración <code>use</code> para traer el módulo del sistema de
+archivos de la biblioteca estándar al scope. El código para leer el contenido
+de un archivo a una cadena debería ser familiar; lo usamos en el Capítulo 12
+cuando leímos el contenido de un archivo para nuestro proyecto de I/O en el
+Listado 12-4.</p>
+<p>A continuación, utilizamos <code>format!</code> para agregar el contenido del archivo como
+el cuerpo de la respuesta de éxito. Para asegurar una respuesta HTTP válida,
+agregamos el encabezado <code>Content-Length</code> que se establece en el tamaño del
+cuerpo de nuestra respuesta, en este caso el tamaño de <code>hello.html</code>.</p>
+<p>Ejecuta este código con <code>cargo run</code> y carga <em>127.0.0.1:7878</em> en tu navegador;
+¡Deberías ver tu HTML renderizado!</p>
+<p>Actualmente, estamos ignorando los datos de la solicitud en <code>http_request</code> y
+enviando de vuelta el contenido del archivo HTML incondicionalmente. Eso
+significa que si intentas solicitar <em>127.0.0.1:7878/something-else</em> en tu
+navegador, aún obtendrás esta misma respuesta HTML. En este momento, nuestro
+servidor es muy limitado y no hace lo que hacen la mayoría de los servidores
+web. Queremos personalizar nuestras respuestas dependiendo de la solicitud y
+solo enviar el archivo HTML para una solicitud bien formada a <em>/</em>.</p>
+<h3 id="validando-la-solicitud-y-respondiendo-selectivamente"><a class="header" href="#validando-la-solicitud-y-respondiendo-selectivamente">Validando la solicitud y respondiendo selectivamente</a></h3>
+<p>En este momento, nuestro servidor web devolverá el HTML del archivo sin
+importar lo que el cliente haya solicitado. Agreguemos funcionalidad para
+verificar que el navegador esté solicitando <em>/</em> antes de devolver el archivo
+HTML y devolver un error si el navegador solicita cualquier otra cosa. Para
+esto necesitamos modificar <code>handle_connection</code>, como se muestra en el Listado
+20-6. Este nuevo código verifica el contenido de la solicitud recibida contra
+lo que sabemos que se parece una solicitud para <em>/</em> y agrega bloques <code>if</code> y
+<code>else</code> para tratar las solicitudes de manera diferente.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust no_run"><span class="boring">use std::{
+</span><span class="boring">    fs,
+</span><span class="boring">    io::{prelude::*, BufReader},
+</span><span class="boring">    net::{TcpListener, TcpStream},
+</span><span class="boring">};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+</span><span class="boring">
+</span><span class="boring">    for stream in listener.incoming() {
+</span><span class="boring">        let stream = stream.unwrap();
+</span><span class="boring">
+</span><span class="boring">        handle_connection(stream);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span>// --snip--
+
+fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&amp;mut stream);
+    let request_line = buf_reader.lines().next().unwrap().unwrap();
+
+    if request_line == "GET / HTTP/1.1" {
+        let status_line = "HTTP/1.1 200 OK";
+        let contents = fs::read_to_string("hello.html").unwrap();
+        let length = contents.len();
+
+        let response = format!(
+            "{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}"
+        );
+
+        stream.write_all(response.as_bytes()).unwrap();
+    } else {
+        // some other request
+    }
+}</code></pre></pre>
+<p><span class="caption">Listing 20-6: Tratar las solicitudes a <em>/</em> de manera
+diferente a las demás solicitudes</span></p>
+<p>Solo vamos a analizar la primera línea de la solicitud HTTP, por lo que en
+lugar de leer toda la solicitud en un vector, estamos llamando a <code>next</code> para
+obtener el primer elemento del iterator. El primer <code>unwrap</code> se encarga de la
+<code>Option</code> y detiene el programa si el iterator no tiene elementos. El segundo
+<code>unwrap</code> maneja el <code>Result</code> y tiene el mismo efecto que el <code>unwrap</code> que estaba
+en el <code>map</code> agregado en el Listado 20-2.</p>
+<p>A continuación, verificamos si la <code>request_line</code> es igual a la línea de
+solicitud de una solicitud GET a la ruta */**. Si es así, el bloque <code>if</code>
+devuelve el contenido de nuestro archivo HTML.</p>
+<p>Si la <code>request_line</code> no es igual a la línea de solicitud GET al camino <em>/</em>,
+significa que hemos recibido alguna otra solicitud. Agregaremos código al
+bloque <code>else</code> en un momento para responder a todas las demás solicitudes.</p>
+<p>Ejecuta este código ahora y solicita <em>127.0.0.1:7878</em>; deberías ver el HTML
+en <em>hello.html</em>. Si haces cualquier otra solicitud, como
+<em>127.0.0.1:7878/something-else</em>, obtendrás un error de conexión como los que
+viste al ejecutar el código en el Listado 20-1 y el Listado 20-2.</p>
+<p>Ahora agreguemos el código del Listado 20-7 al bloque <code>else</code> para devolver
+una respuesta con el código de estado 404, que indica que el contenido de la
+solicitud no se encontró. También devolveremos un poco de HTML para una página
+que se renderizará en el navegador indicando la respuesta al usuario final.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust no_run"><span class="boring">use std::{
+</span><span class="boring">    fs,
+</span><span class="boring">    io::{prelude::*, BufReader},
+</span><span class="boring">    net::{TcpListener, TcpStream},
+</span><span class="boring">};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+</span><span class="boring">
+</span><span class="boring">    for stream in listener.incoming() {
+</span><span class="boring">        let stream = stream.unwrap();
+</span><span class="boring">
+</span><span class="boring">        handle_connection(stream);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn handle_connection(mut stream: TcpStream) {
+</span><span class="boring">    let buf_reader = BufReader::new(&amp;mut stream);
+</span><span class="boring">    let request_line = buf_reader.lines().next().unwrap().unwrap();
+</span><span class="boring">
+</span><span class="boring">    if request_line == "GET / HTTP/1.1" {
+</span><span class="boring">        let status_line = "HTTP/1.1 200 OK";
+</span><span class="boring">        let contents = fs::read_to_string("hello.html").unwrap();
+</span><span class="boring">        let length = contents.len();
+</span><span class="boring">
+</span><span class="boring">        let response = format!(
+</span><span class="boring">            "{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}"
+</span><span class="boring">        );
+</span><span class="boring">
+</span><span class="boring">        stream.write_all(response.as_bytes()).unwrap();
+</span>    // --snip--
+    } else {
+        let status_line = "HTTP/1.1 404 NOT FOUND";
+        let contents = fs::read_to_string("404.html").unwrap();
+        let length = contents.len();
+
+        let response = format!(
+            "{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}"
+        );
+
+        stream.write_all(response.as_bytes()).unwrap();
+    }
+<span class="boring">}</span></code></pre></pre>
+<p><span class="caption">Listing 20-7: Respondiendo con el código de estado 404 y
+una página de error si se solicita algo distinto a <em>/</em></span></p>
+<p>Aquí, nuestra respuesta tiene una línea de estado con el código de estado 404
+y la frase de motivo <code>NOT FOUND</code>. El cuerpo de la respuesta será el HTML en el
+archivo <em>404.html</em>. Necesitarás crear un archivo <em>404.html</em> junto a
+<em>hello.html</em> para la página de error; nuevamente, siéntete libre de usar
+cualquier HTML que desees o usa el HTML de ejemplo en el Listado 20-8.</p>
+<p><span class="filename">Filename: 404.html</span></p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Hello!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Oops!&lt;/h1&gt;
+    &lt;p&gt;Sorry, I don't know what you're asking for.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><span class="caption">Listing 20-8: Contenido de ejemplo para la página que
+se enviará como respuesta en cualquier caso de error 404</span></p>
+<p>Con estos cambios, ejecuta tu servidor nuevamente. Al solicitar <em>127.0.0.1:7878</em>
+deberías obtener el contenido de <em>hello.html</em>, y cualquier otra solicitud,
+como <em>127.0.0.1:7878/foo</em>, debería devolver el HTML de <em>404.html</em>.</p>
+<h3 id="un-toque-de-refactorización"><a class="header" href="#un-toque-de-refactorización">Un toque de refactorización</a></h3>
+<p>En este momento, los bloques <code>if</code> y <code>else</code> tienen mucha repetición: ambos
+están leyendo archivos y escribiendo el contenido de los archivos en el
+stream. Las únicas diferencias son la línea de estado y el nombre del archivo.
+Hagamos que el código sea más conciso extrayendo esas diferencias en líneas
+<code>if</code> y <code>else</code> separadas que asignarán los valores de la línea de estado y el
+nombre del archivo a variables; luego podemos usar esas variables
+incondicionalmente en el código para leer el archivo y escribir la respuesta.
+El Listado 20-9 muestra el código resultante después de reemplazar los grandes
+bloques <code>if</code> y <code>else</code>.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust no_run"><span class="boring">use std::{
+</span><span class="boring">    fs,
+</span><span class="boring">    io::{prelude::*, BufReader},
+</span><span class="boring">    net::{TcpListener, TcpStream},
+</span><span class="boring">};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+</span><span class="boring">
+</span><span class="boring">    for stream in listener.incoming() {
+</span><span class="boring">        let stream = stream.unwrap();
+</span><span class="boring">
+</span><span class="boring">        handle_connection(stream);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span>// --snip--
+
+fn handle_connection(mut stream: TcpStream) {
+    // --snip--
+<span class="boring">    let buf_reader = BufReader::new(&amp;mut stream);
+</span><span class="boring">    let request_line = buf_reader.lines().next().unwrap().unwrap();
+</span>
+    let (status_line, filename) = if request_line == "GET / HTTP/1.1" {
+        ("HTTP/1.1 200 OK", "hello.html")
+    } else {
+        ("HTTP/1.1 404 NOT FOUND", "404.html")
+    };
+
+    let contents = fs::read_to_string(filename).unwrap();
+    let length = contents.len();
+
+    let response =
+        format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+
+    stream.write_all(response.as_bytes()).unwrap();
+}</code></pre></pre>
+<p><span class="caption">Listing 20-9: Refactorizando los bloques <code>if</code> y <code>else</code>
+para que contengan solo el código que difiere entre los dos casos</span></p>
+<p>Ahora los bloques <code>if</code> y <code>else</code> solo devuelven los valores apropiados para la
+línea de estado y el nombre de archivo en una tupla; luego usamos la
+destructuración para asignar estos dos valores a <code>status_line</code> y <code>filename</code>
+usando un patrón en la declaración <code>let</code>, como se discutió en el Capítulo 18.</p>
+<p>El código previamente duplicado ahora está fuera de los bloques <code>if</code> y <code>else</code>
+y usa las variables <code>status_line</code> y <code>filename</code>. Esto hace que sea más fácil
+ver la diferencia entre los dos casos, y significa que solo tenemos un lugar
+para actualizar el código si queremos cambiar la forma en que funciona la
+lectura de archivos y la escritura de respuestas. El comportamiento del código
+en el Listado 20-9 será el mismo que el del Listado 20-8.</p>
+<p>¡Increible! Ahora tenemos un servidor web simple en aproximadamente 40 líneas
+de código Rust que responde a una solicitud con una página de contenido y
+responde a todas las demás solicitudes con una respuesta 404.</p>
+<p>Actualmente, nuestro servidor se ejecuta en un solo hilo, lo que significa que
+solo puede atender una solicitud a la vez. Analicemos cómo esto puede ser un
+problema al simular algunas solicitudes lentas. Luego lo arreglaremos para que
+nuestro servidor pueda manejar múltiples solicitudes a la vez.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch20-00-final-project-a-web-server.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch20-02-multithreaded.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch20-00-final-project-a-web-server.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch20-02-multithreaded.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+    </div>
+    </body>
+</html>
