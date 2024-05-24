@@ -82,5 +82,37 @@ fn main() {
     for (llave, valor) in &puntajes {
         println!("{llave}: {valor}");
     }
+
+    let nombre_campo = String::from("Color favorito");
+    let valor_campo = String::from("Azul");
+
+    let mut map = HashMap::new();
+
+    map.insert(nombre_campo, valor_campo);
+
+    // Entry y or_insert
+    // devuelve una referencia al valor mutable si existe la clave
+    // si no inserta el nuevo valor y devuelve  una referencia mutable a el
+    puntajes.entry(String::from("Amarillo")).or_insert(60);
+    puntajes.entry(String::from("Morado")).or_insert(60);
+
+
+    for (llave, valor) in &puntajes {
+        println!("{llave}: {valor}");
+    }
+
+    let texto = "hola mundo maravilloso mundo";
+    let mut map = HashMap::new();
+
+    // cuenta las palabras de un &str
+    // cada vuelta comprueba si  la llave es nueva
+    // si es nueva la crea y le aumenta en 1
+    // si no devuelve la referencia mut al valor y le aumenta 1
+    for palabra in texto.split_whitespace() {
+        let cont = map.entry(palabra).or_insert(0);
+        *cont += 1;
+    }
+
+    println!("{:?}", map);
 }
 
